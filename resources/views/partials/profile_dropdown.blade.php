@@ -8,6 +8,11 @@
         <a href="/user/bookings"
             style="display:block;padding:10px;border-bottom:1px solid #eee;color:#222;text-decoration:none">My
             Bookings</a>
-        <a href="/logout" style="display:block;padding:10px;color:#c62828;text-decoration:none">Log out</a>
+        <form action="/logout" method="POST" style="margin:0">
+            @csrf
+            <button type="submit"
+                style="display:block;width:100%;padding:10px;border:none;background:none;color:#c62828;text-decoration:none;text-align:left;cursor:pointer">Log
+                out</button>
+        </form>
     </div>
 </div>

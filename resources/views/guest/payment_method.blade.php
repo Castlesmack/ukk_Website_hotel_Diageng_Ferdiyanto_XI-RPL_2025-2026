@@ -1,37 +1,70 @@
-<!doctype html>
-<html>
+@extends('layouts.app')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Payment</title>
+@section('title', 'Payment - Ade Villa')
+
+@push('styles')
     <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif
-        }
-
-        .card {
+        .payment-card {
             max-width: 420px;
             margin: 30px auto;
-            border-radius: 6px;
+            border-radius: 12px;
             box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-            padding: 18px
+            padding: 20px;
+            background: white;
+        }
+
+        .payment-card h4 {
+            margin-top: 0;
+            color: #333;
+        }
+
+        .amount {
+            font-size: 18px;
+            font-weight: bold;
+            color: #007bff;
+        }
+
+        .payment-widget {
+            height: 160px;
+            border: 1px dashed #ddd;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            margin-top: 12px;
+        }
+
+        .pay-btn {
+            padding: 12px 24px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .pay-btn:hover {
+            background: #0056b3;
+        }
+
+        .pay-btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
         }
     </style>
-</head>
+@endpush
 
-<body>
-    <div class="card">
+@section('content')
+    <div class="payment-card">
         <h4>Villa Kota Bunga Ade</h4>
-        <div>Rp5.104.000</div>
+        <div class="amount">Rp 5,104,000</div>
         <hr>
         <div>
-            <h5>Select method</h5>
-            <div style="margin-top:12px">
-                <div id="payment-widget"
-                    style="height:160px;border:1px dashed #ddd;display:flex;align-items:center;justify-content:center">
-                    <button id="payBtn">Pay with Midtrans</button>
-                </div>
+            <h5>Select Payment Method</h5>
+            <div class="payment-widget">
+                <button id="payBtn" class="pay-btn">Pay with Midtrans</button>
             </div>
         </div>
     </div>
@@ -93,6 +126,4 @@
             });
         })();
     </script>
-</body>
-
-</html>
+@endsection

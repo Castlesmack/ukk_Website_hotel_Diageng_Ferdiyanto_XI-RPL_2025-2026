@@ -1,49 +1,131 @@
-<!doctype html>
-<html>
+@extends('layouts.app')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Login - UKK Villa</title>
+@section('title', 'Login - Ade Villa')
+
+@php
+    $hideHeader = true;
+    $hideFooter = true;
+@endphp
+
+@push('styles')
     <style>
         body {
-            font-family: Instrument Sans, Arial;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-card {
+            background: white;
+            border-radius: 12px;
             padding: 30px;
-            background: #f9f9f9
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .login-card h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .form-group input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-submit:hover {
+            background: #0056b3;
+        }
+
+        .error-msg {
+            color: #dc3545;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .forgot-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .forgot-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .forgot-link a:hover {
+            text-decoration: underline;
         }
     </style>
-</head>
+@endpush
 
-<body>
-    <div
-        style="max-width:420px;margin:24px auto;border:1px solid #e6e6e6;border-radius:8px;padding:18px;background:#fff">
-
-        <h1 style="text-align:center;margin:18px 0">Login</h1>
+@section('content')
+    <div class="login-card">
+        <h1>Login</h1>
         @if($errors->any())
-            <div style="color:#c62828;margin-bottom:8px;text-align:center">{{ $errors->first() }}</div>
+            <div class="error-msg">{{ $errors->first() }}</div>
         @endif
         <form method="POST" action="/login">
             @csrf
-            <div style="margin-bottom:12px">
-                <label>Email*</label>
-                <input type="email" name="email"
-                    style="width:100%;padding:12px;border:2px solid #ddd;border-radius:8px">
+            <div class="form-group">
+                <label for="email">Email*</label>
+                <input type="email" id="email" name="email" required>
             </div>
-            <div style="margin-bottom:12px">
-                <label>Password*</label>
-                <input type="password" name="password"
-                    style="width:100%;padding:12px;border:2px solid #ddd;border-radius:8px">
+            <div class="form-group">
+                <label for="password">Password*</label>
+                <input type="password" id="password" name="password" required>
             </div>
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
+            <div class="checkbox-group">
                 <input type="checkbox" id="confirm-login" required>
-                <label for="confirm-login" style="margin:0;font-size:13px">I confirm all the details I entered are
-                    correct*</label>
+                <label for="confirm-login">I confirm all the details I entered are correct*</label>
             </div>
-            <button
-                style="display:block;width:100%;padding:14px;background:#000;color:#fff;border:none;border-radius:8px;font-size:18px">Submit</button>
+            <button type="submit" class="btn-submit">Login</button>
         </form>
-        <p style="text-align:center;margin-top:12px"><a href="/password/reset">Forgot password</a></p>
+        <div class="forgot-link">
+            <a href="/password/reset">Forgot password?</a>
+        </div>
     </div>
-</body>
-
-</html>
+@endsection

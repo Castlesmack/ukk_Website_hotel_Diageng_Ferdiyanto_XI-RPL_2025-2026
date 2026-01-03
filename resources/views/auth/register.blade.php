@@ -1,139 +1,122 @@
-<!doctype html>
-<html>
+@extends('layouts.app')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Register - UKK Villa</title>
+@section('title', 'Register - Ade Villa')
+
+@php
+    $hideHeader = true;
+    $hideFooter = true;
+@endphp
+
+@push('styles')
     <style>
-        :root {
-            --accent: #000;
-            --muted: #e6e6e6
-        }
-
         body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #fff;
-            margin: 0;
-            padding: 0
-        }
-
-        .frame {
-            max-width: 420px;
-            margin: 24px auto;
-            border: 1px solid var(--muted);
-            border-radius: 8px;
-            padding: 18px
-        }
-
-        header.top {
-            height: 56px;
-            background: #f6f6f6;
-            border-bottom: 1px solid var(--muted);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
             display: flex;
             align-items: center;
-            padding: 0 12px
+            justify-content: center;
         }
 
-        h1 {
-            font-size: 20px;
+        .register-card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .register-card h1 {
             text-align: center;
-            margin: 18px 0
+            margin-bottom: 20px;
+            color: #333;
         }
 
-        label {
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
             display: block;
-            margin-bottom: 6px
+            margin-bottom: 5px;
+            font-weight: 500;
         }
 
-        input[type=text],
-        input[type=email],
-        input[type=password] {
+        .form-group input {
             width: 100%;
             padding: 12px;
             border: 2px solid #ddd;
             border-radius: 8px;
-            margin-bottom: 12px;
-            transition: box-shadow .15s, transform .06s
+            font-size: 16px;
         }
 
-        input:focus {
+        .form-group input:focus {
+            border-color: #007bff;
             outline: none;
-            box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
-            transform: translateY(-1px)
         }
 
-        .confirm {
+        .checkbox-group {
             display: flex;
             align-items: center;
             gap: 8px;
-            margin-bottom: 12px
+            margin-bottom: 20px;
+            font-size: 14px;
         }
 
-        .btn {
-            display: block;
+        .btn-submit {
             width: 100%;
             padding: 14px;
-            background: var(--accent);
-            color: #fff;
+            background: #28a745;
+            color: white;
             border: none;
             border-radius: 8px;
             font-size: 18px;
             cursor: pointer;
-            transition: transform .12s, box-shadow .12s
+            transition: background 0.3s;
         }
 
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12)
+        .btn-submit:hover {
+            background: #218838;
         }
 
-        .btn:active {
-            transform: translateY(-1px)
-        }
-
-        .back {
-            display: block;
+        .error-msg {
+            color: #dc3545;
             text-align: center;
-            margin-top: 12px;
-            color: #666;
-            text-decoration: none
+            margin-bottom: 15px;
+            font-weight: 500;
         }
     </style>
-</head>
+@endpush
 
-<body>
-    <div class="frame">
-        <header class="top">
-            <div style="width:34px;height:34px;border-radius:50%;background:#ddd"></div>
-        </header>
-        <h1>REGISTER</h1>
+@section('content')
+    <div class="register-card">
+        <h1>Register</h1>
+        @if($errors->any())
+            <div class="error-msg">{{ $errors->first() }}</div>
+        @endif
         <form method="POST" action="/register">
             @csrf
-            <div>
-                <label>Name*</label>
-                <input type="text" name="name" required>
+            <div class="form-group">
+                <label for="name">Name*</label>
+                <input type="text" id="name" name="name" required>
             </div>
-            <div>
-                <label>Email*</label>
-                <input type="email" name="email" required>
+            <div class="form-group">
+                <label for="email">Email*</label>
+                <input type="email" id="email" name="email" required>
             </div>
-            <div>
-                <label>No Telp*</label>
-                <input type="text" name="phone" required>
+            <div class="form-group">
+                <label for="phone">Phone*</label>
+                <input type="text" id="phone" name="phone" required>
             </div>
-            <div>
-                <label>Password*</label>
-                <input type="password" name="password" required>
+            <div class="form-group">
+                <label for="password">Password*</label>
+                <input type="password" id="password" name="password" required>
             </div>
-            <div class="confirm">
+            <div class="checkbox-group">
                 <input type="checkbox" id="confirm" required>
-                <label for="confirm" style="margin:0;font-size:13px">I confirm all the details I entered are
-                    correct*</label>
+                <label for="confirm">I confirm all the details I entered are correct*</label>
             </div>
-            <button class="btn" type="submit">Submit</button>
+            <button type="submit" class="btn-submit">Register</button>
         </form>
     </div>
-</body>
-
-</html>
+@endsection
