@@ -121,7 +121,3 @@
         </main>
     </div>
 @endsection
-</div>
-</body>
-
-</html>
