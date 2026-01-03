@@ -21,5 +21,8 @@ class DatabaseSeeder extends Seeder
             'name' => 'Test User',
             'email' => 'test@example.com',
         ]);
+
+        // seed villas, room types and sample bookings
+        $this->call(\Database\Seeders\VillaSeeder::class);
     }
 }
