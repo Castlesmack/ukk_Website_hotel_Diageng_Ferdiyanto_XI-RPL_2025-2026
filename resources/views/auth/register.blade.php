@@ -85,11 +85,28 @@
             margin-bottom: 15px;
             font-weight: 500;
         }
+
+        .exit-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 5px;
+        }
+
+        .exit-btn:hover {
+            color: #333;
+        }
     </style>
 @endpush
 
 @section('content')
     <div class="register-card">
+        <button class="exit-btn" onclick="window.location.href='/'">&times;</button>
         <h1>Register</h1>
         @if($errors->any())
             <div class="error-msg">{{ $errors->first() }}</div>

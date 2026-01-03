@@ -1,42 +1,135 @@
-<!doctype html>
-<html>
+@extends('layouts.app')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Reset Password - UKK Villa</title>
+@section('title', 'Reset Password - Ade Villa')
+
+@php
+    $hideHeader = true;
+    $hideFooter = true;
+@endphp
+
+@push('styles')
     <style>
         body {
-            font-family: Instrument Sans, Arial;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .reset-card {
+            background: white;
+            border-radius: 12px;
             padding: 30px;
-            background: #f9f9f9
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            width: 100%;
+        }
+
+        .reset-card h1 {
+            text-align: center;
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+        .reset-card p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .form-group input:focus {
+            border-color: #007bff;
+            outline: none;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 14px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .btn-submit:hover {
+            background: #0056b3;
+        }
+
+        .back-link {
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .back-link a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
+        }
+
+        .exit-btn {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #666;
+            padding: 5px;
+        }
+
+        .exit-btn:hover {
+            color: #333;
+        }
+
+        .success-msg {
+            color: #28a745;
+            text-align: center;
+            margin-bottom: 15px;
+            font-weight: 500;
         }
     </style>
-</head>
+@endpush
 
-<body>
-    <div class="frame"
-        style="max-width:420px;margin:24px auto;border:1px solid #e6e6e6;border-radius:8px;padding:18px;background:#fff">
-        <header
-            style="height:56px;background:#f6f6f6;border-bottom:1px solid #e6e6e6;display:flex;align-items:center;padding:0 12px">
-            <div style="width:34px;height:34px;border-radius:50%;background:#ddd"></div>
-        </header>
-        <h1 style="text-align:center;margin:18px 0">Reset Your Password</h1>
-        <p style="text-align:center;color:#555">Enter the email associated with your account and we'll send you a link
-            to reset your password.</p>
+@section('content')
+    <div class="reset-card">
+        <button class="exit-btn" onclick="window.location.href='/'">&times;</button>
+        <h1>Reset Password</h1>
+        <p>Enter the email associated with your account and we'll send you a link to reset your password.</p>
+
+        @if(session('status'))
+            <div class="success-msg">{{ session('status') }}</div>
+        @endif
+
         <form method="POST" action="/password/reset">
             @csrf
-            <div style="margin:12px 0">
-                <input type="email" name="email" placeholder="Email" required
-                    style="width:100%;padding:12px;border:2px solid #ddd;border-radius:8px">
+            <div class="form-group">
+                <input type="email" name="email" placeholder="Email" required>
             </div>
-            <div>
-                <button
-                    style="display:block;width:100%;padding:14px;background:#000;color:#fff;border:none;border-radius:8px;font-size:18px">Submit</button>
-            </div>
+            <button type="submit" class="btn-submit">Send Reset Link</button>
         </form>
-        <p style="text-align:center;margin-top:12px"><a href="/login">Back to Login</a></p>
-    </div>
-</body>
 
-</html>
+        <div class="back-link">
+            <a href="/login">Back to Login</a>
+        </div>
+    </div>
+@endsection

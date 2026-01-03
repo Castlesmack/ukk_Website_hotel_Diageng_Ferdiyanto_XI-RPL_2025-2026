@@ -17,6 +17,9 @@
             background: #f8f9fa;
             color: #333;
             line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
         }
 
         header.app {
@@ -33,6 +36,8 @@
             font-size: 24px;
             font-weight: bold;
             color: #007bff;
+            cursor: pointer;
+            text-decoration: none;
         }
 
         header.app .nav {
@@ -53,7 +58,8 @@
             background: #f8f9fa;
         }
 
-        .container {
+        main.container {
+            flex: 1;
             max-width: 1200px;
             margin: 20px auto;
             padding: 0 20px;
@@ -64,7 +70,7 @@
             color: #fff;
             text-align: center;
             padding: 20px;
-            margin-top: 40px;
+            margin-top: 20px;
         }
 
         footer p {
@@ -88,7 +94,18 @@
 <body>
     @if(!isset($hideHeader) || !$hideHeader)
         <header class="app">
-            <div class="logo"><strong>Ade</strong> Villa</div>
+            @php
+                $homeUrl = '/';
+                if (auth()->check()) {
+                    $user = auth()->user();
+                    if ($user->role === 'admin') {
+                        $homeUrl = '/admin/dashboard';
+                    } elseif ($user->role === 'receptionist') {
+                        $homeUrl = '/reception/dashboard';
+                    }
+                }
+            @endphp
+            <a href="{{ $homeUrl }}" class="logo"><strong>Ade</strong> Villa</a>
             <div class="nav">
                 @if(auth()->check())
                     @include('partials.profile_dropdown')

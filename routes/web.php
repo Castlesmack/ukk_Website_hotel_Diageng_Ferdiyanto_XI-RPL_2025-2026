@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\PaymentController;
+use App\Http\Controllers\VillaController;
 
 Route::get('/', function () {
     return view('guest.home');
@@ -24,7 +25,7 @@ Route::get('/password/reset', function(){ return view('auth.passwords.email'); }
 
 // Admin pages (static placeholders)
 Route::view('/admin/dashboard', 'admin.dashboard')->name('admin.dashboard');
-Route::view('/admin/manage', 'admin.manage')->name('admin.manage');
+Route::view('/admin/villas', 'admin.manage')->name('admin.villas');
 Route::view('/admin/villas/create', 'admin.villas.create')->name('admin.villas.create');
 Route::view('/admin/villas/{id}/edit', 'admin.villas.edit')->name('admin.villas.edit');
 Route::view('/admin/homepage/edit', 'admin.homepage.edit')->name('admin.homepage.edit');
@@ -50,8 +51,9 @@ Route::view('/home', 'guest.home')->name('home');
 // Additional guest / user pages (static previews)
 Route::view('/guest/home-before', 'guest.home_before')->name('guest.home.before');
 Route::view('/guest/home-after', 'guest.home_after')->name('guest.home.after');
-Route::view('/villa/{id}', 'guest.villa_detail')->name('guest.villa.detail');
-Route::view('/reservation/form', 'guest.reservation_form')->name('guest.reservation.form');
+Route::get('/villa', [VillaController::class, 'search'])->name('villa.search');
+Route::get('/villa/{id}', [VillaController::class, 'detail'])->name('guest.villa.detail');
+Route::get('/reservation/form', [VillaController::class, 'reservationForm'])->name('guest.reservation.form');
 Route::view('/guest/payment', 'guest.payment_method')->name('guest.payment');
 Route::view('/guest/payment/failed', 'guest.payment_failed')->name('guest.payment.failed');
 Route::view('/guest/payment/success', 'guest.payment_success')->name('guest.payment.success');
@@ -60,7 +62,8 @@ Route::view('/guest/payment/success', 'guest.payment_success')->name('guest.paym
 Route::post('/midtrans/token', [PaymentController::class, 'token'])->name('midtrans.token');
 
 // User pages
-Route::view('/user/profile', 'user.profile')->name('user.profile');
+Route::get('/user/profile', [App\Http\Controllers\UserController::class, 'profile'])->name('user.profile');
+Route::post('/user/profile', [App\Http\Controllers\UserController::class, 'updateProfile']);
 Route::view('/user/bookings', 'user.bookings')->name('user.bookings');
 
 

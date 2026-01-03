@@ -23,7 +23,15 @@ class LoginController extends Controller
 
         if (Auth::attempt(['email' => $credentials['email'], 'password' => $credentials['password']])) {
             $request->session()->regenerate();
-            return redirect('/');
+
+            $user = Auth::user();
+            if ($user->role === 'admin') {
+                return redirect('/admin/dashboard');
+            } elseif ($user->role === 'receptionist') {
+                return redirect('/reception/dashboard');
+            } else {
+                return redirect('/');
+            }
         }
 
         return back()->withErrors(['email' => 'The provided credentials do not match our records.']);

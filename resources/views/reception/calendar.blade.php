@@ -1,94 +1,184 @@
-<!doctype html>
-<html>
+@extends('layouts.app')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Resepsionis - Calendar</title>
+@section('title', 'Reception Calendar')
+
+@push('styles')
     <style>
-        body {
-            font-family: Arial, Helvetica, sans-serif;
-            background: #fff
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 18px auto;
+        .reception-layout {
             display: flex;
-            gap: 18px
+            gap: 20px;
+            margin-top: 20px;
         }
 
         .sidebar {
-            width: 220px;
-            border-right: 2px solid #eee;
-            padding: 18px
-        }
-
-        .main {
-            flex: 1;
-            padding: 18px
-        }
-
-        .card {
-            border: 2px solid #ddd;
+            width: 250px;
+            background: #f8f9fa;
+            padding: 20px;
             border-radius: 8px;
-            padding: 12px
+            border: 1px solid #e9ecef;
+        }
+
+        .sidebar h3 {
+            margin-top: 0;
+            color: #007bff;
+        }
+
+        .sidebar .menu-item {
+            display: block;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            text-decoration: none;
+            color: #333;
+            transition: background 0.3s;
+        }
+
+        .sidebar .menu-item:hover,
+        .sidebar .menu-item.active {
+            background: #e9ecef;
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .header h2 {
+            margin: 0;
+            color: #007bff;
+        }
+
+        .calendar-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .calendar-controls select,
+        .calendar-controls button {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background: white;
+        }
+
+        .calendar-controls button {
+            background: #007bff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        .calendar-controls button:hover {
+            background: #0056b3;
         }
 
         .calendar-grid {
             display: grid;
             grid-template-columns: repeat(7, 1fr);
-            gap: 6px
+            gap: 2px;
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            overflow: hidden;
         }
 
         .day {
-            min-height: 80px;
-            border: 1px solid #eee;
-            padding: 8px
+            min-height: 100px;
+            background: white;
+            border: 1px solid #f8f9fa;
+            padding: 8px;
+            position: relative;
+        }
+
+        .day-header {
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .day-number {
+            font-size: 14px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .availability {
+            font-size: 12px;
+            color: #6c757d;
+        }
+
+        .booked {
+            background: #fff3cd !important;
+        }
+
+        .fully-booked {
+            background: #f8d7da !important;
         }
     </style>
-</head>
+@endpush
 
-<body>
-    <header
-        style="display:flex;justify-content:space-between;align-items:center;max-width:1200px;margin:0 auto;padding:12px 0">
-        <h2>Ade Villa — Resepsionis</h2>
-        <div style="width:36px;height:36px;background:#000;border-radius:50%"></div>
-    </header>
-    <div class="container">
+@section('content')
+    <div class="reception-layout">
         <aside class="sidebar">
-            <a href="/reception/dashboard">Dashboard</a>
-            <a href="/reception/reservations">Reservation</a>
-            <a href="/reception/calendar" style="background:#e6e6e6">Calendar</a>
+            <h3>Ade Villa Reception</h3>
+            <a href="/reception/dashboard" class="menu-item">Dashboard</a>
+            <a href="/reception/reservations" class="menu-item">Reservations</a>
+            <a href="/reception/calendar" class="menu-item active">Calendar</a>
         </aside>
-        <main class="main">
-            <h3>Availability List</h3>
-            <div class="card">
-                <div style="display:flex;justify-content:space-between;margin-bottom:12px">
-                    <div>
-                        <select>
-                            <option>November 2025</option>
-                        </select>
-                        <button>Today</button>
-                    </div>
-                    <div>
-                        <select>
-                            <option>Type 0608</option>
-                        </select>
-                    </div>
+
+        <main class="main-content">
+            <div class="header">
+                <h2>Availability Calendar</h2>
+            </div>
+
+            <div class="calendar-controls">
+                <div>
+                    <select>
+                        <option>November 2025</option>
+                        <option>December 2025</option>
+                        <option>January 2026</option>
+                    </select>
+                    <button>Today</button>
                 </div>
-                <div class="calendar-grid">
-                    <div class="day">Sun<br><small>0/0</small></div>
-                    <div class="day">Mon<br><small>0/0</small></div>
-                    <div class="day">Tue<br><small>0/0</small></div>
-                    <div class="day">Wed<br><small>0/0</small></div>
-                    <div class="day">Thu<br><small>0/0</small></div>
-                    <div class="day">Fri<br><small>0/0</small></div>
-                    <div class="day">Sat<br><small>0/0</small></div>
+                <div>
+                    <select>
+                        <option>All Villas</option>
+                        <option>Type 0608</option>
+                        <option>Villa Kota Bunga Ade</option>
+                        <option>Villa Puncak Harmony</option>
+                    </select>
                 </div>
+            </div>
+
+            <div class="calendar-grid">
+                <div class="day-header">Sun</div>
+                <div class="day-header">Mon</div>
+                <div class="day-header">Tue</div>
+                <div class="day-header">Wed</div>
+                <div class="day-header">Thu</div>
+                <div class="day-header">Fri</div>
+                <div class="day-header">Sat</div>
+
+                <!-- Days will be generated dynamically -->
+                @for($i = 1; $i <= 31; $i++)
+                    <div class="day {{ $i % 3 == 0 ? 'booked' : ($i % 7 == 0 ? 'fully-booked' : '') }}">
+                        <div class="day-number">{{ $i }}</div>
+                        <div class="availability">{{ rand(0, 2) }}/{{ rand(2, 5) }}</div>
+                    </div>
+                @endfor
             </div>
         </main>
     </div>
-</body>
-
-</html>
+@endsection

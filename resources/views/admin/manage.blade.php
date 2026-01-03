@@ -1,43 +1,175 @@
-<!doctype html>
-<html>
+@extends('layouts.app')
 
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <title>Manage Villas - Admin</title>
+@section('title', 'Manage Villas - Admin')
+
+@push('styles')
     <style>
-        body {
-            font-family: Instrument Sans, Arial;
+        .admin-layout {
+            display: flex;
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .sidebar {
+            width: 250px;
+            background: #343a40;
+            color: white;
             padding: 20px;
-            background: #f6f6f6
+            border-radius: 8px;
+        }
+
+        .sidebar h3 {
+            margin-top: 0;
+            color: #fff;
+        }
+
+        .sidebar .menu-item {
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background 0.3s;
+            color: white;
+            text-decoration: none;
+        }
+
+        .sidebar .menu-item:hover,
+        .sidebar .menu-item.active {
+            background: #495057;
+        }
+
+        .main-content {
+            flex: 1;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .header h2 {
+            margin: 0;
+            color: #007bff;
+        }
+
+        .add-btn {
+            background: #28a745;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 4px;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .add-btn:hover {
+            background: #218838;
+        }
+
+        .villa-list {
+            background: white;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            padding: 20px;
+        }
+
+        .villa-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            background: #f8f9fa;
+        }
+
+        .villa-info h4 {
+            margin: 0 0 5px;
+            color: #007bff;
+        }
+
+        .villa-info p {
+            margin: 0;
+            color: #6c757d;
+        }
+
+        .villa-actions {
+            display: flex;
+            gap: 10px;
+        }
+
+        .edit-btn {
+            background: #007bff;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .edit-btn:hover {
+            background: #0056b3;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
         }
     </style>
-</head>
+@endpush
 
-<body>
-    <div style="display:flex;gap:20px;max-width:1100px;margin:0 auto">
-        <aside style="width:220px;background:#fff;padding:18px;border:1px solid #e6e6e6">
-            <h3>Ade Villa</h3>
-            <nav style="margin-top:12px">
-                <div style="padding:8px;margin-bottom:6px">Dashboard</div>
-                <div style="padding:8px;background:#eee;margin-bottom:6px">Manage</div>
-                <div style="padding:8px;margin-bottom:6px">Reservation</div>
-            </nav>
+@section('content')
+    <div class="admin-layout">
+        <aside class="sidebar">
+            <h3>Ade Villa Admin</h3>
+            <a href="/admin/dashboard" class="menu-item">Dashboard</a>
+            <a href="/admin/villas" class="menu-item active">Villas</a>
+            <a href="/admin/reservations" class="menu-item">Reservations</a>
+            <a href="/admin/users" class="menu-item">Users</a>
+            <a href="/admin/finances" class="menu-item">Finance</a>
         </aside>
 
-        <main style="flex:1;background:#fff;padding:18px;border:1px solid #e6e6e6">
-            <header style="display:flex;justify-content:space-between;align-items:center">
+        <main class="main-content">
+            <div class="header">
                 <h2>Manage Villas</h2>
-                <a href="/admin/villas/create"
-                    style="background:#000;color:#fff;padding:8px 12px;text-decoration:none">Add Villa</a>
-            </header>
+                <a href="/admin/villas/create" class="add-btn">Add New Villa</a>
+            </div>
 
-            <section style="margin-top:16px">
-                <div style="border:1px solid #e6e6e6;padding:12px;background:#fafafa">[Calendar placeholder with
-                    bookings]</div>
-            </section>
+            <div class="villa-list">
+                <div class="villa-item">
+                    <div class="villa-info">
+                        <h4>Villa Kota Bunga Ade</h4>
+                        <p>Comfortable villa close to the city • Rp 5,104,000 / night</p>
+                    </div>
+                    <div class="villa-actions">
+                        <a href="/admin/villas/1/edit" class="edit-btn">Edit</a>
+                        <a href="#" class="delete-btn" onclick="return confirm('Delete this villa?')">Delete</a>
+                    </div>
+                </div>
+
+                <div class="villa-item">
+                    <div class="villa-info">
+                        <h4>Villa Puncak Harmony</h4>
+                        <p>Spacious villa with panoramic mountain views • Rp 7,200,000 / night</p>
+                    </div>
+                    <div class="villa-actions">
+                        <a href="/admin/villas/2/edit" class="edit-btn">Edit</a>
+                        <a href="#" class="delete-btn" onclick="return confirm('Delete this villa?')">Delete</a>
+                    </div>
+                </div>
+            </div>
         </main>
     </div>
-</body>
-
-</html>
+@endsection
