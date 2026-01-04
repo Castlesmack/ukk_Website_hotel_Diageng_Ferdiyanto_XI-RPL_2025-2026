@@ -10,6 +10,14 @@ class UserController extends Controller
 {
     public function profile()
     {
+        $user = Auth::user();
+        
+        // Return staff profile for admin and receptionist
+        if ($user->role === 'admin' || $user->role === 'receptionist') {
+            return view('user.profile_staff');
+        }
+        
+        // Return guest profile for regular users
         return view('user.profile');
     }
 

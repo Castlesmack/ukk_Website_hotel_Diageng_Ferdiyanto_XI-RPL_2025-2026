@@ -15,9 +15,13 @@ class ReceptionController extends Controller
         $totalGuests = Booking::whereIn('status', ['confirmed', 'checked_in'])
             ->sum('guest_count');
 
-        // Total bookings/revenue
+        // Total bookings
         $totalBookings = Booking::whereIn('status', ['confirmed', 'checked_in', 'completed'])
             ->count();
+
+        // Total revenue
+        $totalRevenue = Booking::whereIn('status', ['confirmed', 'checked_in', 'completed'])
+            ->sum('total_price');
 
         // Schedule - upcoming check-ins and check-outs
         $today = Carbon::now()->toDateString();
@@ -44,6 +48,7 @@ class ReceptionController extends Controller
         return view('reception.dashboard', [
             'totalGuests' => $totalGuests,
             'totalBookings' => $totalBookings,
+            'totalRevenue' => $totalRevenue,
             'upcomingSchedule' => $upcomingSchedule,
             'weeklyData' => $weeklyData,
         ]);

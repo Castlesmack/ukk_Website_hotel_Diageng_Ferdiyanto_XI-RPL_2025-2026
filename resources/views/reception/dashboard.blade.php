@@ -167,7 +167,11 @@
                 </div>
                 <div class="kpi-card">
                     <h1>{{ $totalBookings ?? 0 }}</h1>
-                    <div>Total Pemasakan</div>
+                    <div>Total Pemesanan</div>
+                </div>
+                <div class="kpi-card">
+                    <h1>Rp {{ number_format($totalRevenue ?? 0, 0, ',', '.') }}</h1>
+                    <div>Total Pemasukan</div>
                 </div>
             </section>
 

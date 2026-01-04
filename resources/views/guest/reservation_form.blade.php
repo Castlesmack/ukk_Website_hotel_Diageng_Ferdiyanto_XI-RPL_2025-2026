@@ -143,15 +143,15 @@
                 </div>
                 <div class="form-group">
                     <label>Guest Name:</label>
-                    <input type="text" name="name" required>
+                    <input type="text" name="name" value="{{ auth()->user()->name }}" required>
                 </div>
                 <div class="form-group">
                     <label>Email:</label>
-                    <input type="email" name="email" required>
+                    <input type="email" name="email" value="{{ auth()->user()->email }}" required>
                 </div>
                 <div class="form-group">
                     <label>Phone Number:</label>
-                    <input type="tel" name="phone" required>
+                    <input type="tel" name="phone" value="{{ auth()->user()->phone }}" required>
                 </div>
                 <div class="form-group">
                     <label>Special Requests:</label>
@@ -179,18 +179,30 @@
             <div class="summary-item">
                 <strong>Guests:</strong> {{ $guests }}
             </div>
-            @if($villa)
+            @if($villa && $checkin && $checkout)
+                @php
+                    $checkInDate = \Carbon\Carbon::parse($checkin);
+                    $checkOutDate = \Carbon\Carbon::parse($checkout);
+                    $nights = $checkOutDate->diffInDays($checkInDate);
+                    $totalPrice = $nights * $villa->base_price;
+                @endphp
                 <div class="summary-item">
-                    <strong>Price per night:</strong> Rp {{ number_format($villa->price, 0, ',', '.') }}
+                    <strong>Price per night:</strong> Rp {{ number_format($villa->base_price, 0, ',', '.') }}
                 </div>
                 <div class="summary-item">
-                    <strong>Nights:</strong> [Will be calculated]
+                    <strong>Number of nights:</strong> {{ $nights }}
                 </div>
                 <div class="total-price">
-                    Total: Rp [Will be calculated]
+                    Total: Rp {{ number_format($totalPrice, 0, ',', '.') }}
+                </div>
+            @elseif($villa)
+                <div class="summary-item">
+                    <strong>Price per night:</strong> Rp {{ number_format($villa->base_price, 0, ',', '.') }}
+                </div>
+                <div class="total-price">
+                    Total: [Will be calculated once dates are selected]
                 </div>
             @endif
-            <button class="payment-btn">Proceed to Payment</button>
         </aside>
     </div>
 @endsection
