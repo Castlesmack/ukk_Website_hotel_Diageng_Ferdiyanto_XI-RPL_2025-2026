@@ -160,8 +160,7 @@
 
                     <div class="filter-group">
                         <label for="checkin">Tanggal</label>
-                        <input type="date" id="checkin" name="checkin"
-                            value="{{ request('checkin') ?? now()->format('Y-m-d') }}">
+                        <input type="date" id="checkin" name="checkin" value="{{ $checkin }}">
                     </div>
 
                     <div class="filter-group">

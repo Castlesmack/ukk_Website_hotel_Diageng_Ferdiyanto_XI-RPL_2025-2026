@@ -19,29 +19,22 @@ class VillaController extends Controller
     public function search(Request $request)
     {
         $capacity = $request->get('capacity');
-        $checkin = $request->get('checkin');
+        $checkin = $request->get('checkin') ?? now()->format('Y-m-d');
         $checkout = $request->get('checkout');
         $guests = $request->get('guests', 1);
         $price = $request->get('price');
 
         $query = Villa::query();
 
-        // Use OR logic - villa matches if ANY criteria is met
-        if ($capacity || $price) {
-            $query->where(function($q) use ($capacity, $price) {
-                if ($capacity) {
-                    $q->where('capacity', '>=', $capacity);
-                }
-                if ($price) {
-                    if ($capacity) {
-                        $q->orWhere('base_price', '<=', $price);
-                    } else {
-                        $q->where('base_price', '<=', $price);
-                    }
-                }
-            });
+        // Apply OR logic - villa matches if ANY criteria is met
+        if ($capacity) {
+            $query->where('capacity', '>=', $capacity);
         }
-
+        
+        if ($price) {
+            $query->orWhere('base_price', '<=', $price);
+        }
+        
         $villas = $query->get();
 
         if ($request->wantsJson() || $request->ajax()) {
