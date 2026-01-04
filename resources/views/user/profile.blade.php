@@ -7,6 +7,10 @@
         .profile-layout {
             display: flex;
             gap: 20px;
+            margin: 20px;
+            max-width: 1200px;
+            margin-left: auto;
+            margin-right: auto;
         }
 
         .sidebar {
@@ -15,14 +19,18 @@
             border-radius: 8px;
             padding: 15px;
             background: #f8f9fa;
+            height: fit-content;
         }
 
         .sidebar .menu-item {
-            padding: 10px;
+            display: block;
+            padding: 12px 15px;
             margin-bottom: 8px;
             border-radius: 4px;
             cursor: pointer;
-            transition: background 0.3s;
+            transition: all 0.3s;
+            text-decoration: none;
+            color: #333;
         }
 
         .sidebar .menu-item.active {
@@ -30,42 +38,74 @@
             color: white;
         }
 
+        .sidebar .menu-item:hover {
+            background: #e9ecef;
+        }
+
+        .sidebar .menu-item.active:hover {
+            background: #007bff;
+        }
+
         .main-content {
             flex: 1;
             border: 1px solid #e9ecef;
             border-radius: 8px;
-            padding: 20px;
+            padding: 30px;
             background: white;
         }
 
+        .main-content h4 {
+            margin-top: 0;
+            margin-bottom: 25px;
+            color: #333;
+            font-size: 20px;
+            font-weight: 600;
+        }
+
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
+            margin-bottom: 8px;
             font-weight: 500;
+            color: #333;
+            font-size: 14px;
         }
 
         .form-group input {
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
         }
 
         .btn-save {
             background: #28a745;
             color: white;
             border: none;
-            padding: 10px 20px;
-            border-radius: 4px;
+            padding: 12px 30px;
+            border-radius: 6px;
             cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
         }
 
         .btn-save:hover {
             background: #218838;
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }
     </style>
 @endpush
@@ -73,8 +113,8 @@
 @section('content')
     <div class="profile-layout">
         <aside class="sidebar">
-            <div class="menu-item active">Profile</div>
-            <div class="menu-item">My Bookings</div>
+            <a href="{{ route('user.profile') }}" class="menu-item active">Profile</a>
+            <a href="{{ route('user.bookings') }}" class="menu-item">My Bookings</a>
         </aside>
         <main class="main-content">
             <h4>My Profile</h4>
@@ -101,15 +141,3 @@
         </main>
     </div>
 @endsection
-<input type="email" name="email" value="john@example.com">
-<label>No Telp*</label>
-<input type="text" name="phone" value="081234567890">
-<label>Password*</label>
-<input type="password" name="password" placeholder="New password">
-<div style="text-align:right"><button class="btn">Simpan</button></div>
-</form>
-</main>
-</div>
-</body>
-
-</html>

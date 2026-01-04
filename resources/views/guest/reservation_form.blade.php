@@ -126,15 +126,16 @@
     <div class="reservation-layout">
         <div class="form-section">
             <h3>Booking Details</h3>
-            <form action="/reservation" method="POST">
+            <form action="{{ route('guest.reservation.store') }}" method="POST">
                 @csrf
+                <input type="hidden" name="villa_id" value="{{ $villa->id ?? '' }}">
                 <div class="form-group">
                     <label>Check In:</label>
-                    <input type="date" name="check_in" value="{{ $checkin }}" required>
+                    <input type="date" name="checkin" value="{{ $checkin }}" required>
                 </div>
                 <div class="form-group">
                     <label>Check Out:</label>
-                    <input type="date" name="check_out" value="{{ $checkout }}" required>
+                    <input type="date" name="checkout" value="{{ $checkout }}" required>
                 </div>
                 <div class="form-group">
                     <label>Number of Guests:</label>
@@ -142,7 +143,7 @@
                 </div>
                 <div class="form-group">
                     <label>Guest Name:</label>
-                    <input type="text" name="guest_name" required>
+                    <input type="text" name="name" required>
                 </div>
                 <div class="form-group">
                     <label>Email:</label>

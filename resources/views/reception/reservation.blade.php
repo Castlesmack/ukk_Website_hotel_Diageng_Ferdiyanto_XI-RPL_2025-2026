@@ -129,16 +129,39 @@
                 <h2>Reservations</h2>
             </div>
 
-            <div class="filters">
-                <input type="text" placeholder="Itinerary ID/Name">
-                <select>
-                    <option>Check-In</option>
-                    <option>Check-Out</option>
-                </select>
-                <input type="date">
-                <input type="date">
-                <button>Search</button>
-            </div>
+            <form method="GET" action="{{ route('reception.reservations') }}">
+                <div class="filters"
+                    style="display: grid; grid-template-columns: auto auto auto auto auto auto; gap: 15px; align-items: flex-end; margin-bottom: 20px;">
+                    <div style="display: flex; flex-direction: column;">
+                        <label style="font-size: 12px; color: #666; margin-bottom: 5px;">Itinerary ID/Name</label>
+                        <input type="text" name="itinerary" placeholder="" value="{{ request('itinerary') }}"
+                            style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; width: 150px;">
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <label style="font-size: 12px; color: #666; margin-bottom: 5px;">Date of</label>
+                        <select name="date_type"
+                            style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; width: 150px;">
+                            <option value="check_in" {{ request('date_type') == 'check_in' ? 'selected' : '' }}>Check-in
+                            </option>
+                            <option value="check_out" {{ request('date_type') == 'check_out' ? 'selected' : '' }}>Check-Out
+                            </option>
+                        </select>
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <label style="font-size: 12px; color: #666; margin-bottom: 5px;">Start Date</label>
+                        <input type="date" name="start_date" value="{{ request('start_date') }}"
+                            style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; width: 150px;">
+                    </div>
+                    <div style="display: flex; flex-direction: column;">
+                        <label style="font-size: 12px; color: #666; margin-bottom: 5px;">End Date</label>
+                        <input type="date" name="end_date" value="{{ request('end_date') }}"
+                            style="padding: 10px; border: 1px solid #ccc; border-radius: 4px; width: 150px;">
+                    </div>
+                    <div></div>
+                    <button type="submit"
+                        style="padding: 10px 25px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">GO</button>
+                </div>
+            </form>
 
             <div class="reservation-table">
                 <table>
@@ -146,41 +169,42 @@
                         <tr>
                             <th>No</th>
                             <th>Itinerary ID</th>
-                            <th>Phone</th>
+                            <th>No Telp</th>
                             <th>Guest Name</th>
                             <th>Booking Time</th>
                             <th>Check-in</th>
                             <th>Check-out</th>
-                            <th>Type</th>
+                            <th>Tipe</th>
                             <th>Price</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>XXXX</td>
-                            <td>081234567890</td>
-                            <td>John Doe</td>
-                            <td>Sun, 10 Nov</td>
-                            <td>Sat, 22 Nov</td>
-                            <td>Sun, 23 Nov</td>
-                            <td>0608</td>
-                            <td>Rp 800,000</td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>YYYY</td>
-                            <td>081234567891</td>
-                            <td>Jane Smith</td>
-                            <td>Mon, 11 Nov</td>
-                            <td>Sun, 24 Nov</td>
-                            <td>Mon, 25 Nov</td>
-                            <td>0608</td>
-                            <td>Rp 800,000</td>
-                        </tr>
+                        @forelse($bookings as $booking)
+                            <tr>
+                                <td>{{ $loop->iteration }}</td>
+                                <td>{{ $booking->booking_code }}</td>
+                                <td>{{ $booking->guest_phone }}</td>
+                                <td>{{ $booking->guest_name }}</td>
+                                <td>{{ $booking->created_at->format('D, d M y') }}</td>
+                                <td>{{ $booking->check_in_date->format('D, d M y') }}</td>
+                                <td>{{ $booking->check_out_date->format('D, d M y') }}</td>
+                                <td>{{ $booking->villa->name ?? 'N/A' }}</td>
+                                <td>Rp {{ number_format($booking->total_price, 0, ',', '.') }}</td>
+                            </tr>
+                        @empty
+                            <tr>
+                                <td colspan="9" style="text-align: center; padding: 20px; color: #999;">No bookings found</td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
+
+            @if($bookings->hasPages())
+                <div style="margin-top: 20px;">
+                    {{ $bookings->links() }}
+                </div>
+            @endif
         </main>
     </div>
 @endsection

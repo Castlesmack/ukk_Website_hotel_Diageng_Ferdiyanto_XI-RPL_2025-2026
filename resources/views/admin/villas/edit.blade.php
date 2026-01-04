@@ -17,10 +17,14 @@
 <body>
     <div style="max-width:900px;margin:20px auto;background:#fff;padding:18px;border:1px solid #e6e6e6">
         <h2>Edit Villa</h2>
-        <form method="POST" action="#" enctype="multipart/form-data">
+        <form method="POST" action="{{ route('admin.villas.update', $villa->id) }}" enctype="multipart/form-data">
+            @csrf
+            @method('PUT')
             <div style="display:flex;gap:12px">
                 <div style="flex:1">
                     <label>Thumbnail / Pictures</label>
+                    <input type="file" name="thumbnail" style="width:100%;padding:8px;margin-bottom:8px">
+                    <input type="file" name="images[]" multiple style="width:100%;padding:8px;margin-bottom:8px">
                     <div style="display:flex;gap:8px;margin-top:8px">
                         <div
                             style="width:160px;height:120px;border:1px dashed #ccc;display:flex;align-items:center;justify-content:center">
@@ -32,17 +36,31 @@
                 </div>
                 <div style="width:300px">
                     <label>Price</label><br>
-                    <input type="text" style="width:100%;padding:8px;margin-bottom:8px">
-                    <label>Kamar Mandi / Kamar Tidur</label><br>
-                    <input type="text" style="width:100%;padding:8px;margin-bottom:8px">
-                    <label>Nama Villa</label><br>
-                    <input type="text" style="width:100%;padding:8px;margin-bottom:8px">
-                    <label>Kapasitas</label><br>
-                    <input type="text" style="width:100%;padding:8px">
+                    <input type="number" name="base_price" step="0.01" value="{{ $villa->base_price }}"
+                        style="width:100%;padding:8px;margin-bottom:8px" required>
+                    <label>Bedrooms</label><br>
+                    <input type="number" name="rooms_total" value="{{ $villa->rooms_total }}"
+                        style="width:100%;padding:8px;margin-bottom:8px" required>
+                    <label>Name</label><br>
+                    <input type="text" name="name" value="{{ $villa->name }}"
+                        style="width:100%;padding:8px;margin-bottom:8px" required>
+                    <label>Capacity</label><br>
+                    <input type="number" name="capacity" value="{{ $villa->capacity }}"
+                        style="width:100%;padding:8px;margin-bottom:8px" required>
+                    <label>Description</label><br>
+                    <textarea name="description"
+                        style="width:100%;padding:8px;margin-bottom:8px">{{ $villa->description }}</textarea>
+                    <label>Status</label><br>
+                    <select name="status" style="width:100%;padding:8px">
+                        <option value="active" {{ $villa->status == 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="inactive" {{ $villa->status == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        <option value="maintenance" {{ $villa->status == 'maintenance' ? 'selected' : '' }}>Maintenance
+                        </option>
+                    </select>
                 </div>
             </div>
             <div style="margin-top:12px;text-align:right">
-                <button style="padding:10px 14px;background:#000;color:#fff;border:none">Simpan</button>
+                <button style="padding:10px 14px;background:#000;color:#fff;border:none">Update</button>
             </div>
         </form>
     </div>

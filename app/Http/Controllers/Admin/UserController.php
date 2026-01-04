@@ -52,11 +52,13 @@ class UserController extends Controller
             'email' => 'required|email|unique:users,email,'.$user->id,
             'phone' => 'nullable|string|max:30',
             'password' => 'nullable|string|min:6',
+            'role' => 'nullable|string',
         ]);
 
         $user->name = $data['name'];
         $user->email = $data['email'];
         $user->phone = $data['phone'] ?? null;
+        $user->role = $data['role'] ?? 'guest';
         if (!empty($data['password'])) {
             $user->password = Hash::make($data['password']);
         }

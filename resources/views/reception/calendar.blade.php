@@ -140,44 +140,75 @@
 
         <main class="main-content">
             <div class="header">
-                <h2>Availability Calendar</h2>
+                <h2>Availability List</h2>
             </div>
 
-            <div class="calendar-controls">
-                <div>
-                    <select>
-                        <option>November 2025</option>
-                        <option>December 2025</option>
-                        <option>January 2026</option>
-                    </select>
-                    <button>Today</button>
+            <form method="GET" action="{{ route('reception.calendar') }}" style="display: contents;">
+                <div class="calendar-controls">
+                    <div style="display: flex; gap: 15px; align-items: center;">
+                        <a href="{{ route('reception.calendar', ['month' => $month - 1 ?: 12, 'year' => $month - 1 ? $year : $year - 1]) }}"
+                            style="background: white; color: #007bff; border: 1px solid #ccc; padding: 6px 10px; cursor: pointer; border-radius: 4px; text-decoration: none; display: inline-block;">←</a>
+
+                        <select name="month" onchange="this.form.submit()"
+                            style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px;">
+                            @for($m = 1; $m <= 12; $m++)
+                                <option value="{{ $m }}" {{ $month == $m ? 'selected' : '' }}>
+                                    {{ \Carbon\Carbon::createFromDate($year, $m, 1)->format('F Y') }}
+                                </option>
+                            @endfor
+                        </select>
+
+                        <a href="{{ route('reception.calendar', ['month' => \Carbon\Carbon::now()->month, 'year' => \Carbon\Carbon::now()->year]) }}"
+                            style="background: white; color: #007bff; border: 1px solid #ccc; padding: 6px 10px; cursor: pointer; border-radius: 4px; text-decoration: none; display: inline-block;">Today</a>
+                    </div>
+                    <div>
+                        <select name="villa_id" onchange="this.form.submit()"
+                            style="padding: 8px 12px; border: 1px solid #ccc; border-radius: 4px;">
+                            <option value="">All Villas</option>
+                            @foreach($villas as $villa)
+                                <option value="{{ $villa->id }}" {{ $villaId == $villa->id ? 'selected' : '' }}>
+                                    {{ $villa->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
                 </div>
-                <div>
-                    <select>
-                        <option>All Villas</option>
-                        <option>Type 0608</option>
-                        <option>Villa Kota Bunga Ade</option>
-                        <option>Villa Puncak Harmony</option>
-                    </select>
-                </div>
-            </div>
+            </form>
 
             <div class="calendar-grid">
-                <div class="day-header">Sun</div>
-                <div class="day-header">Mon</div>
-                <div class="day-header">Tue</div>
-                <div class="day-header">Wed</div>
-                <div class="day-header">Thu</div>
-                <div class="day-header">Fri</div>
-                <div class="day-header">Sat</div>
+                <div class="day-header">Sunday</div>
+                <div class="day-header">Monday</div>
+                <div class="day-header">Tuesday</div>
+                <div class="day-header">Wednesday</div>
+                <div class="day-header">Thursday</div>
+                <div class="day-header">Friday</div>
+                <div class="day-header">Saturday</div>
 
-                <!-- Days will be generated dynamically -->
-                @for($i = 1; $i <= 31; $i++)
-                    <div class="day {{ $i % 3 == 0 ? 'booked' : ($i % 7 == 0 ? 'fully-booked' : '') }}">
-                        <div class="day-number">{{ $i }}</div>
-                        <div class="availability">{{ rand(0, 2) }}/{{ rand(2, 5) }}</div>
-                    </div>
-                @endfor
+                @foreach($calendarDays as $day)
+                    @if($day['isCurrentMonth'])
+                        <div class="day" style="{{ $day['isBooked'] ? 'background: #b3d9ff;' : 'background: white;' }}">
+                            <div class="day-number" style="{{ $day['isBooked'] ? 'color: #0066cc;' : 'color: #333;' }}">
+                                {{ $day['day'] }}
+                            </div>
+                            @if($day['bookings']->count() > 0)
+                                <div class="availability" style="color: #0066cc; font-weight: 600;">
+                                    Rp {{ number_format($day['totalPrice'], 0, ',', '.') }}
+                                </div>
+                                @foreach($day['bookings'] as $booking)
+                                    <div class="availability" style="font-size: 10px; color: #0066cc; margin-top: 2px;">
+                                        {{ $booking->guest_name }}
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="availability">Available</div>
+                            @endif
+                        </div>
+                    @else
+                        <div class="day" style="background: #f0f0f0;">
+                            <div class="day-number" style="color: #999;">{{ $day['day'] ?? '' }}</div>
+                        </div>
+                    @endif
+                @endforeach
             </div>
         </main>
     </div>

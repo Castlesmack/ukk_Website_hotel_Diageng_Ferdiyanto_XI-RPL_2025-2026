@@ -16,26 +16,53 @@
             color: white;
             padding: 20px;
             border-radius: 8px;
+            height: fit-content;
+            flex-shrink: 0;
         }
 
         .sidebar h3 {
             margin-top: 0;
+            margin-bottom: 20px;
             color: #fff;
+            font-size: 18px;
+            border-bottom: 2px solid #495057;
+            padding-bottom: 15px;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .sidebar .menu-item {
-            padding: 12px;
-            margin-bottom: 8px;
-            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 15px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: background 0.3s;
-            color: white;
+            transition: all 0.3s;
+            color: #333;
             text-decoration: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            background: #e9ecef;
+            text-align: center;
         }
 
-        .sidebar .menu-item:hover,
+        .sidebar .menu-item:hover {
+            background: #007bff;
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
         .sidebar .menu-item.active {
-            background: #495057;
+            background: #007bff;
+            color: white;
+            font-weight: 600;
         }
 
         .main-content {
@@ -156,7 +183,7 @@
             <h3>Ade Villa Admin</h3>
             <nav>
                 <a href="/admin/dashboard" class="menu-item">Dashboard</a>
-                <a href="/admin/villas" class="menu-item">Villas</a>
+                <a href="/admin/manage" class="menu-item">Manage</a>
                 <a href="/admin/reservations" class="menu-item">Reservations</a>
                 <a href="/admin/users" class="menu-item">Users</a>
                 <a href="/admin/finances" class="menu-item active">Finance</a>

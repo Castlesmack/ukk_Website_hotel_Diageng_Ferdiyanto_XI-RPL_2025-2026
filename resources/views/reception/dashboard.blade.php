@@ -162,117 +162,46 @@
 
             <section class="kpis">
                 <div class="kpi-card">
-                    <h1>100</h1>
-                    <div>Total Guests</div>
+                    <h1>{{ $totalGuests ?? 0 }}</h1>
+                    <div>Total Tamu</div>
                 </div>
                 <div class="kpi-card">
-                    <h1>30</h1>
-                    <div>Total Revenue</div>
-                </div>
-                <div class="kpi-card schedule-card">
-                    <h3>Guest Schedule</h3>
-                    <ul class="schedule-list">
-                        <li>John Doe - Check-in: Today 2:00 PM</li>
-                        <li>Jane Smith - Check-out: Tomorrow 11:00 AM</li>
-                        <li>Mike Johnson - Check-in: Tomorrow 3:00 PM</li>
-                    </ul>
-                </div>
-                <div class="kpi-card">
-                    <h1>8</h1>
-                    <div>Today's Check-ins</div>
-                </div>
-            </section>
-
-            <section class="chart-section">
-                <h4>Weekly Occupancy</h4>
-                <div class="chart-placeholder">
-                    <div
-                        style="display: flex; justify-content: space-around; align-items: end; height: 200px; padding: 20px;">
-                        <div style="display: flex; flex-direction: column; align-items: center;">
-                            <div style="width: 30px; height: 80px; background: #007bff; margin-bottom: 5px;"></div>
-                            <span>Mon</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center;">
-                            <div style="width: 30px; height: 120px; background: #007bff; margin-bottom: 5px;"></div>
-                            <span>Tue</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center;">
-                            <div style="width: 30px; height: 150px; background: #007bff; margin-bottom: 5px;"></div>
-                            <span>Wed</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center;">
-                            <div style="width: 30px; height: 100px; background: #007bff; margin-bottom: 5px;"></div>
-                            <span>Thu</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center;">
-                            <div style="width: 30px; height: 180px; background: #007bff; margin-bottom: 5px;"></div>
-                            <span>Fri</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center;">
-                            <div style="width: 30px; height: 200px; background: #007bff; margin-bottom: 5px;"></div>
-                            <span>Sat</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center;">
-                            <div style="width: 30px; height: 160px; background: #007bff; margin-bottom: 5px;"></div>
-                            <span>Sun</span>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <section class="chart-section">
-                <h4>Weekly Reservations</h4>
-                <div class="chart-placeholder">
-                    <div
-                        style="display: flex; align-items: end; justify-content: space-around; height: 200px; padding: 20px;">
-                        <div style="display: flex; flex-direction: column; align-items: center;">
-                            <div style="width: 30px; background: #007bff; margin-bottom: 5px; height: 120px;"></div>
-                            <span>Mon</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center;">
-                            <div style="width: 30px; background: #007bff; margin-bottom: 5px; height: 80px;"></div>
-                            <span>Tue</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center;">
-                            <div style="width: 30px; background: #007bff; margin-bottom: 5px; height: 150px;"></div>
-                            <span>Wed</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center;">
-                            <div style="width: 30px; background: #007bff; margin-bottom: 5px; height: 100px;"></div>
-                            <span>Thu</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center;">
-                            <div style="width: 30px; background: #007bff; margin-bottom: 5px; height: 90px;"></div>
-                            <span>Fri</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center;">
-                            <div style="width: 30px; background: #007bff; margin-bottom: 5px; height: 180px;"></div>
-                            <span>Sat</span>
-                        </div>
-                        <div style="display: flex; flex-direction: column; align-items: center;">
-                            <div style="width: 30px; background: #007bff; margin-bottom: 5px; height: 140px;"></div>
-                            <span>Sun</span>
-                        </div>
-                    </div>
+                    <h1>{{ $totalBookings ?? 0 }}</h1>
+                    <div>Total Pemasakan</div>
                 </div>
             </section>
 
             <section style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;">
                 <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    <h4 style="margin-top: 0;">Today's Check-ins</h4>
+                    <h4 style="margin-top: 0;">Jadwal Tamu</h4>
                     <ul style="list-style: none; padding: 0;">
-                        <li style="padding: 8px 0; border-bottom: 1px solid #f8f9fa;">Room 101 - Sarah Wilson</li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #f8f9fa;">Room 205 - David Brown</li>
-                        <li style="padding: 8px 0;">Villa A - Michael Davis</li>
+                        @forelse($upcomingSchedule as $booking)
+                            <li style="padding: 8px 0; border-bottom: 1px solid #f8f9fa; font-size: 13px;">
+                                {{ $booking->check_in_date->format('M d') }} - {{ $booking->check_out_date->format('M d') }}
+                            </li>
+                            <li style="padding: 8px 0; border-bottom: 1px solid #f8f9fa; font-size: 13px;">
+                                {{ $booking->guest_name }} ({{ $booking->booking_code }})
+                            </li>
+                        @empty
+                            <li style="padding: 8px 0; color: #999; font-size: 13px;">No upcoming bookings</li>
+                        @endforelse
                     </ul>
                 </div>
-                <div style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-                    <h4 style="margin-top: 0;">Today's Check-outs</h4>
-                    <ul style="list-style: none; padding: 0;">
-                        <li style="padding: 8px 0; border-bottom: 1px solid #f8f9fa;">Room 102 - Emma Johnson</li>
-                        <li style="padding: 8px 0; border-bottom: 1px solid #f8f9fa;">Villa B - Robert Miller</li>
-                        <li style="padding: 8px 0;">Room 303 - Lisa Garcia</li>
-                    </ul>
+                <div
+                    style="background: white; padding: 20px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); display: flex; flex-direction: column;">
+                    <h4 style="margin-top: 0;">Penyewaan Minggu ini</h4>
+                    <div
+                        style="display: flex; justify-content: space-around; align-items: flex-end; flex: 1; padding: 20px 0; min-height: 200px;">
+                        @foreach($weeklyData as $data)
+                            <div style="display: flex; flex-direction: column; align-items: center;">
+                                <div
+                                    style="width: 35px; height: {{ $data['height'] }}px; background: #4a5f7f; margin-bottom: 5px; border-radius: 3px;">
+                                </div>
+                                <span style="font-size: 12px;">{{ $loop->index + 1 }}</span>
+                                <span style="font-size: 10px; color: #999;">{{ $data['count'] }}</span>
+                            </div>
+                        @endforeach
+                    </div>
                 </div>
             </section>
         </main>

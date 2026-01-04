@@ -20,7 +20,9 @@ class PaymentController extends Controller
         }
 
         $amount = (int) $request->input('amount', 100000);
-        $orderId = 'ORDER-' . time();
+        $orderId = $request->input('order_id', 'ORDER-' . time());
+        $name = $request->input('name', 'Guest');
+        $email = $request->input('email', 'guest@example.com');
 
         $payload = [
             'transaction_details' => [
@@ -28,8 +30,8 @@ class PaymentController extends Controller
                 'gross_amount' => $amount,
             ],
             'customer_details' => [
-                'first_name' => $request->user()?->name ?? 'Guest',
-                'email' => $request->user()?->email ?? $request->input('email', 'guest@example.com'),
+                'first_name' => $name,
+                'email' => $email,
             ],
         ];
 
@@ -38,6 +40,8 @@ class PaymentController extends Controller
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Content-Type: application/json',
             'Accept: application/json',

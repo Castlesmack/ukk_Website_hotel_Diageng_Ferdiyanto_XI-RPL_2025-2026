@@ -16,26 +16,53 @@
             color: white;
             padding: 20px;
             border-radius: 8px;
+            height: fit-content;
+            flex-shrink: 0;
         }
 
         .sidebar h3 {
             margin-top: 0;
+            margin-bottom: 20px;
             color: #fff;
+            font-size: 18px;
+            border-bottom: 2px solid #495057;
+            padding-bottom: 15px;
+        }
+
+        .sidebar nav {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
         .sidebar .menu-item {
-            padding: 12px;
-            margin-bottom: 8px;
-            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 12px 15px;
+            border-radius: 6px;
             cursor: pointer;
-            transition: background 0.3s;
-            color: white;
+            transition: all 0.3s;
+            color: #333;
             text-decoration: none;
+            border: none;
+            font-size: 14px;
+            font-weight: 500;
+            background: #e9ecef;
+            text-align: center;
         }
 
-        .sidebar .menu-item:hover,
+        .sidebar .menu-item:hover {
+            background: #007bff;
+            color: white;
+            transform: translateX(5px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+        }
+
         .sidebar .menu-item.active {
-            background: #495057;
+            background: #007bff;
+            color: white;
+            font-weight: 600;
         }
 
         .main-content {
@@ -170,7 +197,7 @@
             <h3>Ade Villa Admin</h3>
             <nav>
                 <a href="/admin/dashboard" class="menu-item">Dashboard</a>
-                <a href="/admin/villas" class="menu-item">Villas</a>
+                <a href="/admin/manage" class="menu-item">Manage</a>
                 <a href="/admin/reservations" class="menu-item">Reservations</a>
                 <a href="/admin/users" class="menu-item active">Users</a>
                 <a href="/admin/finances" class="menu-item">Finance</a>
@@ -180,7 +207,7 @@
         <main class="main-content">
             <div class="header">
                 <h2>Users</h2>
-                <a href="/admin/users/create" class="add-btn">Add New User</a>
+                <a href="{{ route('admin.users.create') }}" class="add-btn">Add New User</a>
             </div>
 
             <div class="stats-grid">
@@ -215,91 +242,31 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>1</td>
-                            <td>Admin User</td>
-                            <td>admin@example.com</td>
-                            <td>+62 812-3456-7890</td>
-                            <td><span class="role-badge role-admin">Admin</span></td>
-                            <td>
-                                <a href="/admin/users/1/edit" class="action-btn edit-btn">Edit</a>
-                                <a href="#" class="action-btn delete-btn"
-                                    onclick="return confirm('Delete this user?')">Delete</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>2</td>
-                            <td>Receptionist User</td>
-                            <td>receptionist@example.com</td>
-                            <td>+62 811-2345-6789</td>
-                            <td><span class="role-badge role-receptionist">Receptionist</span></td>
-                            <td>
-                                <a href="/admin/users/2/edit" class="action-btn edit-btn">Edit</a>
-                                <a href="#" class="action-btn delete-btn"
-                                    onclick="return confirm('Delete this user?')">Delete</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>3</td>
-                            <td>John Doe</td>
-                            <td>john@example.com</td>
-                            <td>+62 813-4567-8901</td>
-                            <td><span class="role-badge role-guest">Guest</span></td>
-                            <td>
-                                <a href="/admin/users/3/edit" class="action-btn edit-btn">Edit</a>
-                                <a href="#" class="action-btn delete-btn"
-                                    onclick="return confirm('Delete this user?')">Delete</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>4</td>
-                            <td>Jane Smith</td>
-                            <td>jane@example.com</td>
-                            <td>+62 814-5678-9012</td>
-                            <td><span class="role-badge role-guest">Guest</span></td>
-                            <td>
-                                <a href="/admin/users/4/edit" class="action-btn edit-btn">Edit</a>
-                                <a href="#" class="action-btn delete-btn"
-                                    onclick="return confirm('Delete this user?')">Delete</a>
-                            </td>
-                        </tr>
+                        @foreach($users as $user)
+                            <tr>
+                                <td>{{ $user->id }}</td>
+                                <td>{{ $user->name }}</td>
+                                <td>{{ $user->email }}</td>
+                                <td>{{ $user->phone ?? '-' }}</td>
+                                <td><span
+                                        class="role-badge role-{{ $user->role ?? 'guest' }}">{{ ucfirst($user->role ?? 'guest') }}</span>
+                                </td>
+                                <td>
+                                    <a href="{{ route('admin.users.edit', $user->id) }}" class="action-btn edit-btn">Edit</a>
+                                    <form action="{{ route('admin.users.destroy', $user->id) }}" method="POST"
+                                        style="display:inline">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="action-btn delete-btn"
+                                            onclick="return confirm('Delete this user?')">Delete</button>
+                                    </form>
+                                </td>
+                            </tr>
+                        @endforeach
                     </tbody>
                 </table>
             </div>
         </main>
     </div>
-    @foreach($users as $i => $u)
-        <tr>
-            <td>{{ $i + 1 }}</td>
-            <td>{{ sprintf('USR%03d', $u->id) }}</td>
-            <td>{{ $u->phone }}</td>
-            <td>{{ $u->name }}</td>
-            <td>{{ $u->email }}</td>
-            <td>{{ $u->role ?? 'guest' }}</td>
-            <td class="actions">
-                <a href="/admin/users/{{ $u->id }}/edit"><button>Edit</button></a>
-                <form action="/admin/users/{{ $u->id }}" method="POST" style="display:inline">
-                    @csrf
-                    @method('DELETE')
-                    <button type="submit">Delete</button>
-                </form>
-            </td>
-        </tr>
-    @endforeach
-    </tbody>
-    </table>
-    </div>
-    </main>
-    </div>
 
-    @include('admin.users.partials.create_modal')
-    @include('admin.users.partials.edit_modal')
-
-    @push('scripts')
-        <script>
-            function openEdit() { document.getElementById('editModal').style.display = 'flex' }
-            // close by clicking background
-            document.addEventListener('click', function (e) { if (e.target.classList.contains('modal')) e.target.style.display = 'none' })
-        </script>
-    @endpush
 @endsection

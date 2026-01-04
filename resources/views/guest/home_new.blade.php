@@ -208,23 +208,6 @@
             margin: 5px 0;
         }
 
-        .book-btn {
-            display: inline-block;
-            background: #28a745;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: bold;
-            margin-top: 10px;
-            transition: background 0.3s;
-        }
-
-        .book-btn:hover {
-            background: #218838;
-        }
-
         .no-results {
             text-align: center;
             padding: 40px;
@@ -330,23 +313,24 @@
             <div class="villa-grid" id="villaGrid">
                 @forelse($villas ?? [] as $villa)
                     <div class="villa-card">
-                        <div class="villa-card-header">
-                            {{ $villa->name }}
-                            <div class="villa-card-header-small">{{ $villa->status }}</div>
-                        </div>
-                        <div class="villa-card-image">
-                            No Image
-                        </div>
-                        <div class="villa-card-body">
-                            <h3>Kapasitas {{ $villa->capacity }} orang</h3>
-                            <div class="villa-info">
-                                <strong>Harga:</strong> Rp {{ number_format($villa->base_price, 0, ',', '.') }}
+                        <a href="{{ route('guest.villa.detail', $villa->id) }}">
+                            <div class="villa-card-header">
+                                {{ $villa->name }}
+                                <div class="villa-card-header-small">{{ $villa->status }}</div>
                             </div>
-                            <div class="villa-info">
-                                <strong>Kamar:</strong> {{ $villa->rooms_total }}
+                            <div class="villa-card-image">
+                                No Image
                             </div>
-                            <a href="{{ route('guest.reservation.form', ['villa_id' => $villa->id]) }}" class="book-btn">Book Now</a>
-                        </div>
+                            <div class="villa-card-body">
+                                <h3>Kapasitas {{ $villa->capacity }} orang</h3>
+                                <div class="villa-info">
+                                    <strong>Harga:</strong> Rp {{ number_format($villa->base_price, 0, ',', '.') }}
+                                </div>
+                                <div class="villa-info">
+                                    <strong>Kamar:</strong> {{ $villa->rooms_total }}
+                                </div>
+                            </div>
+                        </a>
                     </div>
                 @empty
                     <div class="no-results">No villas found</div>
@@ -461,23 +445,24 @@
                         if (data.villas && data.villas.length > 0) {
                             villaGrid.innerHTML = data.villas.map(villa => `
                                 <div class="villa-card">
-                                    <div class="villa-card-header">
-                                        ${villa.name}
-                                        <div class="villa-card-header-small">${villa.status}</div>
-                                    </div>
-                                    <div class="villa-card-image">
-                                        No Image
-                                    </div>
-                                    <div class="villa-card-body">
-                                        <h3>Kapasitas ${villa.capacity} orang</h3>
-                                        <div class="villa-info">
-                                            <strong>Harga:</strong> Rp ${new Intl.NumberFormat('id-ID').format(villa.base_price)}
+                                    <a href="/villa/${villa.id}">
+                                        <div class="villa-card-header">
+                                            ${villa.name}
+                                            <div class="villa-card-header-small">${villa.status}</div>
                                         </div>
-                                        <div class="villa-info">
-                                            <strong>Kamar:</strong> ${villa.rooms_total}
+                                        <div class="villa-card-image">
+                                            No Image
                                         </div>
-                                        <a href="/reservation/form?villa_id=${villa.id}" class="book-btn">Book Now</a>
-                                    </div>
+                                        <div class="villa-card-body">
+                                            <h3>Kapasitas ${villa.capacity} orang</h3>
+                                            <div class="villa-info">
+                                                <strong>Harga:</strong> Rp ${new Intl.NumberFormat('id-ID').format(villa.base_price)}
+                                            </div>
+                                            <div class="villa-info">
+                                                <strong>Kamar:</strong> ${villa.rooms_total}
+                                            </div>
+                                        </div>
+                                    </a>
                                 </div>
                             `).join('');
                         } else {
