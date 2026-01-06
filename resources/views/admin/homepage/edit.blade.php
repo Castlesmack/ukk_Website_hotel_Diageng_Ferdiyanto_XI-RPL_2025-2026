@@ -7,7 +7,7 @@
         .admin-layout {
             display: flex;
             gap: 20px;
-            margin-top: 0;
+            margin-top: 20px;
         }
 
         .sidebar {
@@ -342,7 +342,8 @@
             @endif
 
             @if ($errors->any())
-                <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 4px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
+                <div
+                    style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 4px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
                     <strong>Please fix the following errors:</strong>
                     <ul style="margin: 10px 0 0 20px; padding: 0;">
                         @foreach ($errors->all() as $error)

@@ -7,7 +7,7 @@
         .admin-layout {
             display: flex;
             gap: 20px;
-            margin-top: 0;
+            margin-top: 20px;
         }
 
         .sidebar {

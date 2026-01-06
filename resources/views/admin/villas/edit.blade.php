@@ -7,7 +7,7 @@
         .admin-layout {
             display: flex;
             gap: 20px;
-            margin-top: 0;
+            margin-top: 20px;
         }
 
         .sidebar {
@@ -354,7 +354,8 @@
             </div>
 
             @if ($errors->any())
-                <div style="background: #f8d7da; color: #721c24; padding: 12px; border-radius: 4px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
+                <div
+                    style="background: #f8d7da; color: #721c24; padding: 12px; border-radius: 4px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
                     <strong>Please fix the following errors:</strong>
                     <ul style="margin: 8px 0 0 0; padding-left: 20px;">
                         @foreach ($errors->all() as $error)
@@ -381,7 +382,8 @@
                         </div>
                         <div class="form-group">
                             <label for="base_price">Price per Night (Rp) *</label>
-                            <input type="number" id="base_price" name="base_price" step="0.01" value="{{ old('base_price', $villa->base_price) }}" required>
+                            <input type="number" id="base_price" name="base_price" step="0.01"
+                                value="{{ old('base_price', $villa->base_price) }}" required>
                             @error('base_price')
                                 <div class="error-message">{{ $message }}</div>
                             @enderror
@@ -390,14 +392,16 @@
                     <div class="form-row">
                         <div class="form-group">
                             <label for="capacity">Guest Capacity *</label>
-                            <input type="number" id="capacity" name="capacity" value="{{ old('capacity', $villa->capacity) }}" required>
+                            <input type="number" id="capacity" name="capacity"
+                                value="{{ old('capacity', $villa->capacity) }}" required>
                             @error('capacity')
                                 <div class="error-message">{{ $message }}</div>
                             @enderror
                         </div>
                         <div class="form-group">
                             <label for="rooms_total">Number of Bedrooms *</label>
-                            <input type="number" id="rooms_total" name="rooms_total" value="{{ old('rooms_total', $villa->rooms_total) }}" required>
+                            <input type="number" id="rooms_total" name="rooms_total"
+                                value="{{ old('rooms_total', $villa->rooms_total) }}" required>
                             @error('rooms_total')
                                 <div class="error-message">{{ $message }}</div>
                             @enderror
@@ -406,8 +410,10 @@
                     <div class="form-group">
                         <label for="status">Status *</label>
                         <select id="status" name="status" required>
-                            <option value="active" {{ old('status', $villa->status) == 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="inactive" {{ old('status', $villa->status) == 'inactive' ? 'selected' : '' }}>Inactive</option>
+                            <option value="active" {{ old('status', $villa->status) == 'active' ? 'selected' : '' }}>
+                                Active</option>
+                            <option value="inactive" {{ old('status', $villa->status) == 'inactive' ? 'selected' : '' }}>
+                                Inactive</option>
                             <option value="maintenance" {{ old('status', $villa->status) == 'maintenance' ? 'selected' : '' }}>Maintenance</option>
                         </select>
                         @error('status')
@@ -416,7 +422,8 @@
                     </div>
                     <div class="form-group">
                         <label for="description">Description</label>
-                        <textarea id="description" name="description">{{ old('description', $villa->description) }}</textarea>
+                        <textarea id="description"
+                            name="description">{{ old('description', $villa->description) }}</textarea>
                         @error('description')
                             <div class="error-message">{{ $message }}</div>
                         @enderror
@@ -426,10 +433,11 @@
                 <!-- Images Section -->
                 <div class="form-section">
                     <h3>Villa Images</h3>
-                    
+
                     <div class="form-group">
                         <label for="thumbnail">Thumbnail Image (Main Image)</label>
-                        <div class="upload-area" id="thumbnailArea" onclick="document.getElementById('thumbnail').click()">
+                        <div class="upload-area" id="thumbnailArea"
+                            onclick="document.getElementById('thumbnail').click()">
                             <p style="margin: 0; font-size: 16px;">📷 Click to upload or drag & drop</p>
                             <p style="margin: 8px 0 0 0; color: #666; font-size: 12px;">JPG, PNG, GIF (Max 5MB)</p>
                         </div>
@@ -451,7 +459,8 @@
                         <label for="images">Gallery Images</label>
                         <div class="upload-area" id="imagesArea" onclick="document.getElementById('images').click()">
                             <p style="margin: 0; font-size: 16px;">🖼️ Click to upload or drag & drop</p>
-                            <p style="margin: 8px 0 0 0; color: #666; font-size: 12px;">You can select multiple images</p>
+                            <p style="margin: 8px 0 0 0; color: #666; font-size: 12px;">You can select multiple images
+                            </p>
                         </div>
                         <input type="file" id="images" name="images[]" multiple accept="image/*" style="display: none;">
                         <div class="image-preview" id="imagesPreview">
@@ -473,8 +482,9 @@
                 <!-- Availability Section -->
                 <div class="form-section">
                     <h3>Unavailable Dates</h3>
-                    <p style="color: #666; font-size: 13px; margin-bottom: 15px;">Mark dates when the villa is unavailable for booking (closed, maintenance, etc.)</p>
-                    
+                    <p style="color: #666; font-size: 13px; margin-bottom: 15px;">Mark dates when the villa is
+                        unavailable for booking (closed, maintenance, etc.)</p>
+
                     <div class="date-inputs">
                         <div class="form-group" style="flex: 1; margin-bottom: 0;">
                             <label for="new_unavailable_date">Select Date</label>
@@ -494,7 +504,8 @@
                         @endif
                     </div>
 
-                    <input type="hidden" id="closed_dates_input" name="closed_dates" value="{{ json_encode($villa->closed_dates ?? []) }}">
+                    <input type="hidden" id="closed_dates_input" name="closed_dates"
+                        value="{{ json_encode($villa->closed_dates ?? []) }}">
                 </div>
 
                 <!-- Form Buttons -->
@@ -508,144 +519,144 @@
 </div>
 
 <script>
-// Thumbnail
-const thumbnailInput = document.getElementById('thumbnail');
-const thumbnailArea = document.getElementById('thumbnailArea');
-const thumbnailPreview = document.getElementById('thumbnailPreview');
+    // Thumbnail
+    const thumbnailInput = document.getElementById('thumbnail');
+    const thumbnailArea = document.getElementById('thumbnailArea');
+    const thumbnailPreview = document.getElementById('thumbnailPreview');
 
-thumbnailInput.addEventListener('change', function() {
-    previewThumbnail(this);
-});
+    thumbnailInput.addEventListener('change', function () {
+        previewThumbnail(this);
+    });
 
-thumbnailArea.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    thumbnailArea.classList.add('dragover');
-});
+    thumbnailArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        thumbnailArea.classList.add('dragover');
+    });
 
-thumbnailArea.addEventListener('dragleave', () => {
-    thumbnailArea.classList.remove('dragover');
-});
+    thumbnailArea.addEventListener('dragleave', () => {
+        thumbnailArea.classList.remove('dragover');
+    });
 
-thumbnailArea.addEventListener('drop', (e) => {
-    e.preventDefault();
-    thumbnailArea.classList.remove('dragover');
-    if (e.dataTransfer.files.length > 0) {
-        thumbnailInput.files = e.dataTransfer.files;
-        previewThumbnail(thumbnailInput);
-    }
-});
+    thumbnailArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        thumbnailArea.classList.remove('dragover');
+        if (e.dataTransfer.files.length > 0) {
+            thumbnailInput.files = e.dataTransfer.files;
+            previewThumbnail(thumbnailInput);
+        }
+    });
 
-function previewThumbnail(input) {
-    const existing = thumbnailPreview.querySelector('.image-item');
-    if (input.files && input.files[0]) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            if (existing) existing.remove();
-            const item = document.createElement('div');
-            item.className = 'image-item';
-            item.innerHTML = `
+    function previewThumbnail(input) {
+        const existing = thumbnailPreview.querySelector('.image-item');
+        if (input.files && input.files[0]) {
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                if (existing) existing.remove();
+                const item = document.createElement('div');
+                item.className = 'image-item';
+                item.innerHTML = `
                 <img src="${e.target.result}" alt="Thumbnail">
                 <button type="button" class="image-remove" onclick="removeThumbnail(event)">×</button>
             `;
-            thumbnailPreview.appendChild(item);
-        };
-        reader.readAsDataURL(input.files[0]);
+                thumbnailPreview.appendChild(item);
+            };
+            reader.readAsDataURL(input.files[0]);
+        }
     }
-}
 
-function removeThumbnail(event) {
-    event.preventDefault();
-    thumbnailInput.value = '';
-    thumbnailPreview.innerHTML = '';
-}
-
-// Gallery images
-const imagesInput = document.getElementById('images');
-const imagesArea = document.getElementById('imagesArea');
-const imagesPreview = document.getElementById('imagesPreview');
-
-imagesInput.addEventListener('change', function() {
-    previewGalleryImages(this);
-});
-
-imagesArea.addEventListener('dragover', (e) => {
-    e.preventDefault();
-    imagesArea.classList.add('dragover');
-});
-
-imagesArea.addEventListener('dragleave', () => {
-    imagesArea.classList.remove('dragover');
-});
-
-imagesArea.addEventListener('drop', (e) => {
-    e.preventDefault();
-    imagesArea.classList.remove('dragover');
-    if (e.dataTransfer.files.length > 0) {
-        imagesInput.files = e.dataTransfer.files;
-        previewGalleryImages(imagesInput);
+    function removeThumbnail(event) {
+        event.preventDefault();
+        thumbnailInput.value = '';
+        thumbnailPreview.innerHTML = '';
     }
-});
 
-function previewGalleryImages(input) {
-    imagesPreview.innerHTML = '';
-    if (input.files) {
-        for (let file of input.files) {
-            if (file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    const item = document.createElement('div');
-                    item.className = 'image-item';
-                    item.innerHTML = `
+    // Gallery images
+    const imagesInput = document.getElementById('images');
+    const imagesArea = document.getElementById('imagesArea');
+    const imagesPreview = document.getElementById('imagesPreview');
+
+    imagesInput.addEventListener('change', function () {
+        previewGalleryImages(this);
+    });
+
+    imagesArea.addEventListener('dragover', (e) => {
+        e.preventDefault();
+        imagesArea.classList.add('dragover');
+    });
+
+    imagesArea.addEventListener('dragleave', () => {
+        imagesArea.classList.remove('dragover');
+    });
+
+    imagesArea.addEventListener('drop', (e) => {
+        e.preventDefault();
+        imagesArea.classList.remove('dragover');
+        if (e.dataTransfer.files.length > 0) {
+            imagesInput.files = e.dataTransfer.files;
+            previewGalleryImages(imagesInput);
+        }
+    });
+
+    function previewGalleryImages(input) {
+        imagesPreview.innerHTML = '';
+        if (input.files) {
+            for (let file of input.files) {
+                if (file.type.startsWith('image/')) {
+                    const reader = new FileReader();
+                    reader.onload = (e) => {
+                        const item = document.createElement('div');
+                        item.className = 'image-item';
+                        item.innerHTML = `
                         <img src="${e.target.result}" alt="Gallery">
                     `;
-                    imagesPreview.appendChild(item);
-                };
-                reader.readAsDataURL(file);
+                        imagesPreview.appendChild(item);
+                    };
+                    reader.readAsDataURL(file);
+                }
             }
         }
     }
-}
 
-function removeGalleryImage(button) {
-    button.closest('.image-item').remove();
-}
-
-// Unavailable dates
-function addUnavailableDate() {
-    const input = document.getElementById('new_unavailable_date');
-    const date = input.value;
-    
-    if (!date) {
-        alert('Please select a date');
-        return;
+    function removeGalleryImage(button) {
+        button.closest('.image-item').remove();
     }
 
-    const list = document.getElementById('unavailableDatesList');
-    const tag = document.createElement('div');
-    tag.className = 'date-tag';
-    tag.innerHTML = `
+    // Unavailable dates
+    function addUnavailableDate() {
+        const input = document.getElementById('new_unavailable_date');
+        const date = input.value;
+
+        if (!date) {
+            alert('Please select a date');
+            return;
+        }
+
+        const list = document.getElementById('unavailableDatesList');
+        const tag = document.createElement('div');
+        tag.className = 'date-tag';
+        tag.innerHTML = `
         <span>${date}</span>
         <button type="button" onclick="removeUnavailableDate(this)">×</button>
     `;
-    list.appendChild(tag);
-    input.value = '';
-    updateClosedDatesInput();
-}
-
-function removeUnavailableDate(button) {
-    button.closest('.date-tag').remove();
-    updateClosedDatesInput();
-}
-
-function updateClosedDatesInput() {
-    const dates = Array.from(document.querySelectorAll('#unavailableDatesList .date-tag span')).map(s => s.textContent);
-    document.getElementById('closed_dates_input').value = JSON.stringify(dates);
-}
-
-document.getElementById('new_unavailable_date')?.addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        addUnavailableDate();
+        list.appendChild(tag);
+        input.value = '';
+        updateClosedDatesInput();
     }
-});
+
+    function removeUnavailableDate(button) {
+        button.closest('.date-tag').remove();
+        updateClosedDatesInput();
+    }
+
+    function updateClosedDatesInput() {
+        const dates = Array.from(document.querySelectorAll('#unavailableDatesList .date-tag span')).map(s => s.textContent);
+        document.getElementById('closed_dates_input').value = JSON.stringify(dates);
+    }
+
+    document.getElementById('new_unavailable_date')?.addEventListener('keypress', function (e) {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            addUnavailableDate();
+        }
+    });
 </script>
