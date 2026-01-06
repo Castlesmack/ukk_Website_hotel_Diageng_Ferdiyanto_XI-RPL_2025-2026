@@ -6,6 +6,7 @@ use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\ReservationController;
+use App\Http\Controllers\Admin\HomepageController;
 use App\Http\Controllers\AdminVillaController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\VillaController;
@@ -28,13 +29,14 @@ Route::get('/password/reset', function(){ return view('auth.passwords.email'); }
 // Admin pages with database connection
 Route::middleware('auth')->group(function () {
     Route::get('/admin/dashboard', [AdminDashboardController::class, 'index'])->name('admin.dashboard');
-    Route::get('/admin/manage', [AdminVillaController::class, 'index'])->name('admin.manage');
-    Route::get('/admin/manage/create', [AdminVillaController::class, 'create'])->name('admin.villas.create');
-    Route::post('/admin/manage', [AdminVillaController::class, 'store'])->name('admin.villas.store');
-    Route::get('/admin/manage/{id}/edit', [AdminVillaController::class, 'edit'])->name('admin.villas.edit');
-    Route::put('/admin/manage/{id}', [AdminVillaController::class, 'update'])->name('admin.villas.update');
-    Route::delete('/admin/manage/{id}', [AdminVillaController::class, 'destroy'])->name('admin.villas.destroy');
-    Route::view('/admin/homepage/edit', 'admin.homepage.edit')->name('admin.homepage.edit');
+    Route::get('/admin/villas', [AdminVillaController::class, 'index'])->name('admin.villas.index');
+    Route::get('/admin/villas/create', [AdminVillaController::class, 'create'])->name('admin.villas.create');
+    Route::post('/admin/villas', [AdminVillaController::class, 'store'])->name('admin.villas.store');
+    Route::get('/admin/villas/{id}/edit', [AdminVillaController::class, 'edit'])->name('admin.villas.edit');
+    Route::put('/admin/villas/{id}', [AdminVillaController::class, 'update'])->name('admin.villas.update');
+    Route::delete('/admin/villas/{id}', [AdminVillaController::class, 'destroy'])->name('admin.villas.destroy');
+    Route::get('/admin/homepage/edit', [HomepageController::class, 'edit'])->name('admin.homepage.edit');
+    Route::put('/admin/homepage', [HomepageController::class, 'update'])->name('admin.homepage.update');
     Route::get('/admin/reservations', [ReservationController::class, 'index'])->name('admin.reservations');
 
     // Admin users & finances

@@ -18,6 +18,8 @@
             border-radius: 8px;
             height: fit-content;
             flex-shrink: 0;
+            position: sticky;
+            top: 100px;
         }
 
         .sidebar h3 {
@@ -73,7 +75,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 30px;
             padding-bottom: 15px;
             border-bottom: 1px solid #e9ecef;
         }
@@ -90,115 +92,224 @@
             border-radius: 4px;
             text-decoration: none;
             transition: background 0.3s;
+            border: none;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
         }
 
         .add-btn:hover {
             background: #218838;
         }
 
-        .villa-list {
-            background: white;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            padding: 20px;
+        .villa-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
         }
 
-        .villa-item {
+        .villa-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .villa-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .villa-card-header {
+            padding: 15px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+        }
+
+        .villa-card-header h3 {
+            margin: 0 0 5px 0;
+            color: #333;
+            font-size: 16px;
+        }
+
+        .villa-info {
+            padding: 15px;
+        }
+
+        .villa-info-row {
             display: flex;
             justify-content: space-between;
-            align-items: center;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .villa-info-row label {
+            font-weight: 600;
+            color: #666;
+        }
+
+        .villa-info-row value {
+            color: #333;
+        }
+
+        .villa-status {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-top: 8px;
+        }
+
+        .villa-status.active {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .villa-status.inactive {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .villa-status.maintenance {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .villa-card-footer {
             padding: 15px;
-            border: 1px solid #e9ecef;
-            border-radius: 8px;
-            margin-bottom: 10px;
             background: #f8f9fa;
-        }
-
-        .villa-info h4 {
-            margin: 0 0 5px;
-            color: #007bff;
-        }
-
-        .villa-info p {
-            margin: 0;
-            color: #6c757d;
-        }
-
-        .villa-actions {
+            border-top: 1px solid #e9ecef;
             display: flex;
-            gap: 10px;
+            gap: 8px;
+            justify-content: flex-end;
         }
 
-        .edit-btn {
+        .btn-small {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .btn-edit {
             background: #007bff;
             color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 14px;
         }
 
-        .edit-btn:hover {
+        .btn-edit:hover {
             background: #0056b3;
         }
 
-        .delete-btn {
+        .btn-delete {
             background: #dc3545;
             color: white;
-            padding: 8px 12px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 14px;
         }
 
-        .delete-btn:hover {
+        .btn-delete:hover {
             background: #c82333;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            background: white;
+            border-radius: 8px;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            margin: 0 0 10px 0;
         }
     </style>
 @endpush
 
-@section('content')
-    <div class="admin-layout">
-        <aside class="sidebar">
-            <h3>Ade Villa Admin</h3>
-            <nav>
-                <a href="/admin/dashboard" class="menu-item">Dashboard</a>
-                <a href="/admin/manage" class="menu-item active">Manage</a>
-                <a href="/admin/reservations" class="menu-item">Reservations</a>
-                <a href="/admin/users" class="menu-item">Users</a>
-                <a href="/admin/finances" class="menu-item">Finance</a>
-            </nav>
-        </aside>
-
-        <main class="main-content">
-            <div class="header">
-                <h2>Manage Villas</h2>
-                <a href="/admin/villas/create" class="add-btn">Add New Villa</a>
-            </div>
-
-            <div class="villa-list">
-                <div class="villa-item">
-                    <div class="villa-info">
-                        <h4>Villa Kota Bunga Ade</h4>
-                        <p>Comfortable villa close to the city • Rp 5,104,000 / night</p>
-                    </div>
-                    <div class="villa-actions">
-                        <a href="/admin/villas/1/edit" class="edit-btn">Edit</a>
-                        <a href="#" class="delete-btn" onclick="return confirm('Delete this villa?')">Delete</a>
-                    </div>
-                </div>
-
-                <div class="villa-item">
-                    <div class="villa-info">
-                        <h4>Villa Puncak Harmony</h4>
-                        <p>Spacious villa with panoramic mountain views • Rp 7,200,000 / night</p>
-                    </div>
-                    <div class="villa-actions">
-                        <a href="/admin/villas/2/edit" class="edit-btn">Edit</a>
-                        <a href="#" class="delete-btn" onclick="return confirm('Delete this villa?')">Delete</a>
-                    </div>
-                </div>
-            </div>
-        </main>
+<div class="admin-layout">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h3>Admin Menu</h3>
+        <nav>
+            <a href="{{ route('admin.dashboard') }}" class="menu-item">Dashboard</a>
+            <a href="{{ route('admin.villas.index') }}" class="menu-item active">Manage Villas</a>
+            <a href="{{ route('admin.reservations') }}" class="menu-item">Reservations</a>
+            <a href="{{ route('admin.users.index') }}" class="menu-item">Users</a>
+            <a href="{{ route('admin.homepage.edit') }}" class="menu-item">Edit Homepage</a>
+            <a href="{{ route('admin.finances') }}" class="menu-item">Finances</a>
+        </nav>
     </div>
-@endsection
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <div class="header">
+            <h2>Manage Villas</h2>
+            <a href="{{ route('admin.villas.create') }}" class="add-btn">+ Add Villa</a>
+        </div>
+
+        @if(session('success'))
+            <div style="background: #d4edda; color: #155724; padding: 12px; border-radius: 4px; margin-bottom: 20px;">
+                {{ session('success') }}
+            </div>
+        @endif
+
+        @if($villas->isEmpty())
+            <div class="empty-state">
+                <h3>No villas yet</h3>
+                <p>Create your first villa to get started</p>
+                <a href="{{ route('admin.villas.create') }}" class="add-btn">Create Villa</a>
+            </div>
+        @else
+            <div class="villa-cards">
+                @foreach($villas as $villa)
+                    <div class="villa-card">
+                        <div class="villa-card-header">
+                            <h3>{{ $villa->name }}</h3>
+                            <span class="villa-status {{ strtolower($villa->status) }}">
+                                {{ ucfirst($villa->status) }}
+                            </span>
+                        </div>
+                        <div class="villa-info">
+                            <div class="villa-info-row">
+                                <label>Price:</label>
+                                <value>Rp {{ number_format($villa->base_price, 0, ',', '.') }}</value>
+                            </div>
+                            <div class="villa-info-row">
+                                <label>Capacity:</label>
+                                <value>{{ $villa->capacity }} guests</value>
+                            </div>
+                            <div class="villa-info-row">
+                                <label>Bedrooms:</label>
+                                <value>{{ $villa->rooms_total }}</value>
+                            </div>
+                            <div class="villa-info-row">
+                                <label>Description:</label>
+                            </div>
+                            <div style="font-size: 12px; color: #666; margin-bottom: 8px;">
+                                {{ Str::limit($villa->description, 60) }}
+                            </div>
+                            @if($villa->closed_dates && count($villa->closed_dates) > 0)
+                                <div
+                                    style="background: #fff3cd; padding: 8px; border-radius: 4px; font-size: 12px; margin-top: 8px;">
+                                    <strong>Closed dates:</strong> {{ implode(', ', $villa->closed_dates) }}
+                                </div>
+                            @endif
+                        </div>
+                        <div class="villa-card-footer">
+                            <a href="{{ route('admin.villas.edit', $villa->id) }}" class="btn-small btn-edit">Edit</a>
+                            <form action="{{ route('admin.villas.destroy', $villa->id) }}" method="POST" style="margin: 0;">
+                                @csrf
+                                @method('DELETE')
+                                <button type="submit" class="btn-small btn-delete"
+                                    onclick="return confirm('Are you sure?')">Delete</button>
+                            </form>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+        @endif
+    </div>
+</div>

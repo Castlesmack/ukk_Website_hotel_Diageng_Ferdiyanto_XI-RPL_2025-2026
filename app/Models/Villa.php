@@ -22,6 +22,9 @@ class Villa extends Model
         'rooms_total',
         'description',
         'status',
+        'thumbnail_path',
+        'images',
+        'closed_dates',
     ];
 
     /**
@@ -33,6 +36,9 @@ class Villa extends Model
     {
         return [
             'base_price' => 'decimal:2',
+            'thumbnail_path' => 'string',
+            'images' => 'array',
+            'closed_dates' => 'array',
         ];
     }
 

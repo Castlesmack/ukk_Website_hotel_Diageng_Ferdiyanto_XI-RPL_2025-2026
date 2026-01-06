@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            if (!Schema::hasColumn('users', 'role')) {
-                $table->string('role')->default('user')->after('password');
-            }
-            // roles: user, admin, receptionist
+        Schema::table('villas', function (Blueprint $table) {
+            $table->json('closed_dates')->nullable()->after('status')->comment('JSON array of dates when villa is closed');
         });
     }
 
@@ -24,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('role');
+        Schema::table('villas', function (Blueprint $table) {
+            $table->dropColumn('closed_dates');
         });
     }
 };
