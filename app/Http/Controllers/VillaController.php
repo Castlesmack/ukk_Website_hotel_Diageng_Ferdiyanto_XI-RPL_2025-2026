@@ -6,14 +6,38 @@ use Illuminate\Http\Request;
 use App\Models\Villa;
 use App\Models\Booking;
 use App\Models\User;
+use App\Models\HomepageSetting;
+use App\Models\VillaVisibility;
+use App\Models\HomepageFacility;
 use Illuminate\Support\Facades\Auth;
 
 class VillaController extends Controller
 {
     public function index()
     {
-        $villas = Villa::all();
-        return view('guest.home', compact('villas'));
+        $homepage = HomepageSetting::first();
+        $sliderImages = $homepage?->slider_images ?? [];
+        $description = $homepage?->description ?? '';
+        
+        // Get visible villas in order
+        $visibleVillaIds = VillaVisibility::where('is_visible', true)->orderBy('order')->pluck('villa_id');
+        
+        // Fetch villas and sort by the visibility order (SQLite doesn't support FIELD function)
+        if ($visibleVillaIds->isEmpty()) {
+            // If no visibility records exist, show all villas
+            $villas = Villa::all();
+        } else {
+            $villas = Villa::whereIn('id', $visibleVillaIds)->get();
+            // Sort by the order in visibleVillaIds
+            $villas = $villas->sortBy(function($villa) use ($visibleVillaIds) {
+                return $visibleVillaIds->search($villa->id);
+            })->values();
+        }
+        
+        // Get visible facilities
+        $facilities = HomepageFacility::where('is_visible', true)->orderBy('category')->orderBy('order')->get();
+        
+        return view('guest.homepage', compact('villas', 'sliderImages', 'description', 'facilities'));
     }
 
     public function search(Request $request)
@@ -53,13 +77,28 @@ class VillaController extends Controller
             ]);
         }
 
-        return view('guest.home', compact('villas', 'checkin', 'checkout', 'guests'));
+        // Get homepage settings for slider and description
+        $homepage = HomepageSetting::first();
+        $sliderImages = $homepage?->slider_images ?? [];
+        $description = $homepage?->description ?? '';
+        
+        // Get visible facilities
+        $facilities = HomepageFacility::where('is_visible', true)->orderBy('category')->orderBy('order')->get();
+
+        return view('guest.home', compact('villas', 'checkin', 'checkout', 'guests', 'sliderImages', 'description', 'facilities'));
     }
 
     public function detail($id)
     {
         $villa = Villa::findOrFail($id);
-        return view('guest.villa_detail', compact('villa'));
+        
+        // Get all confirmed/pending bookings for this villa
+        $bookedDates = Booking::where('villa_id', $id)
+            ->whereIn('status', ['confirmed', 'pending'])
+            ->selectRaw('check_in_date, check_out_date')
+            ->get();
+        
+        return view('guest.villa_detail', compact('villa', 'bookedDates'));
     }
 
     public function reservationForm(Request $request)
@@ -92,6 +131,28 @@ class VillaController extends Controller
 
         $villa = Villa::find($validated['villa_id']);
         
+        // Check if villa is available for the requested dates
+        $checkin = \Carbon\Carbon::parse($validated['checkin']);
+        $checkout = \Carbon\Carbon::parse($validated['checkout']);
+        
+        $existingBooking = Booking::where('villa_id', $validated['villa_id'])
+            ->whereIn('status', ['confirmed', 'pending'])
+            ->where(function($query) use ($checkin, $checkout) {
+                $query->whereBetween('check_in_date', [$checkin, $checkout->subDay()])
+                      ->orWhereBetween('check_out_date', [$checkin->addDay(), $checkout])
+                      ->orWhere(function($q) use ($checkin, $checkout) {
+                          $q->where('check_in_date', '<=', $checkin)
+                            ->where('check_out_date', '>=', $checkout);
+                      });
+            })
+            ->first();
+        
+        if ($existingBooking) {
+            return redirect()->back()
+                ->withErrors(['availability' => 'Villa ini tidak tersedia untuk tanggal yang dipilih. Silakan pilih tanggal lain.'])
+                ->withInput();
+        }
+        
         // Get or create a room type for this villa
         $roomType = $villa->roomTypes()->first();
         if (!$roomType) {
@@ -105,10 +166,6 @@ class VillaController extends Controller
         }        
 
         // Calculate number of nights and ensure it's positive
-        $checkin = \Carbon\Carbon::parse($validated['checkin']);
-        $checkout = \Carbon\Carbon::parse($validated['checkout']);
-
-        // Using abs() ensures that even if dates are swapped, nights are positive
         $nights = abs($checkout->diffInDays($checkin));
 
         // Calculate total price
@@ -154,5 +211,55 @@ class VillaController extends Controller
     {
         $booking = Booking::findOrFail($bookingId);
         return view('guest.payment', compact('booking'));
+    }
+
+    public function searchAPI(Request $request)
+    {
+        $capacity = $request->get('capacity');
+        $dates = $request->get('dates');
+        $price = $request->get('price');
+
+        $query = Villa::query();
+
+        // Filter by capacity
+        if ($capacity) {
+            $query->where('capacity', '>=', $capacity);
+        }
+
+        // Filter by price
+        if ($price) {
+            $query->where('base_price', '<=', $price);
+        }
+
+        // Filter by availability on selected date
+        if ($dates) {
+            // Get all bookings for the selected date
+            $bookedVillaIds = Booking::where(function($q) use ($dates) {
+                $q->where('check_in_date', '<=', $dates)
+                  ->where('check_out_date', '>', $dates);
+            })
+            ->whereIn('status', ['confirmed', 'pending'])
+            ->distinct()
+            ->pluck('villa_id');
+
+            // Exclude booked villas
+            if ($bookedVillaIds->count() > 0) {
+                $query->whereNotIn('id', $bookedVillaIds);
+            }
+        }
+
+        $villas = $query->get();
+
+        return response()->json([
+            'villas' => $villas->map(function($villa) {
+                return [
+                    'id' => $villa->id,
+                    'name' => $villa->name,
+                    'capacity' => $villa->capacity,
+                    'base_price' => $villa->base_price,
+                    'image_url' => $villa->image_url,
+                ];
+            })
+        ]);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Models\Booking;
 
 class UserController extends Controller
 {
@@ -19,6 +20,13 @@ class UserController extends Controller
         
         // Return guest profile for regular users
         return view('user.profile');
+    }
+
+    public function bookings()
+    {
+        $user = Auth::user();
+        $bookings = Booking::where('user_id', $user->id)->with('villa')->get();
+        return view('user.bookings', compact('bookings'));
     }
 
     public function updateProfile(Request $request)

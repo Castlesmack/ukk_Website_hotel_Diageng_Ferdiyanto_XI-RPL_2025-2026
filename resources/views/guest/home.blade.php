@@ -1,8 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Home - Ade Villa')
-
-@push('styles')
+@section('content')
     <style>
         * {
             margin: 0;
@@ -10,486 +8,480 @@
             box-sizing: border-box;
         }
 
-        .container {
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #333;
+            background: #fff;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: #e8e8e8;
+            height: 350px;
+            margin: 20px auto;
             max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Image Slider */
-        .slider-container {
+            border-radius: 4px;
             position: relative;
-            width: 100%;
-            height: 300px;
-            background: #f0f0f0;
-            border: 2px solid #333;
-            border-radius: 8px;
             overflow: hidden;
-            margin-bottom: 40px;
-        }
-
-        .slider {
-            display: flex;
-            width: 100%;
-            height: 100%;
-            position: relative;
-            transition: transform 0.5s ease;
-        }
-
-        .slide {
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
-            font-size: 18px;
-            flex-shrink: 0;
         }
 
-        .slide-dots {
+        .carousel-container {
+            width: 100%;
+            height: 100%;
+            position: relative;
+        }
+
+        .carousel-item {
             position: absolute;
-            bottom: 15px;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            opacity: 0;
+            transition: opacity 0.7s ease-in-out;
+        }
+
+        .carousel-item.active {
+            opacity: 1;
+        }
+
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carousel-dots {
+            position: absolute;
+            bottom: 20px;
             left: 50%;
             transform: translateX(-50%);
             display: flex;
-            gap: 10px;
+            gap: 8px;
             z-index: 10;
         }
 
         .dot {
             width: 12px;
             height: 12px;
+            background: black;
             border-radius: 50%;
-            background: #000;
             cursor: pointer;
+            opacity: 0.4;
             transition: opacity 0.3s;
         }
 
         .dot.active {
-            background: #333;
+            opacity: 1;
+        }
+
+        /* Content Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
         }
 
         /* Description Section */
-        .description-section {
-            background: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+        .description-box {
+            background: white;
             padding: 30px;
-            margin-bottom: 40px;
+            margin: 30px 0;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
             text-align: center;
             line-height: 1.6;
-            color: #333;
             font-size: 14px;
+            color: #666;
         }
 
-        .description-section h3 {
-            margin-bottom: 15px;
-            font-size: 18px;
+        /* Villa Section */
+        .villa-section {
+            margin: 40px 0;
         }
 
-        /* Section Headers */
         .section-title {
-            font-size: 24px;
-            font-weight: bold;
+            font-size: 18px;
+            font-weight: 600;
             margin-bottom: 25px;
             border-bottom: 2px solid #000;
             padding-bottom: 10px;
         }
 
-        /* Search Section */
-        .search-section {
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
+        /* Search Bar */
+        .search-bar {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 12px;
             margin-bottom: 30px;
         }
 
-        .search-form {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-            align-items: flex-end;
-        }
-
-        .search-form input,
-        .search-form select {
-            padding: 10px;
+        .search-input,
+        .search-btn {
+            padding: 10px 15px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 14px;
         }
 
-        .search-form button {
-            padding: 10px 25px;
+        .search-input {
+            background: white;
+        }
+
+        .search-btn {
             background: #007bff;
             color: white;
             border: none;
-            border-radius: 4px;
             cursor: pointer;
-            font-weight: bold;
+            font-weight: 600;
+            transition: background 0.3s;
         }
 
-        .search-form button:hover {
+        .search-btn:hover {
             background: #0056b3;
         }
 
         /* Villa Grid */
-        .villa-section {
-            margin-bottom: 50px;
-        }
-
         .villa-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            grid-template-columns: repeat(4, 1fr);
             gap: 20px;
         }
 
         .villa-card {
-            border: 2px solid #333;
+            border: 1px solid #e8e8e8;
             border-radius: 8px;
             overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
             background: white;
-            cursor: pointer;
+            transition: box-shadow 0.3s;
         }
 
         .villa-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
         }
 
-        .villa-card a {
-            text-decoration: none;
-            color: inherit;
-            display: block;
-        }
-
-        .villa-card-header {
-            background: #000;
-            color: white;
-            padding: 12px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        .villa-card-header-small {
-            font-size: 12px;
-            opacity: 0.8;
-            margin-top: 4px;
-        }
-
-        .villa-card-image {
+        .villa-image {
             width: 100%;
-            height: 150px;
+            height: 200px;
             background: #f0f0f0;
             display: flex;
             align-items: center;
             justify-content: center;
             color: #999;
             font-size: 12px;
+            overflow: hidden;
         }
 
-        .villa-card-body {
-            padding: 15px;
-        }
-
-        .villa-card-body h3 {
-            margin: 0 0 10px 0;
-            font-size: 14px;
-            font-weight: bold;
+        .villa-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .villa-info {
+            padding: 15px;
+        }
+
+        .villa-name {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .villa-capacity {
             font-size: 13px;
             color: #666;
-            margin: 5px 0;
+            margin-bottom: 5px;
         }
 
-        .book-btn {
-            display: inline-block;
-            background: #28a745;
-            color: white;
-            padding: 8px 16px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-size: 13px;
-            font-weight: bold;
+        .villa-price {
+            font-size: 15px;
+            font-weight: 600;
+            color: #28a745;
             margin-top: 10px;
-            transition: background 0.3s;
         }
 
-        .book-btn:hover {
-            background: #218838;
-        }
-
-        .no-results {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-            grid-column: 1 / -1;
-        }
-
-        /* Facilities Section */
+        /* Facility Section */
         .facility-section {
             background: #f9f9f9;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 30px;
-            margin-top: 50px;
+            border: 1px solid #e8e8e8;
+            border-radius: 4px;
+            padding: 40px;
+            margin: 50px 0 30px;
         }
 
         .facility-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 25px;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
             margin-top: 20px;
         }
 
         .facility-item {
             display: flex;
-            align-items: flex-start;
-            gap: 12px;
+            gap: 15px;
         }
 
         .facility-icon {
-            font-size: 24px;
-            min-width: 30px;
-            text-align: center;
-        }
-
-        .facility-text {
-            font-size: 13px;
-            color: #333;
-            line-height: 1.4;
+            font-size: 32px;
+            flex-shrink: 0;
         }
 
         .facility-text strong {
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 5px;
+            font-size: 14px;
         }
 
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 20px;
+        .facility-text {
+            font-size: 13px;
             color: #666;
-            grid-column: 1 / -1;
+            line-height: 1.5;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .container {
+                padding: 0 20px;
+            }
+
+            .hero {
+                margin: 20px auto;
+                height: 300px;
+            }
+
+            .villa-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .facility-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .search-bar {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .villa-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 15px;
+            }
+
+            .facility-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                height: 250px;
+                margin: 20px auto;
+            }
+
+            .container {
+                padding: 0 20px;
+            }
+
+            .search-bar {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .villa-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .facility-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .hero {
+                margin: 20px auto;
+                height: 200px;
+            }
+
+            .container {
+                padding: 0 15px;
+            }
+
+            .search-bar {
+                grid-template-columns: 1fr;
+            }
+
+            .section-title {
+                font-size: 16px;
+            }
+
+            .villa-name {
+                font-size: 14px;
+            }
         }
     </style>
-@endpush
 
-@section('content')
+    <!-- Hero Section with Carousel -->
+    <div class="hero">
+        <div class="carousel-container">
+            @if ($sliderImages && count($sliderImages) > 0)
+                @foreach ($sliderImages as $index => $image)
+                    <div class="carousel-item {{ $index === 0 ? 'active' : '' }}"
+                        style="background-image: url('{{ asset($image) }}');">
+                    </div>
+                @endforeach
+            @else
+                <div class="carousel-item active" style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);"></div>
+            @endif
+        </div>
+
+        @if ($sliderImages && count($sliderImages) > 1)
+            <div class="carousel-dots">
+                @for ($i = 0; $i < count($sliderImages); $i++)
+                    <div class="dot {{ $i === 0 ? 'active' : '' }}" onclick="goToSlide({{ $i }})"></div>
+                @endfor
+            </div>
+        @endif
+    </div>
+
     <div class="container">
-        <!-- Image Slider -->
-        <div class="slider-container">
-            <div class="slider" id="slider">
-                <div class="slide">Slide 1</div>
-                <div class="slide">Slide 2</div>
-                <div class="slide">Slide 3</div>
+        <!-- Description -->
+        @if ($description)
+            <div class="description-box">
+                {!! nl2br(e($description)) !!}
             </div>
-            <div class="slide-dots" id="slideDots">
-                <span class="dot active" data-index="0" onclick="goToSlide(0)"></span>
-                <span class="dot" data-index="1" onclick="goToSlide(1)"></span>
-                <span class="dot" data-index="2" onclick="goToSlide(2)"></span>
-            </div>
-        </div>
-
-        <!-- Description Section -->
-        <div class="description-section">
-            <h3>Selamat Datang di Villa Ade Kota Bunga</h3>
-            <p>
-                Penyewaan villa tipe Jasping di Kota Bunga Puncak. Kami menyediakan villa yang nyaman, asri, bersih,
-                serta dilengkapi dengan berbagai fasilitas mewah. Fasilitas yang kami sediakan penuh dan lengkap untuk anda.
-                Segera booking villa pilihan anda, kami tunggu kedatangan Anda.<br><br>
-
-                Bersama kami Nikmati Desain Alami Hijaunya Villa Kota Bunga Ade, Cipeuas.<br>
-                Villa dengan Kelengkapan Fasilitas seperti di rumah sendiri.<br>
-                Villa di lembang gunung dengan suasana Mempersonik.
-            </p>
-        </div>
+        @endif
 
         <!-- Villa Section -->
-        <div class="villa-section">
-            <div class="section-title">Villa</div>
+        <div class="villa-section" id="villa">
+            <h2 class="section-title">Villa</h2>
 
-            <!-- Search Form -->
-            <div class="search-section">
-                <form class="search-form" id="searchForm">
-                    <input type="text" id="kamarTidur" name="kamarTidur" placeholder="Kamar Tidur">
-                    <input type="date" id="tanggal" name="tanggal" placeholder="Tanggal">
-                    <input type="number" id="harga" name="harga" placeholder="Harga" min="0">
-                    <button type="submit">Search</button>
-                </form>
+            <div class="search-bar">
+                <input type="number" id="capacity" class="search-input" placeholder="Kapasitas" min="1">
+                <input type="date" id="dates" class="search-input" placeholder="Tanggal">
+                <input type="number" id="price" class="search-input" placeholder="Harga Max" min="0">
+                <button class="search-btn" onclick="searchVillas()">Search</button>
             </div>
 
-            <!-- Villa Grid -->
-            <div class="loading" id="loading">Loading villas...</div>
             <div class="villa-grid" id="villaGrid">
-                @forelse($villas ?? [] as $villa)
-                    <div class="villa-card">
-                        <div class="villa-card-header">
-                            {{ $villa->name }}
-                            <div class="villa-card-header-small">{{ $villa->status }}</div>
-                        </div>
-                        <div class="villa-card-image">
-                            No Image
-                        </div>
-                        <div class="villa-card-body">
-                            <h3>Kapasitas {{ $villa->capacity }} orang</h3>
-                            <div class="villa-info">
-                                <strong>Harga:</strong> Rp {{ number_format($villa->base_price, 0, ',', '.') }}
+                @forelse ($villas as $villa)
+                    <a href="{{ route('guest.villa.detail', $villa->id) }}" style="text-decoration: none; color: inherit;">
+                        <div class="villa-card">
+                            <div class="villa-image">
+                                @if ($villa->thumbnail_path)
+                                    <img src="{{ asset($villa->thumbnail_path) }}" alt="{{ $villa->name }}">
+                                @else
+                                    No image
+                                @endif
                             </div>
                             <div class="villa-info">
-                                <strong>Kamar:</strong> {{ $villa->rooms_total }}
+                                <div class="villa-name">{{ $villa->name }}</div>
+                                <div class="villa-capacity">Kapasitas {{ $villa->capacity }} orang</div>
+                                <div class="villa-price">Rp {{ number_format($villa->base_price, 0, ',', '.') }}</div>
                             </div>
-                            <a href="{{ route('guest.reservation.form', ['villa_id' => $villa->id]) }}" class="book-btn">Book Now</a>
                         </div>
-                    </div>
+                    </a>
                 @empty
-                    <div class="no-results">No villas found</div>
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #999;">
+                        No villas available
+                    </div>
                 @endforelse
             </div>
         </div>
 
-        <!-- Facilities Section -->
-        <div class="facility-section">
-            <div class="section-title">Facility</div>
-            <div class="facility-grid">
-                <div class="facility-item">
-                    <div class="facility-icon">🏢</div>
-                    <div class="facility-text">
-                        <strong>Public Facilities</strong>
-                        Parking area
-                    </div>
+        <!-- Facility Section -->
+        @if ($facilities && count($facilities) > 0)
+            <div class="facility-section">
+                <h2 class="section-title">Facility</h2>
+                <div class="facility-grid">
+                    @foreach ($facilities as $facility)
+                        <div class="facility-item">
+                            <div class="facility-icon">{{ $facility->icon ?? '🏢' }}</div>
+                            <div class="facility-text">
+                                <strong>{{ $facility->name }}</strong>
+                                {{ $facility->description }}
+                            </div>
+                        </div>
+                    @endforeach
                 </div>
-                <div class="facility-item">
-                    <div class="facility-icon">🎯</div>
-                    <div class="facility-text">
-                        <strong>Other Activities</strong>
-                        Garden
+            </div>
+        @else
+            <div class="facility-section">
+                <h2 class="section-title">Facility</h2>
+                <div class="facility-grid">
+                    <div class="facility-item">
+                        <div class="facility-icon">🏢</div>
+                        <div class="facility-text">
+                            <strong>Public Facilities</strong>
+                            Parking area, lounge
+                        </div>
                     </div>
-                </div>
-                <div class="facility-item">
-                    <div class="facility-icon">📡</div>
-                    <div class="facility-text">
-                        <strong>Connectivity</strong>
-                        In-room internet
+                    <div class="facility-item">
+                        <div class="facility-icon">🎯</div>
+                        <div class="facility-text">
+                            <strong>Other Activities</strong>
+                            Garden, outdoor space
+                        </div>
                     </div>
-                </div>
-                <div class="facility-item">
-                    <div class="facility-icon">🚴</div>
-                    <div class="facility-text">
-                        <strong>Transportation</strong>
-                        Bicycle rental
-                    </div>
-                </div>
-                <div class="facility-item">
-                    <div class="facility-icon">📶</div>
-                    <div class="facility-text">
-                        <strong>WiFi</strong>
-                        WiFi in public areas
-                    </div>
-                </div>
-                <div class="facility-item">
-                    <div class="facility-icon">🏊</div>
-                    <div class="facility-text">
-                        <strong>Swimming Pool</strong>
-                        Private pool access
+                    <div class="facility-item">
+                        <div class="facility-icon">📡</div>
+                        <div class="facility-text">
+                            <strong>Connectivity</strong>
+                            In-room internet
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        @endif
     </div>
 
-    @push('scripts')
-        <script>
-            let currentSlide = 0;
-            const slides = document.querySelectorAll('.slide');
-            const totalSlides = slides.length;
+    <script>
+        let currentSlide = 0;
+        const sliderImages = @json($sliderImages ?? []);
+        const totalSlides = sliderImages.length > 0 ? sliderImages.length : 1;
 
-            function showSlide(index) {
-                const slider = document.getElementById('slider');
-                slider.style.transform = `translateX(-${index * 100}%)`;
+        function showSlide(index) {
+            if (totalSlides <= 1) return;
 
-                document.querySelectorAll('.dot').forEach(dot => dot.classList.remove('active'));
-                document.querySelector(`.dot[data-index="${index}"]`).classList.add('active');
+            const dots = document.querySelectorAll('.dot');
+            dots.forEach(dot => dot.classList.remove('active'));
+
+            if (dots[index]) {
+                dots[index].classList.add('active');
             }
 
-            function goToSlide(index) {
-                currentSlide = index;
-                showSlide(currentSlide);
+            const items = document.querySelectorAll('.carousel-item');
+            items.forEach(item => item.classList.remove('active'));
+            if (items[index]) {
+                items[index].classList.add('active');
             }
+        }
 
-            // Auto advance slides every 5 seconds
+        function goToSlide(index) {
+            currentSlide = index;
+            showSlide(currentSlide);
+        }
+
+        // Auto advance slides every 5 seconds
+        if (totalSlides > 1) {
             setInterval(() => {
                 currentSlide = (currentSlide + 1) % totalSlides;
                 showSlide(currentSlide);
             }, 5000);
+        }
 
-            // Search functionality
-            document.getElementById('searchForm').addEventListener('submit', function (e) {
-                e.preventDefault();
+        function searchVillas() {
+            const capacity = document.getElementById('capacity').value;
+            const dates = document.getElementById('dates').value;
+            const price = document.getElementById('price').value;
 
-                const kamarTidur = document.getElementById('kamarTidur').value;
-                const tanggal = document.getElementById('tanggal').value;
-                const harga = document.getElementById('harga').value;
+            const params = new URLSearchParams();
+            if (capacity) params.append('capacity', capacity);
+            if (dates) params.append('checkin', dates);
+            if (price) params.append('price', price);
 
-                const loading = document.getElementById('loading');
-                const villaGrid = document.getElementById('villaGrid');
-
-                loading.style.display = 'block';
-                villaGrid.innerHTML = '';
-
-                const params = new URLSearchParams();
-                if (kamarTidur) params.append('capacity', kamarTidur);
-                if (tanggal) params.append('checkin', tanggal);
-                if (harga) params.append('price', harga);
-
-                fetch(`/villa/search?${params.toString()}`, {
-                    headers: {
-                        'Accept': 'application/json',
-                        'X-Requested-With': 'XMLHttpRequest'
-                    }
-                })
-                    .then(response => response.json())
-                    .then(data => {
-                        loading.style.display = 'none';
-
-                        if (data.villas && data.villas.length > 0) {
-                            villaGrid.innerHTML = data.villas.map(villa => `
-                                <div class="villa-card">
-                                    <div class="villa-card-header">
-                                        ${villa.name}
-                                        <div class="villa-card-header-small">${villa.status}</div>
-                                    </div>
-                                    <div class="villa-card-image">
-                                        No Image
-                                    </div>
-                                    <div class="villa-card-body">
-                                        <h3>Kapasitas ${villa.capacity} orang</h3>
-                                        <div class="villa-info">
-                                            <strong>Harga:</strong> Rp ${new Intl.NumberFormat('id-ID').format(villa.base_price)}
-                                        </div>
-                                        <div class="villa-info">
-                                            <strong>Kamar:</strong> ${villa.rooms_total}
-                                        </div>
-                                        <a href="/reservation/form?villa_id=${villa.id}" class="book-btn">Book Now</a>
-                                    </div>
-                                </div>
-                            `).join('');
-                        } else {
-                            villaGrid.innerHTML = '<div class="no-results">No villas found matching your criteria</div>';
-                        }
-                    })
-                    .catch(error => {
-                        loading.style.display = 'none';
-                        villaGrid.innerHTML = '<div class="no-results">Error loading villas</div>';
-                        console.error('Error:', error);
-                    });
-            });
-        </script>
-    @endpush
+            window.location.href = '/villa?' + params.toString();
+        }
+    </script>
 @endsection

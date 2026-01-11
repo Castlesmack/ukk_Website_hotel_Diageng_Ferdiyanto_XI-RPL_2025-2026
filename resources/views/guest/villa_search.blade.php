@@ -1,207 +1,204 @@
 @extends('layouts.app')
 
-@section('title', 'Villas')
-
-@push('styles')
-    <style>
-        .villa-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        .villa-header {
-            margin-bottom: 30px;
-        }
-
-        .villa-header h1 {
-            font-size: 28px;
-            margin-bottom: 20px;
-        }
-
-        .filter-section {
-            background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 30px;
-        }
-
-        .filter-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            align-items: flex-end;
-        }
-
-        .filter-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .filter-group label {
-            font-weight: bold;
-            margin-bottom: 5px;
-            font-size: 14px;
-        }
-
-        .filter-group input,
-        .filter-group select {
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-            font-size: 14px;
-        }
-
-        .search-btn {
-            background: #007bff;
-            color: white;
-            border: none;
-            padding: 10px 30px;
-            border-radius: 4px;
-            cursor: pointer;
-            font-weight: bold;
-        }
-
-        .search-btn:hover {
-            background: #0056b3;
-        }
-
-        .villa-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .villa-card {
-            border: 2px solid #333;
-            border-radius: 8px;
-            overflow: hidden;
-            transition: transform 0.3s, box-shadow 0.3s;
-            cursor: pointer;
-            background: white;
-        }
-
-        .villa-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .villa-card-header {
-            background: #000;
-            color: white;
-            padding: 12px;
-            font-weight: bold;
-            font-size: 14px;
-        }
-
-        .villa-card-header-small {
-            font-size: 12px;
-            opacity: 0.8;
-            margin-top: 4px;
-        }
-
-        .villa-card-image {
-            width: 100%;
-            height: 150px;
-            background: #f0f0f0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: #999;
-            font-size: 12px;
-        }
-
-        .villa-card-body {
-            padding: 15px;
-        }
-
-        .villa-card-body h3 {
-            margin: 0 0 10px 0;
-            font-size: 14px;
-            font-weight: bold;
-        }
-
-        .villa-info {
-            font-size: 13px;
-            color: #666;
-            margin: 5px 0;
-        }
-
-        .villa-price {
-            margin-top: 10px;
-            font-size: 12px;
-            color: #007bff;
-            font-weight: bold;
-        }
-
-        .no-villas {
-            text-align: center;
-            padding: 40px;
-            color: #999;
-        }
-    </style>
-@endpush
+@section('title', 'Villa Booking')
 
 @section('content')
-    <div class="villa-container">
-        <div class="villa-header">
-            <h1>Villa</h1>
-        </div>
+    <div style="background: #f5f5f5; min-height: 100vh; padding: 40px 20px;">
+        <div style="max-width: 1000px; margin: 0 auto;">
+            <h1 style="font-size: 24px; margin-bottom: 30px; color: #333;">{{ $villas->first()?->name ?? 'Villa' }}</h1>
 
-        <div class="filter-section">
-            <form method="GET" action="{{ route('villa.search') }}">
-                <div class="filter-row">
-                    <div class="filter-group">
-                        <label for="capacity">Kapasitas</label>
-                        <input type="number" id="capacity" name="capacity" placeholder="Min guests"
-                            value="{{ request('capacity') }}">
-                    </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                <!-- Left: Booking Form -->
+                <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                    <h2 style="font-size: 16px; font-weight: 600; color: #007bff; margin-bottom: 20px;">Booking Details</h2>
 
-                    <div class="filter-group">
-                        <label for="checkin">Tanggal</label>
-                        <input type="date" id="checkin" name="checkin" value="{{ $checkin }}">
-                    </div>
-
-                    <div class="filter-group">
-                        <label for="price">Harga</label>
-                        <input type="number" id="price" name="price" placeholder="Max price" value="{{ request('price') }}">
-                    </div>
-
-                    <button type="submit" class="search-btn">Search</button>
-                </div>
-            </form>
-        </div>
-
-        @if($villas->count() > 0)
-            <div class="villa-grid">
-                @foreach($villas as $villa)
-                    <a href="{{ route('guest.villa.detail', $villa->id) }}" style="text-decoration: none; color: inherit;">
-                        <div class="villa-card">
-                            <div class="villa-card-header">
-                                {{ $villa->name }}
-                                <div class="villa-card-header-small">{{ $villa->status }}</div>
-                            </div>
-                            <div class="villa-card-image">
-                                No Image
-                            </div>
-                            <div class="villa-card-body">
-                                <h3>Kapasitas {{ $villa->capacity }} orang</h3>
-                                <div class="villa-info">
-                                    <strong>Harga:</strong> Rp {{ number_format($villa->base_price, 0, ',', '.') }}
-                                </div>
-                                <div class="villa-info">
-                                    <strong>Kamar:</strong> {{ $villa->rooms_total }}
-                                </div>
-                            </div>
+                    @if($errors->any())
+                        <div
+                            style="background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 12px; border-radius: 4px; margin-bottom: 20px;">
+                            <ul style="margin: 0; padding-left: 20px;">
+                                @foreach($errors->all() as $error)
+                                    <li style="font-size: 13px;">{{ $error }}</li>
+                                @endforeach
+                            </ul>
                         </div>
-                    </a>
-                @endforeach
+                    @endif
+
+                    <form action="{{ route('guest.store.booking') }}" method="POST" id="bookingForm"
+                        style="display: flex; flex-direction: column; gap: 18px;">
+                        @csrf
+
+                        @foreach($villas as $villa)
+                            <input type="hidden" name="villa_id" value="{{ $villa->id }}">
+                            @php $selectedVilla = $villa; @endphp
+                        @endforeach
+
+                        <!-- Check-in -->
+                        <div>
+                            <label
+                                style="display: block; font-weight: 500; margin-bottom: 6px; font-size: 13px; color: #333;">Check-in:</label>
+                            <input type="date" name="checkin" value="{{ old('checkin') }}" required
+                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; box-sizing: border-box;"
+                                id="checkinInput">
+                            <small style="display: block; color: #999; margin-top: 4px;">dd/mm/yyyy</small>
+                        </div>
+
+                        <!-- Check-out -->
+                        <div>
+                            <label
+                                style="display: block; font-weight: 500; margin-bottom: 6px; font-size: 13px; color: #333;">Check
+                                Out:</label>
+                            <input type="date" name="checkout" value="{{ old('checkout') }}" required
+                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; box-sizing: border-box;"
+                                id="checkoutInput">
+                            <small style="display: block; color: #999; margin-top: 4px;">dd/mm/yyyy</small>
+                        </div>
+
+                        <!-- Number of Guests -->
+                        <div>
+                            <label
+                                style="display: block; font-weight: 500; margin-bottom: 6px; font-size: 13px; color: #333;">Number
+                                of Guests:</label>
+                            <input type="number" name="guests" min="1" max="20" value="{{ old('guests', 2) }}" required
+                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; box-sizing: border-box;">
+                        </div>
+
+                        <!-- Guest Name -->
+                        <div>
+                            <label
+                                style="display: block; font-weight: 500; margin-bottom: 6px; font-size: 13px; color: #333;">Guest
+                                Name:</label>
+                            <input type="text" name="name" value="{{ old('name', 'Test User') }}" required
+                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; box-sizing: border-box;">
+                        </div>
+
+                        <!-- Email -->
+                        <div>
+                            <label
+                                style="display: block; font-weight: 500; margin-bottom: 6px; font-size: 13px; color: #333;">Email:</label>
+                            <input type="email" name="email" value="{{ old('email', 'user@example.com') }}" required
+                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; box-sizing: border-box;">
+                        </div>
+
+                        <!-- Phone Number -->
+                        <div>
+                            <label
+                                style="display: block; font-weight: 500; margin-bottom: 6px; font-size: 13px; color: #333;">Phone
+                                Number:</label>
+                            <input type="tel" name="phone" value="{{ old('phone', '081234567890') }}" required
+                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; box-sizing: border-box;">
+                        </div>
+
+                        <!-- Special Requests -->
+                        <div>
+                            <label
+                                style="display: block; font-weight: 500; margin-bottom: 6px; font-size: 13px; color: #333;">Special
+                                Requests:</label>
+                            <textarea name="special_requests" rows="3" placeholder="Any special requests or notes..."
+                                style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; box-sizing: border-box; font-family: Arial; resize: vertical;">{{ old('special_requests') }}</textarea>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <button type="submit"
+                            style="background: #007bff; color: white; padding: 12px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 14px; margin-top: 10px;">
+                            Continue to Payment
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Right: Order Summary -->
+                <div
+                    style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: fit-content; position: sticky; top: 20px;">
+                    <h2 style="font-size: 16px; font-weight: 600; color: #007bff; margin-bottom: 20px;">Order Summary</h2>
+
+                    <!-- Villa Info -->
+                    <div style="padding-bottom: 15px; border-bottom: 1px solid #eee;">
+                        <p style="margin: 0 0 8px 0; font-size: 13px; color: #666;">Villa:</p>
+                        <p style="margin: 0; font-size: 14px; font-weight: 600; color: #333;">
+                            {{ $villas->first()?->name ?? 'N/A' }}</p>
+                    </div>
+
+                    <!-- Check-in & Check-out -->
+                    <div style="padding: 15px 0; border-bottom: 1px solid #eee;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 8px;">
+                            <span style="font-size: 13px; color: #666;">Check in:</span>
+                            <span style="font-size: 13px; color: #333;" class="checkin-summary">[Select date]</span>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="font-size: 13px; color: #666;">Check out:</span>
+                            <span style="font-size: 13px; color: #333;" class="checkout-summary">[Select date]</span>
+                        </div>
+                    </div>
+
+                    <!-- Guests -->
+                    <div style="padding: 15px 0; border-bottom: 1px solid #eee;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="font-size: 13px; color: #666;">Guests:</span>
+                            <span style="font-size: 13px; font-weight: 600; color: #333;" class="guests-summary">2</span>
+                        </div>
+                    </div>
+
+                    <!-- Price -->
+                    <div style="padding: 15px 0; border-bottom: 1px solid #eee;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="font-size: 13px; color: #666;">Price per night:</span>
+                            <span style="font-size: 13px; font-weight: 600; color: #333;">Rp
+                                {{ number_format($villas->first()?->base_price ?? 0, 0, ',', '.') }}</span>
+                        </div>
+                    </div>
+
+                    <!-- Total -->
+                    <div style="padding: 15px 0;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="font-size: 14px; font-weight: 600; color: #333;">Total:</span>
+                            <span style="font-size: 14px; font-weight: 700; color: #007bff;" class="total-summary">[Will be
+                                calculated once dates are selected]</span>
+                        </div>
+                    </div>
+                </div>
             </div>
-        @else
-            <div class="no-villas">
-                <p>No villas found matching your criteria.</p>
-            </div>
-        @endif
+        </div>
     </div>
+
+    <script>
+        const basePrice = {{ $villas->first()?->base_price ?? 0 }};
+
+        function updateSummary() {
+            const checkinInput = document.getElementById('checkinInput').value;
+            const checkoutInput = document.getElementById('checkoutInput').value;
+            const guestInput = document.querySelector('[name="guests"]').value;
+
+            // Update guests
+            document.querySelector('.guests-summary').textContent = guestInput;
+
+            // Update dates
+            if (checkinInput) {
+                const checkinDate = new Date(checkinInput + 'T00:00:00');
+                document.querySelector('.checkin-summary').textContent =
+                    checkinDate.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            }
+
+            if (checkoutInput) {
+                const checkoutDate = new Date(checkoutInput + 'T00:00:00');
+                document.querySelector('.checkout-summary').textContent =
+                    checkoutDate.toLocaleDateString('en-GB', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            }
+
+            // Calculate total
+            if (checkinInput && checkoutInput) {
+                const checkinDate = new Date(checkinInput + 'T00:00:00');
+                const checkoutDate = new Date(checkoutInput + 'T00:00:00');
+                const nights = Math.ceil((checkoutDate - checkinDate) / (1000 * 60 * 60 * 24));
+
+                if (nights > 0) {
+                    const total = basePrice * nights;
+                    document.querySelector('.total-summary').textContent =
+                        `Rp ${new Intl.NumberFormat('id-ID').format(total)}`;
+                }
+            }
+        }
+
+        document.getElementById('checkinInput').addEventListener('change', updateSummary);
+        document.getElementById('checkoutInput').addEventListener('change', updateSummary);
+        document.querySelector('[name="guests"]').addEventListener('change', updateSummary);
+    </script>
 @endsection

@@ -11,8 +11,11 @@ class UserController extends Controller
 {
     public function index()
     {
-        $users = User::orderBy('id','asc')->get();
-        return view('admin.users', compact('users'));
+        $users = User::where('role', '!=', 'admin')
+            ->orderBy('created_at', 'desc')
+            ->paginate(15);
+
+        return view('admin.users.index', compact('users'));
     }
 
     public function create()
@@ -22,22 +25,20 @@ class UserController extends Controller
 
     public function store(Request $request)
     {
-        $data = $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'phone' => 'nullable|string|max:30',
             'password' => 'required|string|min:6',
-            'role' => 'nullable|string',
+            'phone' => 'nullable|string|max:20',
+            'role' => 'required|in:guest,receptionist,admin',
         ]);
 
-        User::create([
-            'name' => $data['name'],
-            'email' => $data['email'],
-            'phone' => $data['phone'] ?? null,
-            'password' => Hash::make($data['password']),
-        ]);
+        $validated['password'] = Hash::make($validated['password']);
 
-        return redirect()->route('admin.users.index');
+        User::create($validated);
+
+        return redirect()->route('admin.users.index')
+            ->with('success', 'Pengguna berhasil ditambahkan!');
     }
 
     public function edit(User $user)
@@ -47,29 +48,35 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
-        $data = $request->validate([
+        $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|email|unique:users,email,'.$user->id,
-            'phone' => 'nullable|string|max:30',
+            'email' => 'required|email|unique:users,email,' . $user->id,
             'password' => 'nullable|string|min:6',
-            'role' => 'nullable|string',
+            'phone' => 'nullable|string|max:20',
+            'role' => 'required|in:guest,receptionist,admin',
         ]);
 
-        $user->name = $data['name'];
-        $user->email = $data['email'];
-        $user->phone = $data['phone'] ?? null;
-        $user->role = $data['role'] ?? 'guest';
-        if (!empty($data['password'])) {
-            $user->password = Hash::make($data['password']);
+        if ($request->filled('password')) {
+            $validated['password'] = Hash::make($validated['password']);
+        } else {
+            unset($validated['password']);
         }
-        $user->save();
 
-        return redirect()->route('admin.users.index');
+        $user->update($validated);
+
+        return redirect()->route('admin.users.index')
+            ->with('success', 'Pengguna berhasil diperbarui!');
+    }
+
+    public function show(User $user)
+    {
+        return view('admin.users.show', compact('user'));
     }
 
     public function destroy(User $user)
     {
         $user->delete();
-        return redirect()->route('admin.users.index');
+        return redirect()->route('admin.users.index')
+            ->with('success', 'User deleted successfully!');
     }
 }

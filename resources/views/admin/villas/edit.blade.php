@@ -1,662 +1,169 @@
 @extends('layouts.app')
 
-@section('title', 'Edit Villa - Admin')
+@section('title', 'Edit Villa')
 
-@push('styles')
-    <style>
-        .admin-layout {
-            display: flex;
-            gap: 20px;
-            margin-top: 20px;
-        }
-
-        .sidebar {
-            width: 250px;
-            background: #343a40;
-            color: white;
-            padding: 20px;
-            border-radius: 8px;
-            height: fit-content;
-            flex-shrink: 0;
-            position: sticky;
-            top: 20px;
-        }
-
-        .sidebar h3 {
-            margin-top: 0;
-            margin-bottom: 20px;
-            color: #fff;
-            font-size: 18px;
-            border-bottom: 2px solid #495057;
-            padding-bottom: 15px;
-        }
-
-        .sidebar nav {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .sidebar .menu-item {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 12px 15px;
-            border-radius: 6px;
-            cursor: pointer;
-            transition: all 0.3s;
-            color: #333;
-            text-decoration: none;
-            border: none;
-            font-size: 14px;
-            font-weight: 500;
-            background: #e9ecef;
-            text-align: center;
-        }
-
-        .sidebar .menu-item:hover {
-            background: #007bff;
-            color: white;
-            transform: translateX(5px);
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-        }
-
-        .sidebar .menu-item.active {
-            background: #007bff;
-            color: white;
-            font-weight: 600;
-        }
-
-        .main-content {
-            flex: 1;
-        }
-
-        .form-container {
-            background: white;
-            padding: 30px;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            max-width: 900px;
-        }
-
-        .form-header {
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .form-header h2 {
-            margin: 0 0 5px 0;
-            color: #333;
-        }
-
-        .form-header p {
-            margin: 0;
-            color: #666;
-            font-size: 14px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            color: #333;
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-family: inherit;
-            font-size: 14px;
-            transition: border-color 0.3s;
-            box-sizing: border-box;
-        }
-
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #007bff;
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 20px;
-        }
-
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .form-buttons {
-            display: flex;
-            gap: 10px;
-            justify-content: flex-end;
-            margin-top: 30px;
-            padding-top: 20px;
-            border-top: 1px solid #e9ecef;
-        }
-
-        .btn {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            transition: background 0.3s;
-            text-decoration: none;
-            display: inline-block;
-        }
-
-        .btn-primary {
-            background: #007bff;
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background: #0056b3;
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-secondary:hover {
-            background: #5a6268;
-        }
-
-        .form-section {
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid #e9ecef;
-        }
-
-        .form-section h3 {
-            margin: 0 0 20px 0;
-            color: #333;
-            font-size: 16px;
-        }
-
-        .upload-area {
-            border: 2px dashed #d1d5db;
-            border-radius: 6px;
-            padding: 30px;
-            text-align: center;
-            background: #f8f9fa;
-            cursor: pointer;
-            transition: border-color 0.3s, background 0.3s;
-        }
-
-        .upload-area:hover {
-            border-color: #007bff;
-            background: #e7f1ff;
-        }
-
-        .upload-area.dragover {
-            border-color: #007bff;
-            background: #e7f1ff;
-        }
-
-        .image-preview {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-            gap: 12px;
-            margin-top: 15px;
-        }
-
-        .image-item {
-            position: relative;
-            border-radius: 6px;
-            overflow: hidden;
-            background: #f0f0f0;
-            aspect-ratio: 1;
-        }
-
-        .image-item img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .image-remove {
-            position: absolute;
-            top: 4px;
-            right: 4px;
-            background: #dc3545;
-            color: white;
-            border: none;
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 14px;
-            transition: background 0.3s;
-        }
-
-        .image-remove:hover {
-            background: #c82333;
-        }
-
-        .date-inputs {
-            display: flex;
-            gap: 10px;
-            align-items: flex-end;
-            margin-bottom: 15px;
-        }
-
-        .date-inputs .form-group {
-            flex: 1;
-            margin-bottom: 0;
-        }
-
-        .btn-add-date {
-            padding: 10px 15px;
-            background: #28a745;
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 14px;
-            transition: background 0.3s;
-        }
-
-        .btn-add-date:hover {
-            background: #218838;
-        }
-
-        .unavailable-dates {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px;
-        }
-
-        .date-tag {
-            background: #fff3cd;
-            color: #856404;
-            padding: 8px 12px;
-            border-radius: 4px;
-            font-size: 13px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .date-tag button {
-            background: none;
-            border: none;
-            color: #856404;
-            cursor: pointer;
-            font-weight: bold;
-            font-size: 16px;
-            padding: 0;
-            transition: color 0.3s;
-        }
-
-        .date-tag button:hover {
-            color: #721c24;
-        }
-
-        .error-message {
-            color: #dc3545;
-            font-size: 12px;
-            margin-top: 4px;
-        }
-
-        .success-message {
-            background: #d4edda;
-            color: #155724;
-            padding: 12px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-            border: 1px solid #c3e6cb;
-        }
-    </style>
-@endpush
-
-<div class="admin-layout">
-    <!-- Sidebar -->
-    <div class="sidebar">
-        <h3>Admin Menu</h3>
-        <nav>
-            <a href="{{ route('admin.dashboard') }}" class="menu-item">Dashboard</a>
-            <a href="{{ route('admin.villas.index') }}" class="menu-item active">Manage Villas</a>
-            <a href="{{ route('admin.reservations') }}" class="menu-item">Reservations</a>
-            <a href="{{ route('admin.users.index') }}" class="menu-item">Users</a>
-            <a href="{{ route('admin.homepage.edit') }}" class="menu-item">Edit Homepage</a>
-            <a href="{{ route('admin.finances') }}" class="menu-item">Finances</a>
-        </nav>
-    </div>
-
-    <!-- Main Content -->
-    <div class="main-content">
-        <div class="form-container">
-            <div class="form-header">
-                <h2>Edit Villa</h2>
-                <p>Update villa information, images, and availability</p>
-            </div>
-
-            @if ($errors->any())
-                <div
-                    style="background: #f8d7da; color: #721c24; padding: 12px; border-radius: 4px; margin-bottom: 20px; border: 1px solid #f5c6cb;">
-                    <strong>Please fix the following errors:</strong>
-                    <ul style="margin: 8px 0 0 0; padding-left: 20px;">
-                        @foreach ($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
+@section('content')
+    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 20px; margin: 0 -20px; padding: 0;">
+        <!-- Sidebar -->
+        <div style="background: #f8f9fa; padding: 20px; min-height: 100vh;">
+            <h2 style="margin: 0 0 30px 0; font-size: 18px; font-weight: 600;">Menu</h2>
+            <nav style="display: flex; flex-direction: column; gap: 10px;">
+                <a href="{{ route('admin.dashboard') }}"
+                    style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">📊
+                    Dashboard</a>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <button
+                        onclick="document.getElementById('manage-menu').style.display = document.getElementById('manage-menu').style.display === 'none' ? 'flex' : 'none'"
+                        style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; text-align: left; font-weight: 500;">🏡
+                        Manage</button>
+                    <div id="manage-menu" style="display: none; flex-direction: column; gap: 5px; margin-left: 10px;">
+                        <a href="{{ route('admin.villas.index') }}"
+                            style="padding: 8px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            Villa</a>
+                        <a href="{{ route('admin.settings.homepage') }}"
+                            style="padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            Homepage</a>
+                    </div>
                 </div>
-            @endif
+                <a href="{{ route('admin.reservations.index') }}"
+                    style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">📅
+                    Reservation</a>
+                <a href="{{ route('admin.users.index') }}"
+                    style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">👥
+                    Users</a>
+                <a href="{{ route('admin.finances.index') }}"
+                    style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">💰
+                    Finance</a>
+            </nav>
+        </div>
 
-            <form method="POST" action="{{ route('admin.villas.update', $villa->id) }}" enctype="multipart/form-data">
+        <!-- Main Content -->
+        <div style="padding: 20px; background: white; max-width: 800px;">
+            <h1 style="margin: 0 0 20px 0; font-size: 28px;">Edit Villa</h1>
+
+            <form action="{{ route('admin.villas.update', $villa) }}" method="POST" enctype="multipart/form-data"
+                style="background: #f9f9f9; padding: 20px; border-radius: 8px;">
                 @csrf
                 @method('PUT')
 
-                <!-- Basic Information -->
-                <div class="form-section">
-                    <h3>Villa Information</h3>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="name">Villa Name *</label>
-                            <input type="text" id="name" name="name" value="{{ old('name', $villa->name) }}" required>
-                            @error('name')
-                                <div class="error-message">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="base_price">Price per Night (Rp) *</label>
-                            <input type="number" id="base_price" name="base_price" step="0.01"
-                                value="{{ old('base_price', $villa->base_price) }}" required>
-                            @error('base_price')
-                                <div class="error-message">{{ $message }}</div>
-                            @enderror
-                        </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Nama Villa *</label>
+                    <input type="text" name="name" value="{{ old('name', $villa->name) }}"
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" required>
+                    @error('name') <small style="color: #dc3545;">{{ $message }}</small> @enderror
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Slug *</label>
+                    <input type="text" name="slug" value="{{ old('slug', $villa->slug) }}"
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" required>
+                    @error('slug') <small style="color: #dc3545;">{{ $message }}</small> @enderror
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Kapasitas *</label>
+                        <input type="number" name="capacity" value="{{ old('capacity', $villa->capacity) }}"
+                            style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" required>
+                        @error('capacity') <small style="color: #dc3545;">{{ $message }}</small> @enderror
                     </div>
-                    <div class="form-row">
-                        <div class="form-group">
-                            <label for="capacity">Guest Capacity *</label>
-                            <input type="number" id="capacity" name="capacity"
-                                value="{{ old('capacity', $villa->capacity) }}" required>
-                            @error('capacity')
-                                <div class="error-message">{{ $message }}</div>
-                            @enderror
-                        </div>
-                        <div class="form-group">
-                            <label for="rooms_total">Number of Bedrooms *</label>
-                            <input type="number" id="rooms_total" name="rooms_total"
-                                value="{{ old('rooms_total', $villa->rooms_total) }}" required>
-                            @error('rooms_total')
-                                <div class="error-message">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label for="status">Status *</label>
-                        <select id="status" name="status" required>
-                            <option value="active" {{ old('status', $villa->status) == 'active' ? 'selected' : '' }}>
-                                Active</option>
-                            <option value="inactive" {{ old('status', $villa->status) == 'inactive' ? 'selected' : '' }}>
-                                Inactive</option>
-                            <option value="maintenance" {{ old('status', $villa->status) == 'maintenance' ? 'selected' : '' }}>Maintenance</option>
-                        </select>
-                        @error('status')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
-                    </div>
-                    <div class="form-group">
-                        <label for="description">Description</label>
-                        <textarea id="description"
-                            name="description">{{ old('description', $villa->description) }}</textarea>
-                        @error('description')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Jumlah Kamar *</label>
+                        <input type="number" name="rooms_total" value="{{ old('rooms_total', $villa->rooms_total) }}"
+                            style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" required>
+                        @error('rooms_total') <small style="color: #dc3545;">{{ $message }}</small> @enderror
                     </div>
                 </div>
 
-                <!-- Images Section -->
-                <div class="form-section">
-                    <h3>Villa Images</h3>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Harga Per Malam (Rp) *</label>
+                    <input type="number" name="base_price" value="{{ old('base_price', $villa->base_price) }}"
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" required>
+                    @error('base_price') <small style="color: #dc3545;">{{ $message }}</small> @enderror
+                </div>
 
-                    <div class="form-group">
-                        <label for="thumbnail">Thumbnail Image (Main Image)</label>
-                        <div class="upload-area" id="thumbnailArea"
-                            onclick="document.getElementById('thumbnail').click()">
-                            <p style="margin: 0; font-size: 16px;">📷 Click to upload or drag & drop</p>
-                            <p style="margin: 8px 0 0 0; color: #666; font-size: 12px;">JPG, PNG, GIF (Max 5MB)</p>
-                        </div>
-                        <input type="file" id="thumbnail" name="thumbnail" accept="image/*" style="display: none;">
-                        <div class="image-preview" id="thumbnailPreview">
-                            @if($villa->thumbnail_path && file_exists(public_path($villa->thumbnail_path)))
-                                <div class="image-item">
-                                    <img src="{{ asset($villa->thumbnail_path) }}" alt="Thumbnail">
-                                    <button type="button" class="image-remove" onclick="removeThumbnail(event)">×</button>
-                                </div>
-                            @endif
-                        </div>
-                        @error('thumbnail')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
-                    </div>
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Deskripsi *</label>
+                    <textarea name="description"
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; min-height: 100px;"
+                        required>{{ old('description', $villa->description) }}</textarea>
+                    @error('description') <small style="color: #dc3545;">{{ $message }}</small> @enderror
+                </div>
 
-                    <div class="form-group">
-                        <label for="images">Gallery Images</label>
-                        <div class="upload-area" id="imagesArea" onclick="document.getElementById('images').click()">
-                            <p style="margin: 0; font-size: 16px;">🖼️ Click to upload or drag & drop</p>
-                            <p style="margin: 8px 0 0 0; color: #666; font-size: 12px;">You can select multiple images
-                            </p>
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Status *</label>
+                    <select name="status" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"
+                        required>
+                        <option value="available" {{ old('status', $villa->status) === 'available' ? 'selected' : '' }}>
+                            Available</option>
+                        <option value="unavailable" {{ old('status', $villa->status) === 'unavailable' ? 'selected' : '' }}>
+                            Unavailable</option>
+                    </select>
+                    @error('status') <small style="color: #dc3545;">{{ $message }}</small> @enderror
+                </div>
+
+                <div style="margin-bottom: 15px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Thumbnail Image</label>
+                    @if($villa->thumbnail_path && file_exists(public_path($villa->thumbnail_path)))
+                        <div style="margin-bottom: 10px;">
+                            <img src="{{ asset($villa->thumbnail_path) }}" alt="Thumbnail"
+                                style="max-width: 150px; border-radius: 4px;">
+                            <p style="font-size: 12px; color: #666; margin-top: 5px;">Current thumbnail</p>
                         </div>
-                        <input type="file" id="images" name="images[]" multiple accept="image/*" style="display: none;">
-                        <div class="image-preview" id="imagesPreview">
-                            @if($villa->images && is_array($villa->images))
+                    @endif
+                    <input type="file" name="thumbnail" accept="image/*"
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                    <small style="color: #666;">Leave empty to keep current. Max 20MB. Format: JPG, PNG, GIF</small>
+                    @error('thumbnail') <small style="color: #dc3545;">{{ $message }}</small> @enderror
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Gallery Images</label>
+                    @if($villa->images && count($villa->images) > 0)
+                        <div style="margin-bottom: 15px;">
+                            <p style="font-size: 12px; font-weight: 600; margin-bottom: 8px;">Current Gallery Images:</p>
+                            <div
+                                style="display: grid; grid-template-columns: repeat(auto-fill, minmax(100px, 1fr)); gap: 10px;">
                                 @foreach($villa->images as $image)
-                                    <div class="image-item">
-                                        <img src="{{ asset($image) }}" alt="Gallery">
-                                        <button type="button" class="image-remove" onclick="removeGalleryImage(this)">×</button>
+                                    <div style="position: relative; border-radius: 4px; overflow: hidden;">
+                                        <img src="{{ asset($image) }}" alt="Gallery"
+                                            style="width: 100%; height: 100px; object-fit: cover;">
+                                        <button type="button" onclick="deleteImage(this, '{{ $image }}');"
+                                            style="position: absolute; top: 2px; right: 2px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 16px; line-height: 1;">×</button>
                                     </div>
                                 @endforeach
-                            @endif
+                            </div>
                         </div>
-                        @error('images')
-                            <div class="error-message">{{ $message }}</div>
-                        @enderror
-                    </div>
+                    @endif
+                    <input type="file" name="images[]" multiple accept="image/*"
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                    <small style="color: #666;">You can select multiple images. Leave empty to keep current. Max 20MB per
+                        image.</small>
+                    @error('images') <small style="color: #dc3545;">{{ $message }}</small> @enderror
                 </div>
 
-                <!-- Availability Section -->
-                <div class="form-section">
-                    <h3>Unavailable Dates</h3>
-                    <p style="color: #666; font-size: 13px; margin-bottom: 15px;">Mark dates when the villa is
-                        unavailable for booking (closed, maintenance, etc.)</p>
+                <script>
+                    function deleteImage(button, imagePath) {
+                        if (confirm('Are you sure you want to delete this image?')) {
+                            const form = button.closest('form');
+                            const input = document.createElement('input');
+                            input.type = 'hidden';
+                            input.name = 'delete_images[]';
+                            input.value = imagePath;
+                            form.appendChild(input);
+                            button.parentElement.style.opacity = '0.5';
+                            button.disabled = true;
+                        }
+                    }
+                </script>
 
-                    <div class="date-inputs">
-                        <div class="form-group" style="flex: 1; margin-bottom: 0;">
-                            <label for="new_unavailable_date">Select Date</label>
-                            <input type="date" id="new_unavailable_date">
-                        </div>
-                        <button type="button" class="btn-add-date" onclick="addUnavailableDate()">+ Add Date</button>
-                    </div>
-
-                    <div class="unavailable-dates" id="unavailableDatesList">
-                        @if($villa->closed_dates && count($villa->closed_dates) > 0)
-                            @foreach($villa->closed_dates as $date)
-                                <div class="date-tag">
-                                    <span>{{ $date }}</span>
-                                    <button type="button" onclick="removeUnavailableDate(this)">×</button>
-                                </div>
-                            @endforeach
-                        @endif
-                    </div>
-
-                    <input type="hidden" id="closed_dates_input" name="closed_dates"
-                        value="{{ json_encode($villa->closed_dates ?? []) }}">
-                </div>
-
-                <!-- Form Buttons -->
-                <div class="form-buttons">
-                    <a href="{{ route('admin.villas.index') }}" class="btn btn-secondary">Cancel</a>
-                    <button type="submit" class="btn btn-primary">Update Villa</button>
+                <div style="display: flex; gap: 10px;">
+                    <button type="submit"
+                        style="background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Simpan</button>
+                    <a href="{{ route('admin.villas.index') }}"
+                        style="background: #6c757d; color: white; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: 600;">Batal</a>
                 </div>
             </form>
         </div>
     </div>
-</div>
-
-<script>
-    // Thumbnail
-    const thumbnailInput = document.getElementById('thumbnail');
-    const thumbnailArea = document.getElementById('thumbnailArea');
-    const thumbnailPreview = document.getElementById('thumbnailPreview');
-
-    thumbnailInput.addEventListener('change', function () {
-        previewThumbnail(this);
-    });
-
-    thumbnailArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        thumbnailArea.classList.add('dragover');
-    });
-
-    thumbnailArea.addEventListener('dragleave', () => {
-        thumbnailArea.classList.remove('dragover');
-    });
-
-    thumbnailArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        thumbnailArea.classList.remove('dragover');
-        if (e.dataTransfer.files.length > 0) {
-            thumbnailInput.files = e.dataTransfer.files;
-            previewThumbnail(thumbnailInput);
-        }
-    });
-
-    function previewThumbnail(input) {
-        const existing = thumbnailPreview.querySelector('.image-item');
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = (e) => {
-                if (existing) existing.remove();
-                const item = document.createElement('div');
-                item.className = 'image-item';
-                item.innerHTML = `
-                <img src="${e.target.result}" alt="Thumbnail">
-                <button type="button" class="image-remove" onclick="removeThumbnail(event)">×</button>
-            `;
-                thumbnailPreview.appendChild(item);
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-
-    function removeThumbnail(event) {
-        event.preventDefault();
-        thumbnailInput.value = '';
-        thumbnailPreview.innerHTML = '';
-    }
-
-    // Gallery images
-    const imagesInput = document.getElementById('images');
-    const imagesArea = document.getElementById('imagesArea');
-    const imagesPreview = document.getElementById('imagesPreview');
-
-    imagesInput.addEventListener('change', function () {
-        previewGalleryImages(this);
-    });
-
-    imagesArea.addEventListener('dragover', (e) => {
-        e.preventDefault();
-        imagesArea.classList.add('dragover');
-    });
-
-    imagesArea.addEventListener('dragleave', () => {
-        imagesArea.classList.remove('dragover');
-    });
-
-    imagesArea.addEventListener('drop', (e) => {
-        e.preventDefault();
-        imagesArea.classList.remove('dragover');
-        if (e.dataTransfer.files.length > 0) {
-            imagesInput.files = e.dataTransfer.files;
-            previewGalleryImages(imagesInput);
-        }
-    });
-
-    function previewGalleryImages(input) {
-        imagesPreview.innerHTML = '';
-        if (input.files) {
-            for (let file of input.files) {
-                if (file.type.startsWith('image/')) {
-                    const reader = new FileReader();
-                    reader.onload = (e) => {
-                        const item = document.createElement('div');
-                        item.className = 'image-item';
-                        item.innerHTML = `
-                        <img src="${e.target.result}" alt="Gallery">
-                    `;
-                        imagesPreview.appendChild(item);
-                    };
-                    reader.readAsDataURL(file);
-                }
-            }
-        }
-    }
-
-    function removeGalleryImage(button) {
-        button.closest('.image-item').remove();
-    }
-
-    // Unavailable dates
-    function addUnavailableDate() {
-        const input = document.getElementById('new_unavailable_date');
-        const date = input.value;
-
-        if (!date) {
-            alert('Please select a date');
-            return;
-        }
-
-        const list = document.getElementById('unavailableDatesList');
-        const tag = document.createElement('div');
-        tag.className = 'date-tag';
-        tag.innerHTML = `
-        <span>${date}</span>
-        <button type="button" onclick="removeUnavailableDate(this)">×</button>
-    `;
-        list.appendChild(tag);
-        input.value = '';
-        updateClosedDatesInput();
-    }
-
-    function removeUnavailableDate(button) {
-        button.closest('.date-tag').remove();
-        updateClosedDatesInput();
-    }
-
-    function updateClosedDatesInput() {
-        const dates = Array.from(document.querySelectorAll('#unavailableDatesList .date-tag span')).map(s => s.textContent);
-        document.getElementById('closed_dates_input').value = JSON.stringify(dates);
-    }
-
-    document.getElementById('new_unavailable_date')?.addEventListener('keypress', function (e) {
-        if (e.key === 'Enter') {
-            e.preventDefault();
-            addUnavailableDate();
-        }
-    });
-</script>
+@endsection

@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Manage Villa')
+@section('title', 'Users')
 
 @section('content')
     <div style="display: grid; grid-template-columns: 200px 1fr; gap: 20px; margin: 0 -20px; padding: 0;">
@@ -12,12 +12,13 @@
                     style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">📊
                     Dashboard</a>
                 <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <button onclick="document.getElementById('manage-menu').style.display = document.getElementById('manage-menu').style.display === 'none' ? 'flex' : 'none'"
+                    <button
+                        onclick="document.getElementById('manage-menu').style.display = document.getElementById('manage-menu').style.display === 'none' ? 'flex' : 'none'"
                         style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; text-align: left; font-weight: 500;">🏡
                         Manage</button>
                     <div id="manage-menu" style="display: none; flex-direction: column; gap: 5px; margin-left: 10px;">
                         <a href="{{ route('admin.villas.index') }}"
-                            style="padding: 8px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Villa</a>
                         <a href="{{ route('admin.settings.homepage') }}"
                             style="padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
@@ -28,7 +29,7 @@
                     style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">📅
                     Reservation</a>
                 <a href="{{ route('admin.users.index') }}"
-                    style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">👥
+                    style="padding: 12px; background: #007bff; color: white; text-decoration: none; border-radius: 4px;">👥
                     Users</a>
                 <a href="{{ route('admin.finances.index') }}"
                     style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">💰
@@ -39,10 +40,10 @@
         <!-- Main Content -->
         <div style="padding: 20px; background: white;">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                <h1 style="margin: 0; font-size: 28px;">Halaman Data Villa</h1>
-                <a href="{{ route('admin.villas.create') }}"
-                    style="background: #007bff; color: white; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: 600;">+
-                    Tambah Villa</a>
+                <h1 style="margin: 0; font-size: 28px;">Daftar Pengguna</h1>
+                <a href="{{ route('admin.users.create') }}"
+                    style="background: #28a745; color: white; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: 500;">+
+                    Tambah Pengguna</a>
             </div>
 
             @if(session('success'))
@@ -56,54 +57,62 @@
                 <table style="width: 100%; border-collapse: collapse;">
                     <thead style="background: #f8f9fa;">
                         <tr>
+                            <th style="padding: 12px; text-align: left; font-weight: 600; border-bottom: 1px solid #ddd;">No
+                            </th>
                             <th style="padding: 12px; text-align: left; font-weight: 600; border-bottom: 1px solid #ddd;">
-                                Nama Tipe Villa</th>
+                                Nama</th>
                             <th style="padding: 12px; text-align: left; font-weight: 600; border-bottom: 1px solid #ddd;">
-                                Harga</th>
+                                Email</th>
+                            <th style="padding: 12px; text-align: left; font-weight: 600; border-bottom: 1px solid #ddd;">No
+                                Telp</th>
                             <th style="padding: 12px; text-align: left; font-weight: 600; border-bottom: 1px solid #ddd;">
-                                Deskripsi</th>
-                            <th style="padding: 12px; text-align: left; font-weight: 600; border-bottom: 1px solid #ddd;">
-                                Status Villa</th>
+                                Terdaftar</th>
                             <th style="padding: 12px; text-align: center; font-weight: 600; border-bottom: 1px solid #ddd;">
                                 Aksi</th>
                         </tr>
                     </thead>
                     <tbody>
-                        @forelse($villas as $villa)
+                        @forelse($users as $index => $user)
                             <tr style="border-bottom: 1px solid #eee;">
-                                <td style="padding: 12px;">{{ $villa->name }}</td>
-                                <td style="padding: 12px;">Rp {{ number_format($villa->base_price, 0, ',', '.') }}</td>
-                                <td style="padding: 12px;">{{ Str::limit($villa->description, 50) }}</td>
+                                <td style="padding: 12px;">{{ $users->firstItem() + $index }}</td>
                                 <td style="padding: 12px;">
-                                    <span
-                                        style="background: {{ $villa->status === 'available' ? '#d4edda' : '#f8d7da' }}; color: {{ $villa->status === 'available' ? '#155724' : '#721c24' }}; padding: 4px 8px; border-radius: 4px; font-size: 12px;">
-                                        {{ ucfirst($villa->status) }}
-                                    </span>
+                                    <strong>{{ $user->name }}</strong>
                                 </td>
+                                <td style="padding: 12px;">{{ $user->email }}</td>
+                                <td style="padding: 12px;">{{ $user->phone ?? '-' }}</td>
+                                <td style="padding: 12px;">{{ $user->created_at->format('d M Y H:i') }}</td>
                                 <td style="padding: 12px; text-align: center;">
-                                    <a href="{{ route('admin.villas.edit', $villa) }}"
-                                        style="color: #007bff; text-decoration: none; margin-right: 10px;">Edit</a>
-                                    <form action="{{ route('admin.villas.destroy', $villa) }}" method="POST"
-                                        style="display: inline;" onsubmit="return confirm('Delete?');">
+                                    <a href="{{ route('admin.users.edit', $user) }}"
+                                        style="background: none; border: none; color: #007bff; cursor: pointer; text-decoration: underline; font-size: 14px; margin-right: 10px;">Edit</a>
+                                    <form action="{{ route('admin.users.destroy', $user) }}" method="POST"
+                                        style="display: inline;" onsubmit="return confirm('Hapus pengguna ini?');">
                                         @csrf
                                         @method('DELETE')
                                         <button type="submit"
-                                            style="background: none; border: none; color: #dc3545; cursor: pointer; text-decoration: none;">Hapus</button>
+                                            style="background: none; border: none; color: #dc3545; cursor: pointer; text-decoration: underline; font-size: 14px;">Hapus</button>
                                     </form>
                                 </td>
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" style="padding: 20px; text-align: center; color: #666;">Tidak ada villa</td>
+                                <td colspan="6" style="padding: 20px; text-align: center; color: #666;">Tidak ada pengguna</td>
                             </tr>
                         @endforelse
                     </tbody>
                 </table>
             </div>
 
-            <div style="margin-top: 20px;">
-                {{ $villas->links() }}
-            </div>
+            @if($users->total() > 0)
+                <div style="margin-top: 20px; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="color: #666; font-size: 13px;">
+                        Menampilkan {{ $users->firstItem() }} hingga {{ $users->lastItem() }} dari {{ $users->total() }}
+                        pengguna
+                    </div>
+                    <div>
+                        {{ $users->links() }}
+                    </div>
+                </div>
+            @endif
         </div>
     </div>
 @endsection

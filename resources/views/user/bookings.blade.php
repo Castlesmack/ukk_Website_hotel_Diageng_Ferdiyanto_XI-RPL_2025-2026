@@ -142,25 +142,29 @@
         <main class="main-content">
             <h2>My Bookings</h2>
 
-            <div class="booking-card">
-                <h4>Order ID: 14524621</h4>
-                <div class="booking-details">
-                    <div><strong>Villa:</strong> Villa Tipe - 0608</div>
-                    <div><strong>Guests:</strong> 2</div>
-                    <div><strong>Dates:</strong> 20/12/2025 - 21/12/2025</div>
-                    <div><strong>Status:</strong> <span class="status confirmed">Confirmed</span></div>
+            @if ($bookings && $bookings->count() > 0)
+                @foreach ($bookings as $booking)
+                    <div class="booking-card">
+                        <h4>Order ID: {{ $booking->booking_code }}</h4>
+                        <div class="booking-details">
+                            <div><strong>Villa:</strong> {{ $booking->villa->name }}</div>
+                            <div><strong>Guests:</strong> {{ $booking->guests }}</div>
+                            <div><strong>Check-in:</strong> {{ \Carbon\Carbon::parse($booking->check_in_date)->format('d/m/Y') }}
+                            </div>
+                            <div><strong>Check-out:</strong> {{ \Carbon\Carbon::parse($booking->check_out_date)->format('d/m/Y') }}
+                            </div>
+                            <div><strong>Nights:</strong> {{ $booking->nights }}</div>
+                            <div><strong>Total Price:</strong> Rp {{ number_format($booking->total_price, 0, ',', '.') }}</div>
+                            <div><strong>Status:</strong> <span
+                                    class="status {{ strtolower($booking->status) }}">{{ ucfirst($booking->status) }}</span></div>
+                        </div>
+                    </div>
+                @endforeach
+            @else
+                <div class="no-bookings">
+                    <p>You have no bookings yet.</p>
                 </div>
-            </div>
-
-            <div class="booking-card">
-                <h4>Order ID: 14524622</h4>
-                <div class="booking-details">
-                    <div><strong>Villa:</strong> Villa Puncak Harmony</div>
-                    <div><strong>Guests:</strong> 4</div>
-                    <div><strong>Dates:</strong> 15/01/2026 - 18/01/2026</div>
-                    <div><strong>Status:</strong> <span class="status pending">Pending</span></div>
-                </div>
-            </div>
+            @endif
         </main>
     </div>
 @endsection

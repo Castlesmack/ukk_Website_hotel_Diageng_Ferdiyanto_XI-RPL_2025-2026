@@ -21,6 +21,7 @@ class AdminVillaController extends Controller
 
     public function store(Request $request)
     {
+        // Validate input
         $request->validate([
             'name' => 'required|string|max:191',
             'capacity' => 'required|integer|min:1',
@@ -28,56 +29,68 @@ class AdminVillaController extends Controller
             'rooms_total' => 'required|integer|min:1',
             'description' => 'nullable|string',
             'status' => 'required|in:active,inactive,maintenance',
-            'thumbnail' => 'nullable|image|max:5120',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,gif,jpg|max:20480',
             'images' => 'nullable|array',
-            'images.*' => 'image|max:5120',
+            'images.*' => 'image|mimes:jpeg,png,gif,jpg|max:20480',
         ]);
 
+        // Ensure upload directory exists
+        $uploadDir = public_path('uploads/villas');
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        // Generate unique slug
         $slug = Str::slug($request->name);
         $originalSlug = $slug;
-        $count = 1;
+        $counter = 1;
         while (Villa::where('slug', $slug)->exists()) {
-            $slug = $originalSlug . '-' . $count;
-            $count++;
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
         }
 
-        // Create uploads directory if it doesn't exist
-        if (!is_dir(public_path('uploads/villas'))) {
-            mkdir(public_path('uploads/villas'), 0755, true);
-        }
-
-        // Handle thumbnail upload
+        // Handle thumbnail
         $thumbnailPath = null;
         if ($request->hasFile('thumbnail')) {
-            $filename = time() . '_thumbnail_' . Str::random(10) . '.' . $request->file('thumbnail')->extension();
-            $request->file('thumbnail')->move(public_path('uploads/villas'), $filename);
+            $file = $request->file('thumbnail');
+            $filename = 'thumb_' . time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadDir, $filename);
             $thumbnailPath = 'uploads/villas/' . $filename;
         }
 
-        // Handle gallery images upload
+        // Handle gallery images
         $imagePaths = [];
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $image) {
-                $filename = time() . '_' . Str::random(10) . '.' . $image->extension();
-                $image->move(public_path('uploads/villas'), $filename);
+            foreach ($request->file('images') as $file) {
+                $filename = 'img_' . time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+                $file->move($uploadDir, $filename);
                 $imagePaths[] = 'uploads/villas/' . $filename;
             }
         }
 
-        Villa::create([
+        // Create villa - store null if no images, otherwise array
+        $villaData = [
             'name' => $request->name,
             'slug' => $slug,
             'capacity' => $request->capacity,
             'base_price' => $request->base_price,
             'rooms_total' => $request->rooms_total,
             'description' => $request->description,
-            'status' => $request->status ?? 'active',
+            'status' => $request->status,
             'thumbnail_path' => $thumbnailPath,
-            'images' => $imagePaths,
             'closed_dates' => [],
-        ]);
+        ];
 
-        return redirect()->route('admin.villas.index')->with('success', 'Villa created successfully.');
+        // Only add images if there are any - FORCE JSON ENCODING
+        if (count($imagePaths) > 0) {
+            $villaData['images'] = json_encode($imagePaths);
+        } else {
+            $villaData['images'] = null;
+        }
+
+        $villa = Villa::create($villaData);
+
+        return redirect()->route('admin.villas.index')->with('success', 'Villa created successfully!');
     }
 
     public function edit($id)
@@ -90,6 +103,7 @@ class AdminVillaController extends Controller
     {
         $villa = Villa::findOrFail($id);
 
+        // Validate input
         $request->validate([
             'name' => 'required|string|max:191',
             'capacity' => 'required|integer|min:1',
@@ -97,53 +111,71 @@ class AdminVillaController extends Controller
             'rooms_total' => 'required|integer|min:1',
             'description' => 'nullable|string',
             'status' => 'required|in:active,inactive,maintenance',
-            'thumbnail' => 'nullable|image|max:5120',
+            'thumbnail' => 'nullable|image|mimes:jpeg,png,gif,jpg|max:20480',
             'images' => 'nullable|array',
-            'images.*' => 'image|max:5120',
-            'closed_dates' => 'nullable|json',
+            'images.*' => 'image|mimes:jpeg,png,gif,jpg|max:20480',
         ]);
 
+        // Ensure upload directory exists
+        $uploadDir = public_path('uploads/villas');
+        if (!is_dir($uploadDir)) {
+            mkdir($uploadDir, 0755, true);
+        }
+
+        // Update slug
         $slug = Str::slug($request->name);
         $originalSlug = $slug;
-        $count = 1;
+        $counter = 1;
         while (Villa::where('slug', $slug)->where('id', '!=', $id)->exists()) {
-            $slug = $originalSlug . '-' . $count;
-            $count++;
+            $slug = $originalSlug . '-' . $counter;
+            $counter++;
         }
 
-        // Create uploads directory if it doesn't exist
-        if (!is_dir(public_path('uploads/villas'))) {
-            mkdir(public_path('uploads/villas'), 0755, true);
-        }
-
-        // Handle thumbnail upload
+        // Handle thumbnail update
         $thumbnailPath = $villa->thumbnail_path;
         if ($request->hasFile('thumbnail')) {
+            // Delete old thumbnail
             if ($thumbnailPath && file_exists(public_path($thumbnailPath))) {
                 unlink(public_path($thumbnailPath));
             }
-            $filename = time() . '_thumbnail_' . Str::random(10) . '.' . $request->file('thumbnail')->extension();
-            $request->file('thumbnail')->move(public_path('uploads/villas'), $filename);
+            // Save new thumbnail
+            $file = $request->file('thumbnail');
+            $filename = 'thumb_' . time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+            $file->move($uploadDir, $filename);
             $thumbnailPath = 'uploads/villas/' . $filename;
         }
 
-        // Handle gallery images upload
-        $imagePaths = $villa->images ?? [];
+        // Handle gallery images - start with existing
+        $imagePaths = is_array($villa->images) ? $villa->images : ($villa->images ? json_decode($villa->images, true) : []);
+        
+        // Delete marked images
+        if ($request->has('delete_images') && is_array($request->delete_images)) {
+            foreach ($request->delete_images as $pathToDelete) {
+                // Remove from array
+                $key = array_search($pathToDelete, $imagePaths);
+                if ($key !== false) {
+                    unset($imagePaths[$key]);
+                }
+                // Delete file
+                if (file_exists(public_path($pathToDelete))) {
+                    unlink(public_path($pathToDelete));
+                }
+            }
+            // Re-index array
+            $imagePaths = array_values($imagePaths);
+        }
+        
+        // Add new images
         if ($request->hasFile('images')) {
-            $imagePaths = [];
-            foreach ($request->file('images') as $image) {
-                $filename = time() . '_' . Str::random(10) . '.' . $image->extension();
-                $image->move(public_path('uploads/villas'), $filename);
+            foreach ($request->file('images') as $file) {
+                $filename = 'img_' . time() . '_' . Str::random(8) . '.' . $file->getClientOriginalExtension();
+                $file->move($uploadDir, $filename);
                 $imagePaths[] = 'uploads/villas/' . $filename;
             }
         }
 
-        $closedDates = [];
-        if ($request->closed_dates) {
-            $closedDates = json_decode($request->closed_dates, true) ?? [];
-        }
-
-        $villa->update([
+        // Update villa
+        $updateData = [
             'name' => $request->name,
             'slug' => $slug,
             'capacity' => $request->capacity,
@@ -152,32 +184,39 @@ class AdminVillaController extends Controller
             'description' => $request->description,
             'status' => $request->status,
             'thumbnail_path' => $thumbnailPath,
-            'images' => $imagePaths,
-            'closed_dates' => $closedDates,
-        ]);
+        ];
 
-        return redirect()->route('admin.villas.index')->with('success', 'Villa updated successfully.');
+        // Only add images if there are any - FORCE JSON ENCODING
+        if (count($imagePaths) > 0) {
+            $updateData['images'] = json_encode($imagePaths);
+        } else {
+            $updateData['images'] = null;
+        }
+
+        $villa->update($updateData);
+
+        return redirect()->route('admin.villas.index')->with('success', 'Villa updated successfully!');
     }
 
     public function destroy($id)
     {
         $villa = Villa::findOrFail($id);
-        
+
         // Delete thumbnail
         if ($villa->thumbnail_path && file_exists(public_path($villa->thumbnail_path))) {
             unlink(public_path($villa->thumbnail_path));
         }
-        
-        // Delete gallery images
+
+        // Delete all gallery images
         if ($villa->images && is_array($villa->images)) {
-            foreach ($villa->images as $image) {
-                if (file_exists(public_path($image))) {
-                    unlink(public_path($image));
+            foreach ($villa->images as $imagePath) {
+                if (file_exists(public_path($imagePath))) {
+                    unlink(public_path($imagePath));
                 }
             }
         }
-        
+
         $villa->delete();
-        return redirect()->route('admin.villas.index')->with('success', 'Villa deleted successfully.');
+        return redirect()->route('admin.villas.index')->with('success', 'Villa deleted successfully!');
     }
 }

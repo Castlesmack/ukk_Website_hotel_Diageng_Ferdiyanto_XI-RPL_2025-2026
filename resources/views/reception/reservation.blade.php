@@ -185,9 +185,9 @@
                                 <td>{{ $booking->booking_code }}</td>
                                 <td>{{ $booking->guest_phone }}</td>
                                 <td>{{ $booking->guest_name }}</td>
-                                <td>{{ $booking->created_at->format('D, d M y') }}</td>
-                                <td>{{ $booking->check_in_date->format('D, d M y') }}</td>
-                                <td>{{ $booking->check_out_date->format('D, d M y') }}</td>
+                                <td>{{ $booking->created_at?->format('D, d M y') ?? 'N/A' }}</td>
+                                <td>{{ $booking->check_in_date?->format('D, d M y') ?? 'N/A' }}</td>
+                                <td>{{ $booking->check_out_date?->format('D, d M y') ?? 'N/A' }}</td>
                                 <td>{{ $booking->villa->name ?? 'N/A' }}</td>
                                 <td>Rp {{ number_format($booking->total_price, 0, ',', '.') }}</td>
                             </tr>

@@ -20,9 +20,12 @@ class RegisterController extends Controller
         $data = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'phone' => 'nullable|string|max:30',
-            'password' => 'required|string|min:6',
+            'phone' => 'required|string|max:20',
+            'password' => 'required|string|min:8|confirmed',
             'confirm' => 'accepted',
+        ], [
+            'password.confirmed' => 'Password confirmation does not match.',
+            'confirm.accepted' => 'You must confirm all details are correct.',
         ]);
 
         $user = User::create([
@@ -30,10 +33,11 @@ class RegisterController extends Controller
             'email' => $data['email'],
             'phone' => $data['phone'] ?? null,
             'password' => Hash::make($data['password']),
+            'role' => 'user',
         ]);
 
         Auth::login($user);
 
-        return redirect('/')->with('status', 'Registration successful');
+        return redirect('/')->with('success', 'Registration successful! Welcome to Ade Villa.');
     }
 }

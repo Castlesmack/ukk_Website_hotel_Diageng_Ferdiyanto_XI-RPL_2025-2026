@@ -1,98 +1,109 @@
 @extends('layouts.app')
 
-@section('title', 'Create User - Admin')
-
-@push('styles')
-    <style>
-        .form-container {
-            max-width: 600px;
-            margin: 20px auto;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 4px;
-            font-weight: bold;
-        }
-
-        input,
-        select {
-            width: 100%;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
-
-        .btn {
-            padding: 10px 15px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-        }
-
-        .btn-primary {
-            background: #007bff;
-            color: white;
-        }
-
-        .btn-secondary {
-            background: #6c757d;
-            color: white;
-        }
-
-        .btn-group {
-            text-align: right;
-        }
-    </style>
-@endpush
+@section('title', 'Tambah Pengguna')
 
 @section('content')
-    <div class="form-container">
-        <h2>Create New User</h2>
-        <form method="POST" action="{{ route('admin.users.store') }}">
-            @csrf
+    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 20px; margin: 0 -20px; padding: 0;">
+        <!-- Sidebar -->
+        <div style="background: #f8f9fa; padding: 20px; min-height: 100vh;">
+            <h2 style="margin: 0 0 30px 0; font-size: 18px; font-weight: 600;">Menu</h2>
+            <nav style="display: flex; flex-direction: column; gap: 10px;">
+                <a href="{{ route('admin.dashboard') }}"
+                    style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">📊
+                    Dashboard</a>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <button
+                        onclick="document.getElementById('manage-menu').style.display = document.getElementById('manage-menu').style.display === 'none' ? 'flex' : 'none'"
+                        style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; text-align: left; font-weight: 500;">🏡
+                        Manage</button>
+                    <div id="manage-menu" style="display: none; flex-direction: column; gap: 5px; margin-left: 10px;">
+                        <a href="{{ route('admin.villas.index') }}"
+                            style="padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            Villa</a>
+                        <a href="{{ route('admin.settings.homepage') }}"
+                            style="padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            Homepage</a>
+                    </div>
+                </div>
+                <a href="{{ route('admin.reservations.index') }}"
+                    style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">📅
+                    Reservation</a>
+                <a href="{{ route('admin.users.index') }}"
+                    style="padding: 12px; background: #007bff; color: white; text-decoration: none; border-radius: 4px;">👥
+                    Users</a>
+                <a href="{{ route('admin.finances.index') }}"
+                    style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">💰
+                    Finance</a>
+            </nav>
+        </div>
 
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" value="{{ old('name') }}" required>
-            </div>
+        <!-- Main Content -->
+        <div style="padding: 20px; background: white;">
+            <h1 style="margin: 0 0 20px 0; font-size: 28px;">Tambah Pengguna Baru</h1>
 
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" required>
-            </div>
+            @if ($errors->any())
+                <div
+                    style="background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 12px; border-radius: 4px; margin-bottom: 20px;">
+                    <strong>Terjadi kesalahan:</strong>
+                    <ul style="margin: 10px 0 0 0; padding-left: 20px;">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
 
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" required>
-            </div>
+            <form action="{{ route('admin.users.store') }}" method="POST"
+                style="background: white; border: 1px solid #ddd; border-radius: 8px; padding: 30px; max-width: 500px;">
+                @csrf
 
-            <div class="form-group">
-                <label for="phone">Phone</label>
-                <input type="text" id="phone" name="phone" value="{{ old('phone') }}">
-            </div>
+                <div style="margin-bottom: 20px;">
+                    <label for="name"
+                        style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Nama</label>
+                    <input type="text" id="name" name="name" value="{{ old('name') }}" required
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; box-sizing: border-box;">
+                </div>
 
-            <div class="form-group">
-                <label for="role">Role</label>
-                <select id="role" name="role">
-                    <option value="guest" {{ old('role', 'guest') == 'guest' ? 'selected' : '' }}>Guest</option>
-                    <option value="receptionist" {{ old('role') == 'receptionist' ? 'selected' : '' }}>Receptionist</option>
-                    <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
-                </select>
-            </div>
+                <div style="margin-bottom: 20px;">
+                    <label for="email"
+                        style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Email</label>
+                    <input type="email" id="email" name="email" value="{{ old('email') }}" required
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; box-sizing: border-box;">
+                </div>
 
-            <div class="btn-group">
-                <a href="{{ route('admin.users.index') }}" class="btn btn-secondary">Cancel</a>
-                <button type="submit" class="btn btn-primary">Create User</button>
-            </div>
-        </form>
+                <div style="margin-bottom: 20px;">
+                    <label for="password"
+                        style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Password</label>
+                    <input type="password" id="password" name="password" required
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; box-sizing: border-box;">
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label for="phone" style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">No.
+                        Telp</label>
+                    <input type="text" id="phone" name="phone" value="{{ old('phone') }}"
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; box-sizing: border-box;">
+                </div>
+
+                <div style="margin-bottom: 20px;">
+                    <label for="role"
+                        style="display: block; margin-bottom: 8px; font-weight: 600; color: #333;">Role</label>
+                    <select id="role" name="role" required
+                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px; font-size: 14px; box-sizing: border-box;">
+                        <option value="guest" {{ old('role') == 'guest' ? 'selected' : '' }}>Guest</option>
+                        <option value="receptionist" {{ old('role') == 'receptionist' ? 'selected' : '' }}>Receptionist
+                        </option>
+                        <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Admin</option>
+                    </select>
+                </div>
+
+                <div style="display: flex; gap: 10px;">
+                    <a href="{{ route('admin.users.index') }}"
+                        style="flex: 1; padding: 10px; background: #6c757d; color: white; text-decoration: none; text-align: center; border-radius: 4px; cursor: pointer; border: none; font-weight: 500;">Batal</a>
+                    <button type="submit"
+                        style="flex: 1; padding: 10px; background: #28a745; color: white; border-radius: 4px; cursor: pointer; border: none; font-weight: 500;">Simpan</button>
+                </div>
+            </form>
+        </div>
     </div>
 @endsection

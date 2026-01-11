@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'Login - Ade Villa')
+@section('title', 'Reset Password - Ade Villa')
 
 @php
     $hideHeader = true;
@@ -17,7 +17,7 @@
             justify-content: center;
         }
 
-        .login-card {
+        .reset-card {
             background: white;
             border-radius: 12px;
             padding: 30px;
@@ -26,20 +26,28 @@
             width: 100%;
         }
 
-        .login-card h1 {
+        .reset-card h1 {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             color: #333;
         }
 
+        .reset-card p {
+            text-align: center;
+            color: #666;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
         .form-group {
-            margin-bottom: 15px;
+            margin-bottom: 20px;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 5px;
-            font-weight: 500;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
         }
 
         .form-group input {
@@ -51,16 +59,8 @@
         }
 
         .form-group input:focus {
-            border-color: #007bff;
             outline: none;
-        }
-
-        .checkbox-group {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 20px;
-            font-size: 14px;
+            border-color: #007bff;
         }
 
         .btn-submit {
@@ -73,6 +73,7 @@
             font-size: 18px;
             cursor: pointer;
             transition: background 0.3s;
+            font-weight: 600;
         }
 
         .btn-submit:hover {
@@ -86,14 +87,25 @@
             font-weight: 500;
         }
 
-        .forgot-link {
+        .success-msg {
+            color: #28a745;
             text-align: center;
-            margin-top: 15px;
+            margin-bottom: 15px;
+            font-weight: 500;
         }
 
-        .forgot-link a {
+        .back-link {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .back-link a {
             color: #007bff;
             text-decoration: none;
+        }
+
+        .back-link a:hover {
+            text-decoration: underline;
         }
 
         .exit-btn {
@@ -115,48 +127,46 @@
 @endpush
 
 @section('content')
-    <div class="login-card">
+    <div class="reset-card">
         <button class="exit-btn" onclick="window.location.href='/'">&times;</button>
-        <h1>Login</h1>
+        <h1>Set New Password</h1>
+        <p>Enter your new password below.</p>
 
         @if($errors->any())
             <div class="error-msg">
-                <strong>Login Failed:</strong><br>
+                <strong>Error:</strong><br>
                 @foreach($errors->all() as $error)
                     <small>{{ $error }}</small><br>
                 @endforeach
             </div>
         @endif
 
-        <form method="POST" action="/login">
+        <form method="POST" action="{{ route('password.update') }}">
             @csrf
-            <div class="form-group">
-                <label for="email">Email Address <span style="color: #dc3545;">*</span></label>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" required>
-                @error('email')
-                    <small style="color: #dc3545;">{{ $message }}</small>
-                @enderror
-            </div>
+            <input type="hidden" name="token" value="{{ $token }}">
+            <input type="hidden" name="email" value="{{ $email }}">
 
             <div class="form-group">
-                <label for="password">Password <span style="color: #dc3545;">*</span></label>
+                <label for="password">New Password</label>
                 <input type="password" id="password" name="password" required>
                 @error('password')
                     <small style="color: #dc3545;">{{ $message }}</small>
                 @enderror
             </div>
 
-            <div class="checkbox-group">
-                <input type="checkbox" id="confirm" name="confirm" required>
-                <label for="confirm" style="margin-bottom: 0;">I confirm all the details I entered are correct</label>
+            <div class="form-group">
+                <label for="password_confirmation">Confirm Password</label>
+                <input type="password" id="password_confirmation" name="password_confirmation" required>
+                @error('password_confirmation')
+                    <small style="color: #dc3545;">{{ $message }}</small>
+                @enderror
             </div>
 
-            <button type="submit" class="btn-submit">Login</button>
+            <button type="submit" class="btn-submit">Reset Password</button>
         </form>
 
-        <div style="margin-top: 20px; text-align: center; font-size: 14px;">
-            <p style="margin: 0 0 10px 0; color: #666;">Don't have an account? <a href="/register"
-                    style="color: #007bff; text-decoration: none; font-weight: 600;">Register here</a></p>
+        <div class="back-link">
+            <a href="/login">Back to Login</a>
         </div>
     </div>
 @endsection

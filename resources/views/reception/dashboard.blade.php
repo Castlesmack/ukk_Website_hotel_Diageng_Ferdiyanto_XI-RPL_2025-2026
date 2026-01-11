@@ -157,7 +157,6 @@
         <main class="main-content">
             <header class="header">
                 <h2>Dashboard</h2>
-                <div class="profile-icon"></div>
             </header>
 
             <section class="kpis">

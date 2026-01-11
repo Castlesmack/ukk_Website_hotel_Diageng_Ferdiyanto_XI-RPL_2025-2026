@@ -35,9 +35,9 @@ class Villa extends Model
     protected function casts(): array
     {
         return [
-            'base_price' => 'decimal:2',
+            'base_price' => 'integer',
             'thumbnail_path' => 'string',
-            'images' => 'array',
+            'images' => 'array',  // Laravel will auto-JSON decode
             'closed_dates' => 'array',
         ];
     }
@@ -56,5 +56,13 @@ class Villa extends Model
     public function bookings()
     {
         return $this->hasMany(Booking::class);
+    }
+
+    /**
+     * Get image URL accessor - returns the thumbnail path (without asset wrapper)
+     */
+    public function getImageUrlAttribute()
+    {
+        return $this->thumbnail_path;
     }
 }

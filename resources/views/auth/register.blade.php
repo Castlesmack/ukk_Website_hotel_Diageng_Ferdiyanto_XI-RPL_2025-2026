@@ -66,7 +66,7 @@
         .btn-submit {
             width: 100%;
             padding: 14px;
-            background: #28a745;
+            background: #007bff;
             color: white;
             border: none;
             border-radius: 8px;
@@ -76,7 +76,7 @@
         }
 
         .btn-submit:hover {
-            background: #218838;
+            background: #0056b3;
         }
 
         .error-msg {
@@ -108,32 +108,74 @@
     <div class="register-card">
         <button class="exit-btn" onclick="window.location.href='/'">&times;</button>
         <h1>Register</h1>
+
         @if($errors->any())
-            <div class="error-msg">{{ $errors->first() }}</div>
+            <div class="error-msg">
+                <strong>Registration Failed:</strong><br>
+                @foreach($errors->all() as $error)
+                    <small>{{ $error }}</small><br>
+                @endforeach
+            </div>
         @endif
+
         <form method="POST" action="/register">
             @csrf
             <div class="form-group">
-                <label for="name">Name*</label>
-                <input type="text" id="name" name="name" required>
+                <label for="name">Full Name <span style="color: #dc3545;">*</span></label>
+                <input type="text" id="name" name="name" value="{{ old('name') }}" required>
+                @error('name')
+                    <small style="color: #dc3545;">{{ $message }}</small>
+                @enderror
             </div>
+
             <div class="form-group">
-                <label for="email">Email*</label>
-                <input type="email" id="email" name="email" required>
+                <label for="email">Email Address <span style="color: #dc3545;">*</span></label>
+                <input type="email" id="email" name="email" value="{{ old('email') }}" required>
+                @error('email')
+                    <small style="color: #dc3545;">{{ $message }}</small>
+                @enderror
             </div>
+
             <div class="form-group">
-                <label for="phone">Phone*</label>
-                <input type="text" id="phone" name="phone" required>
+                <label for="phone">Phone Number <span style="color: #dc3545;">*</span></label>
+                <input type="text" id="phone" name="phone" value="{{ old('phone') }}" required>
+                @error('phone')
+                    <small style="color: #dc3545;">{{ $message }}</small>
+                @enderror
             </div>
+
             <div class="form-group">
-                <label for="password">Password*</label>
+                <label for="password">Password <span style="color: #dc3545;">*</span></label>
                 <input type="password" id="password" name="password" required>
+                <small style="color: #666; display: block; margin-top: 5px;">Minimum 8 characters</small>
+                @error('password')
+                    <small style="color: #dc3545;">{{ $message }}</small>
+                @enderror
             </div>
+
+            <div class="form-group">
+                <label for="password_confirmation">Confirm Password <span style="color: #dc3545;">*</span></label>
+                <input type="password" id="password_confirmation" name="password_confirmation" required>
+                @error('password_confirmation')
+                    <small style="color: #dc3545;">{{ $message }}</small>
+                @enderror
+            </div>
+
             <div class="checkbox-group">
-                <input type="checkbox" id="confirm" required>
-                <label for="confirm">I confirm all the details I entered are correct*</label>
+                <input type="checkbox" id="confirm" name="confirm" value="yes" required>
+                <label for="confirm">I confirm all the details I entered are correct <span
+                        style="color: #dc3545;">*</span></label>
             </div>
-            <button type="submit" class="btn-submit">Register</button>
+            @error('confirm')
+                <small style="color: #dc3545; display: block; margin-bottom: 15px;">{{ $message }}</small>
+            @enderror
+
+            <button type="submit" class="btn-submit">Create Account</button>
         </form>
+
+        <div style="margin-top: 20px; text-align: center; font-size: 14px;">
+            <p style="margin: 0; color: #666;">Already have an account? <a href="/login"
+                    style="color: #007bff; text-decoration: none; font-weight: 600;">Login here</a></p>
+        </div>
     </div>
 @endsection

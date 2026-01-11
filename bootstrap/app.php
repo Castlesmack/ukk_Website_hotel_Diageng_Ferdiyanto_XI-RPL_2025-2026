@@ -14,6 +14,10 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->validateCsrfTokens(except: [
             'midtrans/token',
         ]);
+        $middleware->alias([
+            'admin' => \App\Http\Middleware\IsAdmin::class,
+            'receptionist' => \App\Http\Middleware\Receptionist::class,
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //
