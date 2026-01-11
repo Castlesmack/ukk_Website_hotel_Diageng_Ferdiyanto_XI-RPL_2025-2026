@@ -104,7 +104,7 @@
                     <label style="display: block; margin-bottom: 5px; font-weight: 600;">Thumbnail Image</label>
                     <input type="file" name="thumbnail" accept="image/*"
                         style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-                    <small style="color: #666;">Max file size: 20MB. Format: JPG, PNG, GIF</small>
+                    <small style="color: #666;">Max file size: 2MB. Format: JPG, PNG, GIF</small>
                     @error('thumbnail') <small style="color: #dc3545;">{{ $message }}</small> @enderror
                 </div>
 
@@ -112,7 +112,7 @@
                     <label style="display: block; margin-bottom: 5px; font-weight: 600;">Gallery Images</label>
                     <input type="file" name="images[]" multiple accept="image/*"
                         style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-                    <small style="color: #666;">You can select multiple images at once. Max 20MB per image.</small>
+                    <small style="color: #666;">You can select multiple images at once. Max 2MB per image.</small>
                     @error('images') <small style="color: #dc3545;">{{ $message }}</small> @enderror
                 </div>
 

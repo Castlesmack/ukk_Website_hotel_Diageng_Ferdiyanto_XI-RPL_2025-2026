@@ -37,7 +37,7 @@ class Villa extends Model
         return [
             'base_price' => 'integer',
             'thumbnail_path' => 'string',
-            'images' => 'array',  // Laravel will auto-JSON decode
+            'images' => 'array',  // Auto JSON decode/encode
             'closed_dates' => 'array',
         ];
     }

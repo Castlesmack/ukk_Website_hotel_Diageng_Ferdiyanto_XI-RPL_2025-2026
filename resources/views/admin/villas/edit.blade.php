@@ -113,7 +113,7 @@
                     @endif
                     <input type="file" name="thumbnail" accept="image/*"
                         style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-                    <small style="color: #666;">Leave empty to keep current. Max 20MB. Format: JPG, PNG, GIF</small>
+                    <small style="color: #666;">Leave empty to keep current. Max 2MB. Format: JPG, PNG, GIF</small>
                     @error('thumbnail') <small style="color: #dc3545;">{{ $message }}</small> @enderror
                 </div>
 
@@ -137,7 +137,7 @@
                     @endif
                     <input type="file" name="images[]" multiple accept="image/*"
                         style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
-                    <small style="color: #666;">You can select multiple images. Leave empty to keep current. Max 20MB per
+                    <small style="color: #666;">You can select multiple images. Leave empty to keep current. Max 2MB per
                         image.</small>
                     @error('images') <small style="color: #dc3545;">{{ $message }}</small> @enderror
                 </div>
