@@ -131,8 +131,9 @@ class VillaController extends Controller
 
         $villa = Villa::find($validated['villa_id']);
         
-        // Check villa status
-        if ($villa->status !== 'active') {
+        // Check villa status (support both old and new status values)
+        $inactiveStatuses = ['inactive', 'unavailable', 'maintenance'];
+        if (in_array($villa->status, $inactiveStatuses)) {
             return redirect()->back()
                 ->withErrors(['villa' => 'Villa is not available for booking at this time.'])
                 ->withInput();

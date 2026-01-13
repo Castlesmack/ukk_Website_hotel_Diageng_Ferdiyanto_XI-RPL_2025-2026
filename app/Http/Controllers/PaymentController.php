@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Booking;
+use App\Models\Villa;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -104,7 +105,8 @@ class PaymentController extends Controller
         
         // Verify villa is still available
         $villa = Villa::find($booking->villa_id);
-        if (!$villa || $villa->status !== 'active') {
+        $inactiveStatuses = ['inactive', 'unavailable', 'maintenance'];
+        if (!$villa || in_array($villa->status, $inactiveStatuses)) {
             return redirect('/')->with('error', 'Villa is no longer available.');
         }
 

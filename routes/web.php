@@ -91,7 +91,7 @@ Route::get('/villa', [VillaController::class, 'search'])->name('villa.search');
 Route::get('/villa/{id}', [VillaController::class, 'detail'])->name('guest.villa.detail');
 
 // Public booking routes (no auth required - guest can book)
-Route::post('/booking/store', [VillaController::class, 'storeBooking'])->name('guest.store.booking');
+Route::post('/paymentlink', [VillaController::class, 'storeBooking'])->name('guest.store.booking');
 Route::get('/payment/{booking_id}', [VillaController::class, 'payment'])->name('guest.payment');
 Route::post('/midtrans/token', [PaymentController::class, 'token'])->name('midtrans.token');
 

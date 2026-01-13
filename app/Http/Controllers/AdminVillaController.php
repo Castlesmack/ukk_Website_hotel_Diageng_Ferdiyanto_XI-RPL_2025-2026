@@ -21,18 +21,24 @@ class AdminVillaController extends Controller
 
     public function store(Request $request)
     {
-        // Validate - keep file size small for now
-        $validated = $request->validate([
-            'name' => 'required|string|max:191',
-            'capacity' => 'required|integer|min:1',
-            'base_price' => 'required|numeric|min:0',
-            'rooms_total' => 'required|integer|min:1',
-            'description' => 'nullable|string',
-            'status' => 'required|in:active,inactive,maintenance',
-            'thumbnail' => 'nullable|image|max:2048',
-            'images' => 'nullable|array',
-            'images.*' => 'image|max:2048',
-        ]);
+        // Validate - images are optional
+        try {
+            $validated = $request->validate([
+                'name' => 'required|string|max:191',
+                'capacity' => 'required|integer|min:1',
+                'base_price' => 'required|numeric|min:0',
+                'rooms_total' => 'required|integer|min:1',
+                'description' => 'nullable|string',
+                'status' => 'required|in:active,inactive,maintenance,available,unavailable',
+                'thumbnail' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
+                'images' => 'nullable|array|max:10',
+                'images.*' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()
+                ->withErrors($e->errors())
+                ->withInput();
+        }
 
         // Generate slug
         $slug = Str::slug($request->name);
@@ -51,35 +57,55 @@ class AdminVillaController extends Controller
         // Upload thumbnail
         $thumbnailPath = null;
         if ($request->hasFile('thumbnail')) {
-            $thumb = $request->file('thumbnail');
-            $filename = 'thumb_' . time() . '_' . Str::random(8) . '.' . $thumb->extension();
-            $thumb->move($uploadDir, $filename);
-            $thumbnailPath = 'uploads/villas/' . $filename;
+            try {
+                $thumb = $request->file('thumbnail');
+                $filename = 'thumb_' . time() . '_' . Str::random(8) . '.' . $thumb->extension();
+                $thumb->move($uploadDir, $filename);
+                $thumbnailPath = 'uploads/villas/' . $filename;
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withErrors(['thumbnail' => 'Failed to upload thumbnail: ' . $e->getMessage()])
+                    ->withInput();
+            }
         }
 
         // Upload gallery images
         $images = [];
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $file) {
-                $filename = 'img_' . time() . '_' . uniqid() . '.' . $file->extension();
-                $file->move($uploadDir, $filename);
-                $images[] = 'uploads/villas/' . $filename;
+            try {
+                foreach ($request->file('images') as $file) {
+                    if ($file && $file->isValid()) {
+                        $filename = 'img_' . time() . '_' . uniqid() . '.' . $file->extension();
+                        $file->move($uploadDir, $filename);
+                        $images[] = 'uploads/villas/' . $filename;
+                    }
+                }
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withErrors(['images' => 'Failed to upload images: ' . $e->getMessage()])
+                    ->withInput();
             }
         }
 
         // Create villa
-        Villa::create([
-            'name' => $request->name,
-            'slug' => $slug,
-            'capacity' => $request->capacity,
-            'base_price' => $request->base_price,
-            'rooms_total' => $request->rooms_total,
-            'description' => $request->description,
-            'status' => $request->status,
-            'thumbnail_path' => $thumbnailPath,
-            'images' => count($images) > 0 ? $images : [],
-            'closed_dates' => [],
-        ]);
+        try {
+            Villa::create([
+                'name' => $request->name,
+                'slug' => $slug,
+                'capacity' => $request->capacity,
+                'base_price' => $request->base_price,
+                'rooms_total' => $request->rooms_total,
+                'description' => $request->description,
+                'status' => $request->status,
+                'thumbnail_path' => $thumbnailPath,
+                'images' => count($images) > 0 ? $images : null,
+                'closed_dates' => [],
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withErrors(['villa' => 'Failed to create villa: ' . $e->getMessage()])
+                ->withInput();
+        }
 
         return redirect()->route('admin.villas.index')->with('success', 'Villa created successfully!');
     }
@@ -101,10 +127,10 @@ class AdminVillaController extends Controller
             'base_price' => 'required|numeric|min:0',
             'rooms_total' => 'required|integer|min:1',
             'description' => 'nullable|string',
-            'status' => 'required|in:active,inactive,maintenance',
-            'thumbnail' => 'nullable|image|max:2048',
+            'status' => 'required|in:active,inactive,maintenance,available,unavailable',
+            'thumbnail' => 'nullable|mimes:jpeg,png,jpg,gif|max:2048',
             'images' => 'nullable|array',
-            'images.*' => 'image|max:2048',
+            'images.*' => 'mimes:jpeg,png,jpg,gif|max:2048',
         ]);
 
         // Generate slug
@@ -118,25 +144,46 @@ class AdminVillaController extends Controller
         // Ensure upload directory
         $uploadDir = public_path('uploads/villas');
         if (!is_dir($uploadDir)) {
-            mkdir($uploadDir, 0755, true);
+            if (!mkdir($uploadDir, 0755, true)) {
+                return redirect()->back()
+                    ->withErrors(['image' => 'Failed to create upload directory. Check server permissions.'])
+                    ->withInput();
+            }
+        }
+        
+        // Verify directory is writable
+        if (!is_writable($uploadDir)) {
+            return redirect()->back()
+                ->withErrors(['image' => 'Upload directory is not writable. Check server permissions.'])
+                ->withInput();
         }
 
         // Handle thumbnail
         $thumbnailPath = $villa->thumbnail_path;
         if ($request->hasFile('thumbnail')) {
-            // Delete old
-            if ($thumbnailPath && file_exists(public_path($thumbnailPath))) {
-                unlink(public_path($thumbnailPath));
+            try {
+                // Delete old
+                if ($thumbnailPath && file_exists(public_path($thumbnailPath))) {
+                    unlink(public_path($thumbnailPath));
+                }
+                // Upload new
+                $thumb = $request->file('thumbnail');
+                $filename = 'thumb_' . time() . '_' . Str::random(8) . '.' . $thumb->extension();
+                if (!$thumb->move($uploadDir, $filename)) {
+                    return redirect()->back()
+                        ->withErrors(['thumbnail' => 'Failed to upload thumbnail. Please try again.'])
+                        ->withInput();
+                }
+                $thumbnailPath = 'uploads/villas/' . $filename;
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withErrors(['thumbnail' => 'Thumbnail upload error: ' . $e->getMessage()])
+                    ->withInput();
             }
-            // Upload new
-            $thumb = $request->file('thumbnail');
-            $filename = 'thumb_' . time() . '_' . Str::random(8) . '.' . $thumb->extension();
-            $thumb->move($uploadDir, $filename);
-            $thumbnailPath = 'uploads/villas/' . $filename;
         }
 
-        // Handle images
-        $images = is_array($villa->images) ? $villa->images : json_decode($villa->images, true) ?? [];
+        // Handle images - Villa model casts images as array
+        $images = is_array($villa->images) ? $villa->images : ($villa->images ?? []);
 
         // Delete marked images
         if ($request->has('delete_images')) {
@@ -154,25 +201,41 @@ class AdminVillaController extends Controller
 
         // Add new images
         if ($request->hasFile('images')) {
-            foreach ($request->file('images') as $file) {
-                $filename = 'img_' . time() . '_' . uniqid() . '.' . $file->extension();
-                $file->move($uploadDir, $filename);
-                $images[] = 'uploads/villas/' . $filename;
+            try {
+                foreach ($request->file('images') as $file) {
+                    $filename = 'img_' . time() . '_' . uniqid() . '.' . $file->extension();
+                    if (!$file->move($uploadDir, $filename)) {
+                        return redirect()->back()
+                            ->withErrors(['images' => 'Failed to upload one or more images. Please try again.'])
+                            ->withInput();
+                    }
+                    $images[] = 'uploads/villas/' . $filename;
+                }
+            } catch (\Exception $e) {
+                return redirect()->back()
+                    ->withErrors(['images' => 'Image upload error: ' . $e->getMessage()])
+                    ->withInput();
             }
         }
 
         // Update villa
-        $villa->update([
-            'name' => $request->name,
-            'slug' => $slug,
-            'capacity' => $request->capacity,
-            'base_price' => $request->base_price,
-            'rooms_total' => $request->rooms_total,
-            'description' => $request->description,
-            'status' => $request->status,
-            'thumbnail_path' => $thumbnailPath,
-            'images' => count($images) > 0 ? $images : [],
-        ]);
+        try {
+            $villa->update([
+                'name' => $request->name,
+                'slug' => $slug,
+                'capacity' => $request->capacity,
+                'base_price' => $request->base_price,
+                'rooms_total' => $request->rooms_total,
+                'description' => $request->description,
+                'status' => $request->status,
+                'thumbnail_path' => $thumbnailPath,
+                'images' => count($images) > 0 ? $images : null,
+            ]);
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withErrors(['villa' => 'Failed to update villa: ' . $e->getMessage()])
+                ->withInput();
+        }
 
         return redirect()->route('admin.villas.index')->with('success', 'Villa updated successfully!');
     }
@@ -186,10 +249,9 @@ class AdminVillaController extends Controller
             unlink(public_path($villa->thumbnail_path));
         }
 
-        // Delete images
-        if ($villa->images) {
-            $images = json_decode($villa->images, true) ?? [];
-            foreach ($images as $image) {
+        // Delete images - Villa model casts images as array
+        if ($villa->images && is_array($villa->images)) {
+            foreach ($villa->images as $image) {
                 if (file_exists(public_path($image))) {
                     unlink(public_path($image));
                 }

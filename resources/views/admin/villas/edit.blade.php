@@ -51,13 +51,8 @@
                     <input type="text" name="name" value="{{ old('name', $villa->name) }}"
                         style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" required>
                     @error('name') <small style="color: #dc3545;">{{ $message }}</small> @enderror
-                </div>
-
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Slug *</label>
-                    <input type="text" name="slug" value="{{ old('slug', $villa->slug) }}"
-                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" required>
-                    @error('slug') <small style="color: #dc3545;">{{ $message }}</small> @enderror
+                    <small style="color: #666; display: block; margin-top: 5px;">Current slug:
+                        <code>{{ $villa->slug }}</code> (auto-generated)</small>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
@@ -94,10 +89,12 @@
                     <label style="display: block; margin-bottom: 5px; font-weight: 600;">Status *</label>
                     <select name="status" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"
                         required>
-                        <option value="available" {{ old('status', $villa->status) === 'available' ? 'selected' : '' }}>
-                            Available</option>
-                        <option value="unavailable" {{ old('status', $villa->status) === 'unavailable' ? 'selected' : '' }}>
-                            Unavailable</option>
+                        <option value="">-- Select Status --</option>
+                        <option value="active" {{ old('status', $villa->status) === 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="inactive" {{ old('status', $villa->status) === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        <option value="maintenance" {{ old('status', $villa->status) === 'maintenance' ? 'selected' : '' }}>Maintenance</option>
+                        <option value="available" {{ old('status', $villa->status) === 'available' ? 'selected' : '' }}>Available (Legacy)</option>
+                        <option value="unavailable" {{ old('status', $villa->status) === 'unavailable' ? 'selected' : '' }}>Unavailable (Legacy)</option>
                     </select>
                     @error('status') <small style="color: #dc3545;">{{ $message }}</small> @enderror
                 </div>

@@ -26,6 +26,7 @@ class Booking extends Model
         'special_requests',
         'total_price',
         'status',
+        'payment_status',
     ];
 
     protected function casts(): array

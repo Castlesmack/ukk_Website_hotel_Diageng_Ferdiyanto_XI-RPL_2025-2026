@@ -50,13 +50,8 @@
                     <input type="text" name="name" value="{{ old('name') }}"
                         style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" required>
                     @error('name') <small style="color: #dc3545;">{{ $message }}</small> @enderror
-                </div>
-
-                <div style="margin-bottom: 15px;">
-                    <label style="display: block; margin-bottom: 5px; font-weight: 600;">Slug *</label>
-                    <input type="text" name="slug" value="{{ old('slug') }}"
-                        style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;" required>
-                    @error('slug') <small style="color: #dc3545;">{{ $message }}</small> @enderror
+                    <small style="color: #666; display: block; margin-top: 5px;">Slug will be auto-generated from
+                        name</small>
                 </div>
 
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
@@ -93,9 +88,12 @@
                     <label style="display: block; margin-bottom: 5px; font-weight: 600;">Status *</label>
                     <select name="status" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 4px;"
                         required>
-                        <option value="available" {{ old('status') === 'available' ? 'selected' : '' }}>Available</option>
-                        <option value="unavailable" {{ old('status') === 'unavailable' ? 'selected' : '' }}>Unavailable
-                        </option>
+                        <option value="">-- Select Status --</option>
+                        <option value="active" {{ old('status') === 'active' ? 'selected' : '' }}>Active</option>
+                        <option value="inactive" {{ old('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
+                        <option value="maintenance" {{ old('status') === 'maintenance' ? 'selected' : '' }}>Maintenance</option>
+                        <option value="available" {{ old('status') === 'available' ? 'selected' : '' }}>Available (Legacy)</option>
+                        <option value="unavailable" {{ old('status') === 'unavailable' ? 'selected' : '' }}>Unavailable (Legacy)</option>
                     </select>
                     @error('status') <small style="color: #dc3545;">{{ $message }}</small> @enderror
                 </div>
