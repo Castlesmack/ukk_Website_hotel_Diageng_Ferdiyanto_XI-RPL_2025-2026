@@ -81,6 +81,9 @@ Route::middleware(['auth', 'receptionist'])->group(function () {
 // Guest home
 Route::get('/home', [VillaController::class, 'index'])->name('guest.home');
 
+// API routes for search
+Route::get('/api/villas/search', [VillaController::class, 'searchAPI'])->name('api.villas.search');
+
 // Additional guest / user pages (static previews)
 Route::view('/guest/home-before', 'guest.home_before')->name('guest.home.before');
 Route::view('/guest/home-after', 'guest.home_after')->name('guest.home.after');
@@ -90,6 +93,7 @@ Route::get('/villa/{id}', [VillaController::class, 'detail'])->name('guest.villa
 // Public booking routes (no auth required - guest can book)
 Route::post('/booking/store', [VillaController::class, 'storeBooking'])->name('guest.store.booking');
 Route::get('/payment/{booking_id}', [VillaController::class, 'payment'])->name('guest.payment');
+Route::post('/midtrans/token', [PaymentController::class, 'token'])->name('midtrans.token');
 
 // Protected booking routes (require authentication)
 Route::middleware('auth')->group(function () {
@@ -97,11 +101,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/profile', [App\Http\Controllers\UserController::class, 'profile'])->name('user.profile');
     Route::post('/user/profile', [App\Http\Controllers\UserController::class, 'updateProfile']);
     Route::get('/user/bookings', [App\Http\Controllers\UserController::class, 'bookings'])->name('user.bookings');
-    Route::post('/midtrans/token', [PaymentController::class, 'token'])->name('midtrans.token');
 });
 
 Route::view('/guest/payment/failed', 'guest.payment_failed')->name('guest.payment.failed');
-Route::view('/guest/payment/success', 'guest.payment_success')->name('guest.payment.success');
-
-// API routes for instant search
-Route::get('/api/villas/search', [VillaController::class, 'searchAPI']);
+Route::get('/guest/payment/success', [PaymentController::class, 'success'])->name('guest.payment.success');

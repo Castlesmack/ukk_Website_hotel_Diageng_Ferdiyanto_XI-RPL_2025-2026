@@ -230,8 +230,17 @@
                         order_id: '{{ $booking->booking_code }}'
                     })
                 })
-                    .then(response => response.json())
+                    .then(response => {
+                        console.log('Response status:', response.status);
+                        if (!response.ok) {
+                            return response.text().then(text => {
+                                throw new Error(`HTTP ${response.status}: ${text}`);
+                            });
+                        }
+                        return response.json();
+                    })
                     .then(data => {
+                        console.log('Token response:', data);
                         loader.style.display = 'none';
 
                         if (data.error) {
@@ -259,10 +268,10 @@
                         });
                     })
                     .catch(error => {
+                        console.error('Full error:', error);
                         loader.style.display = 'none';
                         btn.disabled = false;
-                        showError('Connection error: Please try again');
-                        console.error('Error:', error);
+                        showError('Connection error: ' + error.message);
                     });
             }
 

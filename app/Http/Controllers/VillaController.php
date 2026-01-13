@@ -131,6 +131,13 @@ class VillaController extends Controller
 
         $villa = Villa::find($validated['villa_id']);
         
+        // Check villa status
+        if ($villa->status !== 'active') {
+            return redirect()->back()
+                ->withErrors(['villa' => 'Villa is not available for booking at this time.'])
+                ->withInput();
+        }
+        
         // Check if villa is available for the requested dates
         $checkin = \Carbon\Carbon::parse($validated['checkin']);
         $checkout = \Carbon\Carbon::parse($validated['checkout']);

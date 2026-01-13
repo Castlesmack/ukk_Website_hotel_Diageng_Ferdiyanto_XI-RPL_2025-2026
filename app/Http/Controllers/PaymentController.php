@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Booking;
 use Illuminate\Http\Request;
 
 class PaymentController extends Controller
@@ -35,6 +36,7 @@ class PaymentController extends Controller
             ],
         ];
 
+        // Make curl request to Midtrans
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, 'https://app.sandbox.midtrans.com/snap/v1/transactions');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
@@ -47,6 +49,7 @@ class PaymentController extends Controller
             'Accept: application/json',
             'Authorization: Basic ' . base64_encode($serverKey . ':'),
         ]);
+        curl_setopt($ch, CURLOPT_TIMEOUT, 30);
 
         $resp = curl_exec($ch);
         $err = curl_error($ch);
@@ -54,19 +57,63 @@ class PaymentController extends Controller
         curl_close($ch);
 
         if ($err) {
-            return response()->json(['error' => 'Curl error: ' . $err], 500);
+            return response()->json(['error' => 'Curl error: ' . $err, 'code' => 500], 500);
         }
 
         $data = json_decode($resp, true);
-        if (! $data) {
-            return response()->json(['error' => 'Invalid response from Midtrans', 'raw' => $resp], 502);
+        
+        if (!$data) {
+            return response()->json(['error' => 'Invalid response from Midtrans', 'raw' => $resp, 'http_code' => $code], 502);
         }
 
-        // Midtrans returns 'token' (snap_token) in response
+        // Check for Midtrans errors
+        if (isset($data['status']) && $data['status'] >= 400) {
+            return response()->json(['error' => $data['error_message'] ?? 'Midtrans error', 'response' => $data], $code >= 400 ? $code : 400);
+        }
+
+        // Return token and client key
         if (isset($data['token'])) {
-            return response()->json(['token' => $data['token'], 'order_id' => $orderId, 'client_key' => $clientKey]);
+            return response()->json([
+                'token' => $data['token'],
+                'redirect_url' => $data['redirect_url'] ?? null,
+                'order_id' => $orderId,
+                'client_key' => $clientKey
+            ]);
         }
 
-        return response()->json(['error' => 'Midtrans error', 'response' => $data], $code >= 400 ? $code : 500);
+        return response()->json(['error' => 'No token in response', 'response' => $data], 500);
+    }
+
+    /**
+     * Handle payment success - update reservation status to confirmed
+     */
+    public function success(Request $request)
+    {
+        $bookingCode = $request->input('booking_code');
+        $status = $request->input('status', 'confirmed');
+
+        if (!$bookingCode) {
+            return redirect('/')->with('error', 'Invalid booking code');
+        }
+
+        $booking = Booking::where('booking_code', $bookingCode)->first();
+
+        if (!$booking) {
+            return redirect('/')->with('error', 'Booking not found');
+        }
+        
+        // Verify villa is still available
+        $villa = Villa::find($booking->villa_id);
+        if (!$villa || $villa->status !== 'active') {
+            return redirect('/')->with('error', 'Villa is no longer available.');
+        }
+
+        // Update payment status to paid and reservation status to confirmed
+        $booking->update([
+            'payment_status' => 'paid',
+            'status' => 'confirmed'
+        ]);
+
+        return redirect('/')->with('success', 'Payment successful! Your reservation is confirmed.');
     }
 }

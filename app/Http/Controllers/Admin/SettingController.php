@@ -44,8 +44,14 @@ class SettingController extends Controller
             
             foreach ($request->file('slider_images') as $file) {
                 if (count($images) >= 5) break;
-                $path = $file->store('uploads/homepage', 'public');
-                $images[] = $path;
+                // Store directly in public uploads directory, not in storage
+                $uploadDir = public_path('uploads/homepage');
+                if (!is_dir($uploadDir)) {
+                    mkdir($uploadDir, 0755, true);
+                }
+                $filename = 'slider_' . time() . '_' . uniqid() . '.' . $file->extension();
+                $file->move($uploadDir, $filename);
+                $images[] = 'uploads/homepage/' . $filename;
             }
         }
         

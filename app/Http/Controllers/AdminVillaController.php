@@ -61,7 +61,7 @@ class AdminVillaController extends Controller
         $images = [];
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
-                $filename = 'img_' . time() . '_' . Str::random(8) . '.' . $file->extension();
+                $filename = 'img_' . time() . '_' . uniqid() . '.' . $file->extension();
                 $file->move($uploadDir, $filename);
                 $images[] = 'uploads/villas/' . $filename;
             }
@@ -77,8 +77,8 @@ class AdminVillaController extends Controller
             'description' => $request->description,
             'status' => $request->status,
             'thumbnail_path' => $thumbnailPath,
-            'images' => count($images) > 0 ? json_encode($images) : null,
-            'closed_dates' => json_encode([]),
+            'images' => count($images) > 0 ? $images : [],
+            'closed_dates' => [],
         ]);
 
         return redirect()->route('admin.villas.index')->with('success', 'Villa created successfully!');
@@ -155,7 +155,7 @@ class AdminVillaController extends Controller
         // Add new images
         if ($request->hasFile('images')) {
             foreach ($request->file('images') as $file) {
-                $filename = 'img_' . time() . '_' . Str::random(8) . '.' . $file->extension();
+                $filename = 'img_' . time() . '_' . uniqid() . '.' . $file->extension();
                 $file->move($uploadDir, $filename);
                 $images[] = 'uploads/villas/' . $filename;
             }
@@ -171,7 +171,7 @@ class AdminVillaController extends Controller
             'description' => $request->description,
             'status' => $request->status,
             'thumbnail_path' => $thumbnailPath,
-            'images' => count($images) > 0 ? json_encode($images) : null,
+            'images' => count($images) > 0 ? $images : [],
         ]);
 
         return redirect()->route('admin.villas.index')->with('success', 'Villa updated successfully!');

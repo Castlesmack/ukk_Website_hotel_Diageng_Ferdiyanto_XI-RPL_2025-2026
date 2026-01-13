@@ -70,60 +70,94 @@
     </div>
 
     <script>
-        (function () {
-            const payBtn = document.getElementById('payBtn');
-            payBtn.addEventListener('click', async function () {
-                payBtn.disabled = true;
-                payBtn.textContent = 'Requesting token...';
+        // Load Midtrans Snap.js globally
+        const clientKey = '{{ env("MIDTRANS_CLIENT_KEY") }}';
+        const snapScript = document.createElement('script');
+        snapScript.src = 'https://app.sandbox.midtrans.com/snap/snap.js';
+        snapScript.setAttribute('data-client-key', clientKey);
+        document.head.appendChild(snapScript);
 
-                try {
-                    const res = await fetch('/midtrans/token', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '' },
-                        body: JSON.stringify({ amount: 5104000 })
-                    });
-                    const data = await res.json();
-                    if (!res.ok) {
-                        alert('Error: ' + (data.error || JSON.stringify(data)));
-                        payBtn.disabled = false;
-                        payBtn.textContent = 'Pay with Midtrans';
-                        return;
-                    }
+        document.getElementById('payBtn').addEventListener('click', async function () {
+            const payBtn = this;
+            payBtn.disabled = true;
+            payBtn.textContent = 'Requesting token...';
 
-                    const token = data.token;
-                    const clientKey = data.client_key;
+            try {
+                const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content') || '';
+                const res = await fetch('/midtrans/token', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-TOKEN': csrfToken,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        amount: 5104000,
+                        order_id: 'ORDER-' + Date.now(),
+                        name: 'Guest User',
+                        email: 'guest@example.com'
+                    })
+                });
 
-                    // Dynamically load Snap JS with client key (if provided in env)
-                    const scriptUrl = 'https://app.sandbox.midtrans.com/snap/snap.js';
-                    if (clientKey) {
-                        const s = document.createElement('script');
-                        s.src = scriptUrl;
-                        s.setAttribute('data-client-key', clientKey);
-                        document.body.appendChild(s);
-                        s.onload = function () {
-                            // call snap.pay
-                            window.snap.pay(token, {
-                                onSuccess: function (result) { window.location = '/guest/payment/success'; },
-                                onPending: function (result) { window.location = '/guest/payment'; },
-                                onError: function (result) { window.location = '/guest/payment/failed'; }
-                            });
-                        };
-                    } else {
-                        // No client key configured — open midtrans checkout if token present
-                        if (window.snap) {
-                            window.snap.pay(token);
-                        } else {
-                            // If client key not set, open a simple redirect to Midtrans (not ideal)
-                            alert('Midtrans client key not configured. Please set MIDTRANS_CLIENT_KEY in .env for full flow. Token: ' + token);
-                        }
-                    }
+                const data = await res.json();
 
-                } catch (err) {
-                    alert('Request failed: ' + err.message);
+                if (!res.ok) {
+                    const errorMsg = data.error || data.message || JSON.stringify(data);
+                    console.error('Token request failed:', data);
+                    alert('Payment Error: ' + errorMsg);
                     payBtn.disabled = false;
                     payBtn.textContent = 'Pay with Midtrans';
+                    return;
                 }
-            });
-        })();
+
+                const token = data.token;
+                if (!token) {
+                    console.error('No token received:', data);
+                    alert('No payment token received');
+                    payBtn.disabled = false;
+                    payBtn.textContent = 'Pay with Midtrans';
+                    return;
+                }
+
+                // Wait for Snap to be loaded
+                let attempts = 0;
+                const checkSnap = setInterval(function () {
+                    if (window.snap) {
+                        clearInterval(checkSnap);
+                        window.snap.pay(token, {
+                            onSuccess: function (result) {
+                                console.log('Payment success:', result);
+                                window.location = '/guest/payment/success';
+                            },
+                            onPending: function (result) {
+                                console.log('Payment pending:', result);
+                                window.location = '/guest/payment';
+                            },
+                            onError: function (result) {
+                                console.log('Payment error:', result);
+                                window.location = '/guest/payment/failed';
+                            },
+                            onClose: function () {
+                                console.log('Payment dialog closed');
+                                payBtn.disabled = false;
+                                payBtn.textContent = 'Pay with Midtrans';
+                            }
+                        });
+                    } else if (++attempts > 100) {
+                        clearInterval(checkSnap);
+                        console.error('Snap.js failed to load');
+                        alert('Payment gateway failed to load. Please refresh and try again.');
+                        payBtn.disabled = false;
+                        payBtn.textContent = 'Pay with Midtrans';
+                    }
+                }, 100);
+
+            } catch (error) {
+                console.error('Payment error:', error);
+                alert('Payment Error: ' + error.message);
+                payBtn.disabled = false;
+                payBtn.textContent = 'Pay with Midtrans';
+            }
+        });
     </script>
 @endsection
