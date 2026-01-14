@@ -12,15 +12,16 @@
                     style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">📊
                     Dashboard</a>
                 <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <button onclick="document.getElementById('manage-menu').style.display = document.getElementById('manage-menu').style.display === 'none' ? 'flex' : 'none'"
+                    <button
+                        onclick="document.getElementById('manage-menu').style.display = document.getElementById('manage-menu').style.display === 'none' ? 'flex' : 'none'"
                         style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; text-align: left; font-weight: 500;">🏡
                         Manage</button>
                     <div id="manage-menu" style="display: none; flex-direction: column; gap: 5px; margin-left: 10px;">
                         <a href="{{ route('admin.villas.index') }}"
-                            style="padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: #FAF2E8; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Villa</a>
                         <a href="{{ route('admin.settings.homepage') }}"
-                            style="padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: #FAF2E8; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Homepage</a>
                     </div>
                 </div>
@@ -31,7 +32,7 @@
                     style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">👥
                     Users</a>
                 <a href="{{ route('admin.finances.index') }}"
-                    style="padding: 12px; background: #007bff; color: white; text-decoration: none; border-radius: 4px;">💰
+                    style="padding: 12px; background: #f05b4f; color: white; text-decoration: none; border-radius: 4px;">💰
                     Finance</a>
             </nav>
         </div>
@@ -42,7 +43,7 @@
 
             <!-- Filters -->
             <form method="GET"
-                style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+                style="background: #FAF2E8; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
                 <div>
                     <label style="display: block; margin-bottom: 5px; font-size: 12px; font-weight: 600;">Filter Tanggal
                         Mulai</label>
@@ -62,22 +63,24 @@
                         <option value="">Semua Villa</option>
                         @foreach($villas as $villa)
                             <option value="{{ $villa->id }}" {{ request('villa_id') == $villa->id ? 'selected' : '' }}>
-                                {{ $villa->name }}</option>
+                                {{ $villa->name }}
+                            </option>
                         @endforeach
                     </select>
                 </div>
                 <div style="display: flex; align-items: flex-end;">
                     <button type="submit"
-                        style="width: 100%; background: #007bff; color: white; padding: 8px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Filter</button>
+                        style="width: 100%; background: #f05b4f; color: white; padding: 8px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Filter</button>
                 </div>
             </form>
 
             <!-- Income Summary -->
             <div
-                style="background: #f0f7ff; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #007bff;">
+                style="background: #f0f7ff; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #f05b4f;">
                 <p style="margin: 0; color: #666; font-size: 12px; text-transform: uppercase;">Total Income Villa</p>
-                <p style="margin: 8px 0 0 0; font-size: 32px; font-weight: bold; color: #007bff;">Rp
-                    {{ number_format($totalIncome, 0, ',', '.') }}</p>
+                <p style="margin: 8px 0 0 0; font-size: 32px; font-weight: bold; color: #f05b4f;">Rp
+                    {{ number_format($totalIncome, 0, ',', '.') }}
+                </p>
             </div>
 
             <!-- Income Details -->
@@ -105,7 +108,8 @@
                                 <td style="padding: 12px;">{{ $booking->guest_name ?? $booking->user->name }}</td>
                                 <td style="padding: 12px;">{{ $booking->created_at->format('d M Y') }}</td>
                                 <td style="padding: 12px; font-weight: 600;">Rp
-                                    {{ number_format($booking->total_price, 0, ',', '.') }}</td>
+                                    {{ number_format($booking->total_price, 0, ',', '.') }}
+                                </td>
                             </tr>
                         @empty
                             <tr>

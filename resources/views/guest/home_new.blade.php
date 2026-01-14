@@ -21,7 +21,7 @@
             position: relative;
             width: 100%;
             height: 300px;
-            background: #f0f0f0;
+            background: #FAF2E8;
             border: 2px solid #333;
             border-radius: 8px;
             overflow: hidden;
@@ -73,7 +73,7 @@
 
         /* Description Section */
         .description-section {
-            background: #f9f9f9;
+            background: #FAF2E8;
             border: 1px solid #ddd;
             border-radius: 8px;
             padding: 30px;
@@ -124,7 +124,7 @@
 
         .search-form button {
             padding: 10px 25px;
-            background: #007bff;
+            background: #f05b4f;
             color: white;
             border: none;
             border-radius: 4px;
@@ -133,7 +133,7 @@
         }
 
         .search-form button:hover {
-            background: #0056b3;
+            background: #d84539;
         }
 
         /* Villa Grid */
@@ -184,7 +184,7 @@
         .villa-card-image {
             width: 100%;
             height: 150px;
-            background: #f0f0f0;
+            background: #FAF2E8;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -217,7 +217,7 @@
 
         /* Facilities Section */
         .facility-section {
-            background: #f9f9f9;
+            background: #FAF2E8;
             border: 1px solid #ddd;
             border-radius: 8px;
             padding: 30px;
@@ -444,27 +444,27 @@
 
                         if (data.villas && data.villas.length > 0) {
                             villaGrid.innerHTML = data.villas.map(villa => `
-                                <div class="villa-card">
-                                    <a href="/villa/${villa.id}">
-                                        <div class="villa-card-header">
-                                            ${villa.name}
-                                            <div class="villa-card-header-small">${villa.status}</div>
+                                        <div class="villa-card">
+                                            <a href="/villa/${villa.id}">
+                                                <div class="villa-card-header">
+                                                    ${villa.name}
+                                                    <div class="villa-card-header-small">${villa.status}</div>
+                                                </div>
+                                                <div class="villa-card-image">
+                                                    No Image
+                                                </div>
+                                                <div class="villa-card-body">
+                                                    <h3>Kapasitas ${villa.capacity} orang</h3>
+                                                    <div class="villa-info">
+                                                        <strong>Harga:</strong> Rp ${new Intl.NumberFormat('id-ID').format(villa.base_price)}
+                                                    </div>
+                                                    <div class="villa-info">
+                                                        <strong>Kamar:</strong> ${villa.rooms_total}
+                                                    </div>
+                                                </div>
+                                            </a>
                                         </div>
-                                        <div class="villa-card-image">
-                                            No Image
-                                        </div>
-                                        <div class="villa-card-body">
-                                            <h3>Kapasitas ${villa.capacity} orang</h3>
-                                            <div class="villa-info">
-                                                <strong>Harga:</strong> Rp ${new Intl.NumberFormat('id-ID').format(villa.base_price)}
-                                            </div>
-                                            <div class="villa-info">
-                                                <strong>Kamar:</strong> ${villa.rooms_total}
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                            `).join('');
+                                    `).join('');
                         } else {
                             villaGrid.innerHTML = '<div class="no-results">No villas found matching your criteria</div>';
                         }

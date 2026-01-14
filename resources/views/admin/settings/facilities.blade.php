@@ -18,10 +18,10 @@
                         Manage</button>
                     <div id="manage-menu" style="display: none; flex-direction: column; gap: 5px; margin-left: 10px;">
                         <a href="{{ route('admin.villas.index') }}"
-                            style="padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: #FAF2E8; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Villa</a>
                         <a href="{{ route('admin.settings.homepage') }}"
-                            style="padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: #FAF2E8; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Homepage</a>
                     </div>
                 </div>
@@ -71,7 +71,7 @@
                             style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box;">
                     </div>
                     <button type="submit"
-                        style="padding: 8px 16px; background: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;">
+                        style="padding: 8px 16px; background: #f05b4f; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;">
                         ➕ Tambah Fasilitas
                     </button>
                 </form>
@@ -89,7 +89,7 @@
                     @foreach ($grouped as $category => $items)
                         <div style="margin-bottom: 20px;">
                             <h4
-                                style="margin: 0 0 10px 0; font-size: 14px; font-weight: 600; text-transform: capitalize; padding-bottom: 10px; border-bottom: 2px solid #007bff;">
+                                style="margin: 0 0 10px 0; font-size: 14px; font-weight: 600; text-transform: capitalize; padding-bottom: 10px; border-bottom: 2px solid #f05b4f;">
                                 {{ str_replace('_', ' ', $category) }}
                             </h4>
                             <div style="display: grid; gap: 0;">

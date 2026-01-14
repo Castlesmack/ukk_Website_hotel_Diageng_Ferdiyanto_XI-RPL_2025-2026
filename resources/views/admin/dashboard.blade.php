@@ -9,18 +9,19 @@
             <h2 style="margin: 0 0 30px 0; font-size: 18px; font-weight: 600;">Menu</h2>
             <nav style="display: flex; flex-direction: column; gap: 10px;">
                 <a href="{{ route('admin.dashboard') }}"
-                    style="padding: 12px; background: #007bff; color: white; text-decoration: none; border-radius: 4px;">📊
+                    style="padding: 12px; background: #f05b4f; color: white; text-decoration: none; border-radius: 4px;">📊
                     Dashboard</a>
                 <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <button onclick="document.getElementById('manage-menu').style.display = document.getElementById('manage-menu').style.display === 'none' ? 'flex' : 'none'"
+                    <button
+                        onclick="document.getElementById('manage-menu').style.display = document.getElementById('manage-menu').style.display === 'none' ? 'flex' : 'none'"
                         style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; text-align: left; font-weight: 500;">🏡
                         Manage</button>
                     <div id="manage-menu" style="display: none; flex-direction: column; gap: 5px; margin-left: 10px;">
                         <a href="{{ route('admin.villas.index') }}"
-                            style="padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: #FAF2E8; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Villa</a>
                         <a href="{{ route('admin.settings.homepage') }}"
-                            style="padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: #FAF2E8; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Homepage</a>
                     </div>
                 </div>
@@ -43,18 +44,19 @@
             <!-- Stats Grid -->
             <div
                 style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 30px;">
-                <div style="background: #f0f7ff; padding: 20px; border-radius: 8px; border-left: 4px solid #007bff;">
+                <div style="background: #f0f7ff; padding: 20px; border-radius: 8px; border-left: 4px solid #f05b4f;">
                     <p style="margin: 0; color: #666; font-size: 12px; text-transform: uppercase;">Total Villa</p>
-                    <p style="margin: 8px 0 0 0; font-size: 28px; font-weight: bold; color: #007bff;">{{ $totalVillas }}</p>
+                    <p style="margin: 8px 0 0 0; font-size: 28px; font-weight: bold; color: #f05b4f;">{{ $totalVillas }}</p>
                 </div>
                 <div style="background: #fff0f5; padding: 20px; border-radius: 8px; border-left: 4px solid #dc3545;">
                     <p style="margin: 0; color: #666; font-size: 12px; text-transform: uppercase;">Total Tamu</p>
                     <p style="margin: 8px 0 0 0; font-size: 28px; font-weight: bold; color: #dc3545;">{{ $totalGuests }}</p>
                 </div>
-                <div style="background: #f0fff0; padding: 20px; border-radius: 8px; border-left: 4px solid #28a745;">
+                <div style="background: #f0fff0; padding: 20px; border-radius: 8px; border-left: 4px solid #f05b4f;">
                     <p style="margin: 0; color: #666; font-size: 12px; text-transform: uppercase;">Total Revenue</p>
-                    <p style="margin: 8px 0 0 0; font-size: 28px; font-weight: bold; color: #28a745;">Rp
-                        {{ number_format($totalRevenue, 0, ',', '.') }}</p>
+                    <p style="margin: 8px 0 0 0; font-size: 28px; font-weight: bold; color: #f05b4f;">Rp
+                        {{ number_format($totalRevenue, 0, ',', '.') }}
+                    </p>
                 </div>
             </div>
 

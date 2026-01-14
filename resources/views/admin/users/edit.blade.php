@@ -18,10 +18,10 @@
                         Manage</button>
                     <div id="manage-menu" style="display: none; flex-direction: column; gap: 5px; margin-left: 10px;">
                         <a href="{{ route('admin.villas.index') }}"
-                            style="padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: #FAF2E8; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Villa</a>
                         <a href="{{ route('admin.settings.homepage') }}"
-                            style="padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: #FAF2E8; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Homepage</a>
                     </div>
                 </div>
@@ -29,7 +29,7 @@
                     style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">📅
                     Reservation</a>
                 <a href="{{ route('admin.users.index') }}"
-                    style="padding: 12px; background: #007bff; color: white; text-decoration: none; border-radius: 4px;">👥
+                    style="padding: 12px; background: #f05b4f; color: white; text-decoration: none; border-radius: 4px;">👥
                     Users</a>
                 <a href="{{ route('admin.finances.index') }}"
                     style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">💰
@@ -103,7 +103,7 @@
                     <a href="{{ route('admin.users.index') }}"
                         style="flex: 1; padding: 10px; background: #6c757d; color: white; text-decoration: none; text-align: center; border-radius: 4px; cursor: pointer; border: none; font-weight: 500;">Batal</a>
                     <button type="submit"
-                        style="flex: 1; padding: 10px; background: #28a745; color: white; border-radius: 4px; cursor: pointer; border: none; font-weight: 500;">Simpan</button>
+                        style="flex: 1; padding: 10px; background: #f05b4f; color: white; border-radius: 4px; cursor: pointer; border: none; font-weight: 500;">Simpan</button>
                 </div>
             </form>
         </div>

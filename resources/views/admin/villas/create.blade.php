@@ -18,10 +18,10 @@
                         Manage</button>
                     <div id="manage-menu" style="display: none; flex-direction: column; gap: 5px; margin-left: 10px;">
                         <a href="{{ route('admin.villas.index') }}"
-                            style="padding: 8px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: #f05b4f; color: white; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Villa</a>
                         <a href="{{ route('admin.settings.homepage') }}"
-                            style="padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: #FAF2E8; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Homepage</a>
                     </div>
                 </div>
@@ -41,8 +41,20 @@
         <div style="padding: 20px; background: white; max-width: 800px;">
             <h1 style="margin: 0 0 20px 0; font-size: 28px;">Tambah Villa Baru</h1>
 
+            @if ($errors->any())
+                <div
+                    style="background: #f8d7da; border: 1px solid #f5c6cb; color: #721c24; padding: 12px; border-radius: 4px; margin-bottom: 20px;">
+                    <strong>Validation Errors:</strong>
+                    <ul style="margin: 8px 0 0 0; padding-left: 20px;">
+                        @foreach($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
             <form action="{{ route('admin.villas.store') }}" method="POST" enctype="multipart/form-data"
-                style="background: #f9f9f9; padding: 20px; border-radius: 8px;">
+                style="background: #FAF2E8; padding: 20px; border-radius: 8px;">
                 @csrf
 
                 <div style="margin-bottom: 15px;">
@@ -91,9 +103,12 @@
                         <option value="">-- Select Status --</option>
                         <option value="active" {{ old('status') === 'active' ? 'selected' : '' }}>Active</option>
                         <option value="inactive" {{ old('status') === 'inactive' ? 'selected' : '' }}>Inactive</option>
-                        <option value="maintenance" {{ old('status') === 'maintenance' ? 'selected' : '' }}>Maintenance</option>
-                        <option value="available" {{ old('status') === 'available' ? 'selected' : '' }}>Available (Legacy)</option>
-                        <option value="unavailable" {{ old('status') === 'unavailable' ? 'selected' : '' }}>Unavailable (Legacy)</option>
+                        <option value="maintenance" {{ old('status') === 'maintenance' ? 'selected' : '' }}>Maintenance
+                        </option>
+                        <option value="available" {{ old('status') === 'available' ? 'selected' : '' }}>Available (Legacy)
+                        </option>
+                        <option value="unavailable" {{ old('status') === 'unavailable' ? 'selected' : '' }}>Unavailable
+                            (Legacy)</option>
                     </select>
                     @error('status') <small style="color: #dc3545;">{{ $message }}</small> @enderror
                 </div>
@@ -116,7 +131,7 @@
 
                 <div style="display: flex; gap: 10px;">
                     <button type="submit"
-                        style="background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Simpan</button>
+                        style="background: #f05b4f; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Simpan</button>
                     <a href="{{ route('admin.villas.index') }}"
                         style="background: #6c757d; color: white; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: 600;">Batal</a>
                 </div>

@@ -12,20 +12,21 @@
                     style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">📊
                     Dashboard</a>
                 <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <button onclick="document.getElementById('manage-menu').style.display = document.getElementById('manage-menu').style.display === 'none' ? 'flex' : 'none'"
+                    <button
+                        onclick="document.getElementById('manage-menu').style.display = document.getElementById('manage-menu').style.display === 'none' ? 'flex' : 'none'"
                         style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; text-align: left; font-weight: 500;">🏡
                         Manage</button>
                     <div id="manage-menu" style="display: none; flex-direction: column; gap: 5px; margin-left: 10px;">
                         <a href="{{ route('admin.villas.index') }}"
-                            style="padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: #FAF2E8; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Villa</a>
                         <a href="{{ route('admin.settings.homepage') }}"
-                            style="padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: #FAF2E8; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Homepage</a>
                     </div>
                 </div>
                 <a href="{{ route('admin.reservations.index') }}"
-                    style="padding: 12px; background: #007bff; color: white; text-decoration: none; border-radius: 4px;">📅
+                    style="padding: 12px; background: #f05b4f; color: white; text-decoration: none; border-radius: 4px;">📅
                     Reservation</a>
                 <a href="{{ route('admin.users.index') }}"
                     style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">👥
@@ -71,7 +72,8 @@
                                 <td style="padding: 12px;">{{ $reservation->guest_name ?? $reservation->user->name }}</td>
                                 <td style="padding: 12px;">{{ $reservation->villa->name }}</td>
                                 <td style="padding: 12px;">{{ $reservation->check_in_date->format('d M Y') }} -
-                                    {{ $reservation->check_out_date->format('d M Y') }}</td>
+                                    {{ $reservation->check_out_date->format('d M Y') }}
+                                </td>
                                 <td style="padding: 12px;">{{ $reservation->guest_phone ?? $reservation->user->phone }}</td>
                                 <td style="padding: 12px;">
                                     <span
@@ -79,7 +81,7 @@
                                 </td>
                                 <td style="padding: 12px; text-align: center;">
                                     <a href="{{ route('admin.reservations.show', $reservation) }}"
-                                        style="color: #007bff; text-decoration: none;">Lihat</a>
+                                        style="color: #f05b4f; text-decoration: none;">Lihat</a>
                                 </td>
                             </tr>
                         @empty

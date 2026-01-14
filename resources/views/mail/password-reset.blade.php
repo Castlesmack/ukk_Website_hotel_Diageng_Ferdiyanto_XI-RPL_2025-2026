@@ -22,11 +22,11 @@
             text-align: center;
             margin-bottom: 30px;
             padding-bottom: 20px;
-            border-bottom: 2px solid #007bff;
+            border-bottom: 2px solid #f05b4f;
         }
 
         .header h1 {
-            color: #007bff;
+            color: #f05b4f;
             margin: 0;
         }
 
@@ -39,7 +39,7 @@
 
         .button {
             display: inline-block;
-            background-color: #007bff;
+            background-color: #f05b4f;
             color: white;
             padding: 12px 30px;
             text-decoration: none;
@@ -49,7 +49,7 @@
         }
 
         .button:hover {
-            background-color: #0056b3;
+            background-color: #d84539;
         }
 
         .footer {

@@ -97,6 +97,38 @@ class SettingController extends Controller
         return redirect()->back()->with('success', 'Homepage berhasil diperbarui!');
     }
 
+    public function deleteHomepageImage(Request $request)
+    {
+        $request->validate([
+            'image_index' => 'required|integer|min:0',
+        ]);
+
+        $homepage = HomepageSetting::first();
+        if (!$homepage) {
+            return redirect()->back()->with('error', 'Homepage settings tidak ditemukan!');
+        }
+
+        $images = $homepage->slider_images ?? [];
+        $imageIndex = $request->input('image_index');
+
+        if (isset($images[$imageIndex])) {
+            // Delete the file from disk
+            $filePath = public_path($images[$imageIndex]);
+            if (file_exists($filePath)) {
+                @unlink($filePath);
+            }
+            
+            // Remove from array and re-index
+            array_splice($images, $imageIndex, 1);
+            $homepage->slider_images = array_values($images);
+            $homepage->save();
+
+            return redirect()->back()->with('success', 'Gambar slider berhasil dihapus!');
+        }
+
+        return redirect()->back()->with('error', 'Gambar tidak ditemukan!');
+    }
+
     public function manageFacilities()
     {
         $facilities = HomepageFacility::all();

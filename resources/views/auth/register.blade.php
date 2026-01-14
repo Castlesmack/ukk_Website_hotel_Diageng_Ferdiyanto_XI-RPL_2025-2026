@@ -10,11 +10,11 @@
 @push('styles')
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
+            background: #FAF2E8 min-height: 100vh;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
+            padding-top: 55px;
         }
 
         .register-card {
@@ -51,7 +51,7 @@
         }
 
         .form-group input:focus {
-            border-color: #007bff;
+            border-color: #f05b4f;
             outline: none;
         }
 
@@ -66,7 +66,7 @@
         .btn-submit {
             width: 100%;
             padding: 14px;
-            background: #007bff;
+            background: #f05b4f;
             color: white;
             border: none;
             border-radius: 8px;
@@ -76,7 +76,7 @@
         }
 
         .btn-submit:hover {
-            background: #0056b3;
+            background: #d84539;
         }
 
         .error-msg {
@@ -175,7 +175,7 @@
 
         <div style="margin-top: 20px; text-align: center; font-size: 14px;">
             <p style="margin: 0; color: #666;">Already have an account? <a href="/login"
-                    style="color: #007bff; text-decoration: none; font-weight: 600;">Login here</a></p>
+                    style="color: #f05b4f; text-decoration: none; font-weight: 600;">Login here</a></p>
         </div>
     </div>
 @endsection

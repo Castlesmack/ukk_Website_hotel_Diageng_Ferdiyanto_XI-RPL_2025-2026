@@ -21,7 +21,7 @@
         .amount {
             font-size: 18px;
             font-weight: bold;
-            color: #007bff;
+            color: #f05b4f;
         }
 
         .payment-widget {
@@ -36,7 +36,7 @@
 
         .pay-btn {
             padding: 12px 24px;
-            background: #007bff;
+            background: #f05b4f;
             color: white;
             border: none;
             border-radius: 8px;
@@ -46,7 +46,7 @@
         }
 
         .pay-btn:hover {
-            background: #0056b3;
+            background: #d84539;
         }
 
         .pay-btn:disabled {

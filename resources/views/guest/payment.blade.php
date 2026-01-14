@@ -24,7 +24,7 @@
         }
 
         .booking-info {
-            background: #f9f9f9;
+            background: #FAF2E8;
             border: 1px solid #ddd;
             border-radius: 8px;
             padding: 20px;
@@ -55,7 +55,7 @@
         .total-amount {
             font-size: 24px;
             font-weight: bold;
-            color: #007bff;
+            color: #f05b4f;
             text-align: center;
             margin-top: 20px;
             padding-top: 20px;
@@ -76,7 +76,7 @@
         .payment-btn {
             width: 100%;
             padding: 15px;
-            background: #28a745;
+            background: #f05b4f;
             color: white;
             border: none;
             border-radius: 4px;
@@ -87,7 +87,7 @@
         }
 
         .payment-btn:hover {
-            background: #218838;
+            background: #d84539;
         }
 
         .payment-btn:disabled {
@@ -103,7 +103,7 @@
 
         .spinner {
             border: 4px solid #f3f3f3;
-            border-top: 4px solid #007bff;
+            border-top: 4px solid #f05b4f;
             border-radius: 50%;
             width: 40px;
             height: 40px;
@@ -288,9 +288,8 @@
 
             function handlePaymentError(result) {
                 console.log('Payment error:', result);
-                showError('Payment failed. Please try again.');
-                document.getElementById('paymentBtn').disabled = false;
-                document.getElementById('loadingSpinner').style.display = 'none';
+                // Redirect to failure page
+                window.location.href = '{{ route("guest.payment.failed") }}?booking_code={{ $booking->booking_code }}&error=' + encodeURIComponent(JSON.stringify(result));
             }
 
             function showError(message) {

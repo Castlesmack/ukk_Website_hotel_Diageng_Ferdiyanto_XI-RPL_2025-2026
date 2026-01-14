@@ -20,7 +20,7 @@
 
         .form-section h3 {
             margin-top: 0;
-            color: #007bff;
+            color: #f05b4f;
         }
 
         .form-group {
@@ -48,7 +48,7 @@
         }
 
         .continue-btn {
-            background: #007bff;
+            background: #f05b4f;
             color: white;
             padding: 12px 20px;
             border: none;
@@ -58,7 +58,7 @@
         }
 
         .continue-btn:hover {
-            background: #0056b3;
+            background: #d84539;
         }
 
         .order-summary {
@@ -71,7 +71,7 @@
 
         .order-summary h4 {
             margin-top: 0;
-            color: #007bff;
+            color: #f05b4f;
         }
 
         .summary-item {
@@ -87,14 +87,14 @@
         .total-price {
             font-size: 18px;
             font-weight: bold;
-            color: #007bff;
+            color: #f05b4f;
             margin: 15px 0;
         }
 
         .payment-btn {
             width: 100%;
             padding: 12px;
-            background: #28a745;
+            background: #f05b4f;
             color: white;
             border: none;
             border-radius: 4px;
@@ -103,11 +103,11 @@
         }
 
         .payment-btn:hover {
-            background: #218838;
+            background: #d84539;
         }
 
         .back-link {
-            color: #007bff;
+            color: #f05b4f;
             text-decoration: none;
             margin-bottom: 20px;
             display: inline-block;

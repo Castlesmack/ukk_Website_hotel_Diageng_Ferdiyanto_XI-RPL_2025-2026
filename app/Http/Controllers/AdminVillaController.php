@@ -10,7 +10,7 @@ class AdminVillaController extends Controller
 {
     public function index()
     {
-        $villas = Villa::all();
+        $villas = Villa::paginate(15);
         return view('admin.villas.index', compact('villas'));
     }
 
@@ -121,17 +121,23 @@ class AdminVillaController extends Controller
         $villa = Villa::findOrFail($id);
 
         // Validate
-        $request->validate([
-            'name' => 'required|string|max:191',
-            'capacity' => 'required|integer|min:1',
-            'base_price' => 'required|numeric|min:0',
-            'rooms_total' => 'required|integer|min:1',
-            'description' => 'nullable|string',
-            'status' => 'required|in:active,inactive,maintenance,available,unavailable',
-            'thumbnail' => 'nullable|mimes:jpeg,png,jpg,gif|max:2048',
-            'images' => 'nullable|array',
-            'images.*' => 'mimes:jpeg,png,jpg,gif|max:2048',
-        ]);
+        try {
+            $request->validate([
+                'name' => 'required|string|max:191',
+                'capacity' => 'required|integer|min:1',
+                'base_price' => 'required|numeric|min:0',
+                'rooms_total' => 'required|integer|min:1',
+                'description' => 'nullable|string',
+                'status' => 'required|in:active,inactive,maintenance,available,unavailable',
+                'thumbnail' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
+                'images' => 'nullable|array|max:10',
+                'images.*' => 'nullable|file|mimes:jpeg,png,jpg,gif|max:2048',
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->back()
+                ->withErrors($e->errors())
+                ->withInput();
+        }
 
         // Generate slug
         $slug = Str::slug($request->name);
@@ -144,18 +150,7 @@ class AdminVillaController extends Controller
         // Ensure upload directory
         $uploadDir = public_path('uploads/villas');
         if (!is_dir($uploadDir)) {
-            if (!mkdir($uploadDir, 0755, true)) {
-                return redirect()->back()
-                    ->withErrors(['image' => 'Failed to create upload directory. Check server permissions.'])
-                    ->withInput();
-            }
-        }
-        
-        // Verify directory is writable
-        if (!is_writable($uploadDir)) {
-            return redirect()->back()
-                ->withErrors(['image' => 'Upload directory is not writable. Check server permissions.'])
-                ->withInput();
+            mkdir($uploadDir, 0755, true);
         }
 
         // Handle thumbnail
@@ -169,11 +164,7 @@ class AdminVillaController extends Controller
                 // Upload new
                 $thumb = $request->file('thumbnail');
                 $filename = 'thumb_' . time() . '_' . Str::random(8) . '.' . $thumb->extension();
-                if (!$thumb->move($uploadDir, $filename)) {
-                    return redirect()->back()
-                        ->withErrors(['thumbnail' => 'Failed to upload thumbnail. Please try again.'])
-                        ->withInput();
-                }
+                $thumb->move($uploadDir, $filename);
                 $thumbnailPath = 'uploads/villas/' . $filename;
             } catch (\Exception $e) {
                 return redirect()->back()
@@ -203,13 +194,11 @@ class AdminVillaController extends Controller
         if ($request->hasFile('images')) {
             try {
                 foreach ($request->file('images') as $file) {
-                    $filename = 'img_' . time() . '_' . uniqid() . '.' . $file->extension();
-                    if (!$file->move($uploadDir, $filename)) {
-                        return redirect()->back()
-                            ->withErrors(['images' => 'Failed to upload one or more images. Please try again.'])
-                            ->withInput();
+                    if ($file && $file->isValid()) {
+                        $filename = 'img_' . time() . '_' . uniqid() . '.' . $file->extension();
+                        $file->move($uploadDir, $filename);
+                        $images[] = 'uploads/villas/' . $filename;
                     }
-                    $images[] = 'uploads/villas/' . $filename;
                 }
             } catch (\Exception $e) {
                 return redirect()->back()

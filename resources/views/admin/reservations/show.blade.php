@@ -17,15 +17,15 @@
                         Manage</button>
                     <div id="manage-menu" style="display: none; flex-direction: column; gap: 5px; margin-left: 10px;">
                         <a href="{{ route('admin.villas.index') }}"
-                            style="padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: #FAF2E8; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Villa</a>
                         <a href="{{ route('admin.settings.homepage') }}"
-                            style="padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: #FAF2E8; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Homepage</a>
                     </div>
                 </div>
                 <a href="{{ route('admin.reservations.index') }}"
-                    style="padding: 12px; background: #007bff; color: white; text-decoration: none; border-radius: 4px;">📅
+                    style="padding: 12px; background: #f05b4f; color: white; text-decoration: none; border-radius: 4px;">📅
                     Reservation</a>
                 <a href="{{ route('admin.users.index') }}"
                     style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">👥
@@ -39,11 +39,11 @@
         <!-- Main Content -->
         <div style="padding: 20px; background: white; max-width: 800px;">
             <a href="{{ route('admin.reservations.index') }}"
-                style="color: #007bff; text-decoration: none; margin-bottom: 20px; display: inline-block;">← Kembali</a>
+                style="color: #f05b4f; text-decoration: none; margin-bottom: 20px; display: inline-block;">← Kembali</a>
 
             <h1 style="margin: 0 0 20px 0; font-size: 28px;">Detail Pemesanan</h1>
 
-            <div style="background: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
+            <div style="background: #FAF2E8; padding: 20px; border-radius: 8px; margin-bottom: 20px;">
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
                     <div style="padding-bottom: 15px; border-bottom: 1px solid #ddd;">
                         <p style="margin: 0; color: #666; font-size: 12px; text-transform: uppercase;">Nama Tamu</p>
@@ -97,7 +97,7 @@
                     </select>
                 </div>
                 <button type="submit"
-                    style="background: #007bff; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Update
+                    style="background: #f05b4f; color: white; padding: 10px 20px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Update
                     Status</button>
             </form>
 

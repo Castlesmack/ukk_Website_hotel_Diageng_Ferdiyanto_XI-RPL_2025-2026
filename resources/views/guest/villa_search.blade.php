@@ -10,7 +10,7 @@
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
                 <!-- Left: Booking Form -->
                 <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-                    <h2 style="font-size: 16px; font-weight: 600; color: #007bff; margin-bottom: 20px;">Booking Details</h2>
+                    <h2 style="font-size: 16px; font-weight: 600; color: #f05b4f; margin-bottom: 20px;">Booking Details</h2>
 
                     @if($errors->any())
                         <div
@@ -99,7 +99,7 @@
 
                         <!-- Submit Button -->
                         <button type="submit"
-                            style="background: #007bff; color: white; padding: 12px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 14px; margin-top: 10px;">
+                            style="background: #f05b4f; color: white; padding: 12px; border: none; border-radius: 4px; font-weight: 600; cursor: pointer; font-size: 14px; margin-top: 10px;">
                             Continue to Payment
                         </button>
                     </form>
@@ -108,13 +108,14 @@
                 <!-- Right: Order Summary -->
                 <div
                     style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: fit-content; position: sticky; top: 20px;">
-                    <h2 style="font-size: 16px; font-weight: 600; color: #007bff; margin-bottom: 20px;">Order Summary</h2>
+                    <h2 style="font-size: 16px; font-weight: 600; color: #f05b4f; margin-bottom: 20px;">Order Summary</h2>
 
                     <!-- Villa Info -->
                     <div style="padding-bottom: 15px; border-bottom: 1px solid #eee;">
                         <p style="margin: 0 0 8px 0; font-size: 13px; color: #666;">Villa:</p>
                         <p style="margin: 0; font-size: 14px; font-weight: 600; color: #333;">
-                            {{ $villas->first()?->name ?? 'N/A' }}</p>
+                            {{ $villas->first()?->name ?? 'N/A' }}
+                        </p>
                     </div>
 
                     <!-- Check-in & Check-out -->
@@ -150,7 +151,7 @@
                     <div style="padding: 15px 0;">
                         <div style="display: flex; justify-content: space-between;">
                             <span style="font-size: 14px; font-weight: 600; color: #333;">Total:</span>
-                            <span style="font-size: 14px; font-weight: 700; color: #007bff;" class="total-summary">[Will be
+                            <span style="font-size: 14px; font-weight: 700; color: #f05b4f;" class="total-summary">[Will be
                                 calculated once dates are selected]</span>
                         </div>
                     </div>

@@ -10,17 +10,18 @@
 @push('styles')
     <style>
         body {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #FAF2E8;
             min-height: 100vh;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
+            padding-top: 150px;
         }
 
         .login-card {
             background: white;
             border-radius: 12px;
-            padding: 30px;
+            padding: 20px;
             box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
             max-width: 400px;
             width: 100%;
@@ -51,7 +52,7 @@
         }
 
         .form-group input:focus {
-            border-color: #007bff;
+            border-color: #f05b4f;
             outline: none;
         }
 
@@ -66,7 +67,7 @@
         .btn-submit {
             width: 100%;
             padding: 14px;
-            background: #007bff;
+            background: #f05b4f;
             color: white;
             border: none;
             border-radius: 8px;
@@ -76,7 +77,7 @@
         }
 
         .btn-submit:hover {
-            background: #0056b3;
+            background: #d84539;
         }
 
         .error-msg {
@@ -92,7 +93,7 @@
         }
 
         .forgot-link a {
-            color: #007bff;
+            color: #f05b4f;
             text-decoration: none;
         }
 
@@ -110,6 +111,14 @@
 
         .exit-btn:hover {
             color: #333;
+        }
+
+        img {
+            max-width: 150px;
+            height: auto;
+            object-fit: contain;
+            display: block;
+            margin: 0 auto;
         }
     </style>
 @endpush
@@ -156,7 +165,7 @@
 
         <div style="margin-top: 20px; text-align: center; font-size: 14px;">
             <p style="margin: 0 0 10px 0; color: #666;">Don't have an account? <a href="/register"
-                    style="color: #007bff; text-decoration: none; font-weight: 600;">Register here</a></p>
+                    style="color: #f05b4f; text-decoration: none; font-weight: 600;">Register here</a></p>
         </div>
     </div>
 @endsection

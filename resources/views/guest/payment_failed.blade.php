@@ -63,12 +63,12 @@
         }
 
         .btn-danger {
-            background: #dc3545;
+            background: #f05b4f;
             color: white;
         }
 
         .btn-danger:hover {
-            background: #c82333;
+            background: #d84539;
         }
 
         .btn-secondary {
@@ -105,6 +105,21 @@
             <div class="status-badge">Status: Failed</div>
         </div>
 
+        @if($booking)
+            <div style="background: #FAF2E8; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: left;">
+                <h4 style="margin-top: 0; color: #333;">Booking Details</h4>
+                <p style="margin: 8px 0;"><strong>Booking Code:</strong> {{ $booking->booking_code }}</p>
+                <p style="margin: 8px 0;"><strong>Villa:</strong> {{ $booking->villa->name ?? 'N/A' }}</p>
+                <p style="margin: 8px 0;"><strong>Check-in:</strong> {{ $booking->check_in_date->format('d M Y') }}</p>
+                <p style="margin: 8px 0;"><strong>Check-out:</strong> {{ $booking->check_out_date->format('d M Y') }}</p>
+                <p style="margin: 8px 0;"><strong>Guest Name:</strong> {{ $booking->guest_name }}</p>
+                <p style="margin: 8px 0;"><strong>Guest Email:</strong> {{ $booking->guest_email }}</p>
+                <p style="margin: 8px 0; border-top: 1px solid #ddd; padding-top: 10px;"><strong>Total Price:</strong> Rp
+                    {{ number_format($booking->total_price, 0, ',', '.') }}
+                </p>
+            </div>
+        @endif
+
         <div class="error-details">
             <strong>Common reasons for payment failure:</strong>
             <ul style="margin: 10px 0; padding-left: 20px;">
@@ -115,8 +130,19 @@
             </ul>
         </div>
 
+        @if($error_message)
+            <div
+                style="background: #fff3cd; border: 1px solid #ffeaa7; color: #856404; padding: 15px; border-radius: 4px; margin-bottom: 20px; font-size: 14px;">
+                <strong>Error Details:</strong> {{ is_array($error_message) ? json_encode($error_message) : $error_message }}
+            </div>
+        @endif
+
         <div class="action-buttons">
-            <a href="javascript:history.back()" class="btn btn-danger">Try Again</a>
+            @if($booking)
+                <a href="{{ route('guest.payment', $booking->id) }}" class="btn btn-danger">Try Again</a>
+            @else
+                <a href="javascript:history.back()" class="btn btn-danger">Try Again</a>
+            @endif
             <a href="/" class="btn btn-secondary">Back to Home</a>
         </div>
     </div>

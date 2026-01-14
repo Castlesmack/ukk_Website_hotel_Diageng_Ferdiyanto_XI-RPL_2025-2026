@@ -47,13 +47,13 @@
 
         .form-group input:focus {
             outline: none;
-            border-color: #007bff;
-            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+            border-color: #f05b4f;
+            box-shadow: 0 0 0 3px rgba(240, 91, 79, 0.1);
         }
 
         .btn-save {
             width: 100%;
-            background: #28a745;
+            background: #f05b4f;
             color: white;
             border: none;
             padding: 12px 30px;
@@ -65,7 +65,7 @@
         }
 
         .btn-save:hover {
-            background: #218838;
+            background: #d84539;
             transform: translateY(-2px);
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
         }

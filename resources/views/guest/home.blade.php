@@ -11,13 +11,13 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #333;
-            background: #fff;
+            background: #FAF2E8;
         }
 
         /* Hero Section */
         .hero {
             background: #e8e8e8;
-            height: 350px;
+            height: 500px;
             margin: 20px auto;
             max-width: 1200px;
             border-radius: 4px;
@@ -132,7 +132,7 @@
         }
 
         .search-btn {
-            background: #007bff;
+            background: #f05b4f;
             color: white;
             border: none;
             cursor: pointer;
@@ -141,7 +141,7 @@
         }
 
         .search-btn:hover {
-            background: #0056b3;
+            background: #d84539;
         }
 
         /* Villa Grid */
@@ -166,7 +166,7 @@
         .villa-image {
             width: 100%;
             height: 200px;
-            background: #f0f0f0;
+            background: #FAF2E8;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -206,7 +206,7 @@
 
         /* Facility Section */
         .facility-section {
-            background: #f9f9f9;
+            background: #FAF2E8;
             border: 1px solid #e8e8e8;
             border-radius: 4px;
             padding: 40px;
@@ -336,13 +336,7 @@
             @endif
         </div>
 
-        @if ($sliderImages && count($sliderImages) > 1)
-            <div class="carousel-dots">
-                @for ($i = 0; $i < count($sliderImages); $i++)
-                    <div class="dot {{ $i === 0 ? 'active' : '' }}" onclick="goToSlide({{ $i }})"></div>
-                @endfor
-            </div>
-        @endif
+
     </div>
 
     <div class="container">

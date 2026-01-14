@@ -11,13 +11,13 @@
     body {
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         color: #333;
-        background: #fff;
+        background: #FAF2E8;
     }
 
     /* Hero Section */
     .hero {
         background: #e8e8e8;
-        height: 350px;
+        height: 500px;
         margin: 20px 40px;
         border-radius: 4px;
         position: relative;
@@ -351,13 +351,7 @@
         @endif
     </div>
 
-    @if ($sliderImages && count($sliderImages) > 1)
-        <div class="carousel-dots">
-            @for ($i = 0; $i < count($sliderImages); $i++)
-                <div class="dot {{ $i === 0 ? 'active' : '' }}" onclick="goToSlide({{ $i }})"></div>
-            @endfor
-        </div>
-    @endif
+
 </div>
 
 <div class="container">

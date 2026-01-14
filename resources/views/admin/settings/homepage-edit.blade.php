@@ -17,10 +17,10 @@
                         Manage</button>
                     <div id="manage-menu" style="display: none; flex-direction: column; gap: 5px; margin-left: 10px;">
                         <a href="{{ route('admin.villas.index') }}"
-                            style="padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: #FAF2E8; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Villa</a>
                         <a href="{{ route('admin.settings.homepage') }}"
-                            style="padding: 8px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: #f05b4f; color: white; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Homepage</a>
                     </div>
                 </div>
@@ -77,8 +77,8 @@
                             @foreach ($homepage->slider_images as $index => $image)
                                 <div style="position: relative; border: 1px solid #ddd; border-radius: 4px; overflow: hidden; background: #f5f5f5;">
                                     <img src="{{ asset($image) }}" alt="Slider Image" style="width: 100%; height: 100px; object-fit: cover;">
-                                    <button type="submit" name="delete_image" value="{{ $index }}" 
-                                        style="position: absolute; top: 5px; right: 5px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 24px; height: 24px; cursor: pointer; font-size: 12px; display: flex; align-items: center; justify-content: center;">
+                                    <button type="button" onclick="deleteSliderImage(this, {{ $index }})" 
+                                        style="position: absolute; top: 5px; right: 5px; background: #dc3545; color: white; border: none; border-radius: 50%; width: 28px; height: 28px; cursor: pointer; font-size: 18px; display: flex; align-items: center; justify-content: center; font-weight: bold; hover: background: #c82333; transition: background 0.2s;">
                                         ×
                                     </button>
                                 </div>
@@ -143,13 +143,13 @@
                             </div>
                         @endforeach
                     @else
-                        <p style="color: #666;">Belum ada fasilitas. <a href="{{ route('admin.settings.facilities') }}" style="color: #007bff;">Tambahkan fasilitas</a></p>
+                        <p style="color: #666;">Belum ada fasilitas. <a href="{{ route('admin.settings.facilities') }}" style="color: #f05b4f;">Tambahkan fasilitas</a></p>
                     @endif
                 </div>
 
                 <!-- Submit Button -->
                 <div style="display: flex; gap: 10px;">
-                    <button type="submit" style="padding: 10px 20px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;">
+                    <button type="submit" style="padding: 10px 20px; background: #f05b4f; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;">
                         💾 Simpan Perubahan
                     </button>
                     <a href="{{ route('admin.dashboard') }}" style="padding: 10px 20px; background: #6c757d; color: white; text-decoration: none; border-radius: 4px; display: inline-block;">
@@ -159,4 +159,30 @@
             </form>
         </div>
     </div>
+
+    <script>
+        function deleteSliderImage(button, index) {
+            if (confirm('Apakah Anda yakin ingin menghapus gambar slider ini?')) {
+                // Create a hidden form to submit the delete request
+                const form = document.createElement('form');
+                form.method = 'POST';
+                form.action = '{{ route("admin.homepage.delete-image") }}';
+                
+                const tokenInput = document.createElement('input');
+                tokenInput.type = 'hidden';
+                tokenInput.name = '_token';
+                tokenInput.value = '{{ csrf_token() }}';
+                
+                const indexInput = document.createElement('input');
+                indexInput.type = 'hidden';
+                indexInput.name = 'image_index';
+                indexInput.value = index;
+                
+                form.appendChild(tokenInput);
+                form.appendChild(indexInput);
+                document.body.appendChild(form);
+                form.submit();
+            }
+        }
+    </script>
 @endsection

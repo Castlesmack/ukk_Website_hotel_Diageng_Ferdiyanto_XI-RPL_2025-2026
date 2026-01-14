@@ -5,7 +5,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\VillaController as AdminVillaController;
+use App\Http\Controllers\AdminVillaController;
 use App\Http\Controllers\Admin\ReservationController;
 use App\Http\Controllers\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Admin\FinanceController;
@@ -65,6 +65,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::get('/admin/settings/homepage', [SettingController::class, 'editHomepage'])->name('admin.settings.homepage');
     Route::post('/admin/settings/homepage', [SettingController::class, 'updateHomepage'])->name('admin.settings.homepage.update');
     Route::put('/admin/settings/homepage', [SettingController::class, 'updateHomepage']); // Also support PUT
+    Route::post('/admin/settings/homepage/delete-image', [SettingController::class, 'deleteHomepageImage'])->name('admin.homepage.delete-image');
     Route::get('/admin/settings/facilities', [SettingController::class, 'manageFacilities'])->name('admin.settings.facilities');
     Route::post('/admin/settings/facilities', [SettingController::class, 'storeFacility'])->name('admin.settings.facilities.store');
     Route::delete('/admin/settings/facilities/{facility}', [SettingController::class, 'destroyFacility'])->name('admin.settings.facilities.destroy');
@@ -103,5 +104,5 @@ Route::middleware('auth')->group(function () {
     Route::get('/user/bookings', [App\Http\Controllers\UserController::class, 'bookings'])->name('user.bookings');
 });
 
-Route::view('/guest/payment/failed', 'guest.payment_failed')->name('guest.payment.failed');
+Route::get('/guest/payment/failed', [PaymentController::class, 'failed'])->name('guest.payment.failed');
 Route::get('/guest/payment/success', [PaymentController::class, 'success'])->name('guest.payment.success');

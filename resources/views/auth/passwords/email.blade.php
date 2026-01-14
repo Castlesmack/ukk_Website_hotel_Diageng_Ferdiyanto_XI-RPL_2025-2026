@@ -51,14 +51,14 @@
         }
 
         .form-group input:focus {
-            border-color: #007bff;
+            border-color: #f05b4f;
             outline: none;
         }
 
         .btn-submit {
             width: 100%;
             padding: 14px;
-            background: #007bff;
+            background: #f05b4f;
             color: white;
             border: none;
             border-radius: 8px;
@@ -68,7 +68,7 @@
         }
 
         .btn-submit:hover {
-            background: #0056b3;
+            background: #d84539;
         }
 
         .back-link {
@@ -77,7 +77,7 @@
         }
 
         .back-link a {
-            color: #007bff;
+            color: #f05b4f;
             text-decoration: none;
         }
 

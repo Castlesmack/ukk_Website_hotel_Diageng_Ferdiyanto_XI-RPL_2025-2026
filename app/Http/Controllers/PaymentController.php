@@ -16,9 +16,10 @@ class PaymentController extends Controller
     {
         $serverKey = env('MIDTRANS_SERVER_KEY');
         $clientKey = env('MIDTRANS_CLIENT_KEY');
+        $merchantId = env('MIDTRANS_MERCHANT_ID');
 
-        if (! $serverKey) {
-            return response()->json(['error' => 'MIDTRANS_SERVER_KEY not configured in .env'], 400);
+        if (! $serverKey || ! $merchantId) {
+            return response()->json(['error' => 'MIDTRANS configuration missing in .env'], 400);
         }
 
         $amount = (int) $request->input('amount', 100000);
@@ -91,7 +92,7 @@ class PaymentController extends Controller
     public function success(Request $request)
     {
         $bookingCode = $request->input('booking_code');
-        $status = $request->input('status', 'confirmed');
+        $paymentStatus = $request->input('status', 'confirmed');
 
         if (!$bookingCode) {
             return redirect('/')->with('error', 'Invalid booking code');
@@ -107,7 +108,11 @@ class PaymentController extends Controller
         $villa = Villa::find($booking->villa_id);
         $inactiveStatuses = ['inactive', 'unavailable', 'maintenance'];
         if (!$villa || in_array($villa->status, $inactiveStatuses)) {
-            return redirect('/')->with('error', 'Villa is no longer available.');
+            return view('guest.payment_success', [
+                'booking' => $booking,
+                'status' => 'error',
+                'message' => 'Villa is no longer available. Please contact support.'
+            ]);
         }
 
         // Update payment status to paid and reservation status to confirmed
@@ -116,6 +121,28 @@ class PaymentController extends Controller
             'status' => 'confirmed'
         ]);
 
-        return redirect('/')->with('success', 'Payment successful! Your reservation is confirmed.');
+        return view('guest.payment_success', [
+            'booking' => $booking,
+            'status' => $paymentStatus
+        ]);
+    }
+
+    /**
+     * Handle payment failure
+     */
+    public function failed(Request $request)
+    {
+        $bookingCode = $request->input('booking_code');
+        $errorData = $request->input('error', 'Unknown error');
+
+        $booking = null;
+        if ($bookingCode) {
+            $booking = Booking::where('booking_code', $bookingCode)->first();
+        }
+
+        return view('guest.payment_failed', [
+            'booking' => $booking,
+            'error_message' => $errorData
+        ]);
     }
 }

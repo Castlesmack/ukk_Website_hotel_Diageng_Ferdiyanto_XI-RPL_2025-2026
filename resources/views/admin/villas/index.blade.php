@@ -12,15 +12,16 @@
                     style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">📊
                     Dashboard</a>
                 <div style="display: flex; flex-direction: column; gap: 5px;">
-                    <button onclick="document.getElementById('manage-menu').style.display = document.getElementById('manage-menu').style.display === 'none' ? 'flex' : 'none'"
+                    <button
+                        onclick="document.getElementById('manage-menu').style.display = document.getElementById('manage-menu').style.display === 'none' ? 'flex' : 'none'"
                         style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; text-align: left; font-weight: 500;">🏡
                         Manage</button>
                     <div id="manage-menu" style="display: none; flex-direction: column; gap: 5px; margin-left: 10px;">
                         <a href="{{ route('admin.villas.index') }}"
-                            style="padding: 8px; background: #007bff; color: white; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: #f05b4f; color: white; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Villa</a>
                         <a href="{{ route('admin.settings.homepage') }}"
-                            style="padding: 8px; background: #f0f0f0; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: #FAF2E8; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Homepage</a>
                     </div>
                 </div>
@@ -41,7 +42,7 @@
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                 <h1 style="margin: 0; font-size: 28px;">Halaman Data Villa</h1>
                 <a href="{{ route('admin.villas.create') }}"
-                    style="background: #007bff; color: white; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: 600;">+
+                    style="background: #f05b4f; color: white; padding: 10px 20px; border-radius: 4px; text-decoration: none; font-weight: 600;">+
                     Tambah Villa</a>
             </div>
 
@@ -82,7 +83,7 @@
                                 </td>
                                 <td style="padding: 12px; text-align: center;">
                                     <a href="{{ route('admin.villas.edit', $villa) }}"
-                                        style="color: #007bff; text-decoration: none; margin-right: 10px;">Edit</a>
+                                        style="color: #f05b4f; text-decoration: none; margin-right: 10px;">Edit</a>
                                     <form action="{{ route('admin.villas.destroy', $villa) }}" method="POST"
                                         style="display: inline;" onsubmit="return confirm('Delete?');">
                                         @csrf
