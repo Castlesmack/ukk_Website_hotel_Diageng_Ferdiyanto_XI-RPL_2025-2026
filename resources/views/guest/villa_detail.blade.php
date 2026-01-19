@@ -111,8 +111,9 @@
             width: 100%;
             height: 70vh;
             object-fit: contain;
-            margin-bottom: 15px;
+            margin-bottom: 0px;
             border-radius: 8px;
+            position: relative;
         }
 
         .lightbox-thumbnails {
@@ -123,6 +124,7 @@
             width: 100%;
             padding: 10px 0;
             max-width: 900px;
+            margin-top: 15px;
         }
 
         .lightbox-thumbnail {
@@ -215,7 +217,7 @@
             background: rgba(0, 0, 0, 0.6);
             padding: 8px 16px;
             border-radius: 20px;
-            z-index: 1005;
+            z-index: 1015;
         }
 
         .thumbnail-gallery {
@@ -579,10 +581,11 @@
                         <button class="lightbox-next" onclick="nextImage()">❯</button>
                     </div>
 
-                    <img id="lightboxImage" class="lightbox-main-image" src="" alt="Gallery">
-
-                    <div class="lightbox-counter">
-                        <span id="currentImageNumber">1</span> / <span id="totalImageCount">1</span>
+                    <div style="position: relative; width: 100%; max-width: 1000px;">
+                        <img id="lightboxImage" class="lightbox-main-image" src="" alt="Gallery">
+                        <div class="lightbox-counter">
+                            <span id="currentImageNumber">1</span> / <span id="totalImageCount">1</span>
+                        </div>
                     </div>
 
                     @if ($villa->images && count($villa->images) > 0)

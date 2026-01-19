@@ -5,7 +5,7 @@
 @section('content')
     <div style="display: grid; grid-template-columns: 200px 1fr; gap: 20px; margin: 0 -20px; padding: 0;">
         <!-- Sidebar -->
-        <div style="background: white; padding: 20px; min-height: 100vh;">
+        <div style="background: #f8f9fa; padding: 20px; min-height: 100vh;">
             <h2 style="margin: 0 0 30px 0; font-size: 18px; font-weight: 600;">Menu</h2>
             <nav style="display: flex; flex-direction: column; gap: 10px;">
                 <a href="{{ route('admin.dashboard') }}"
