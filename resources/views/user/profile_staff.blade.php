@@ -7,7 +7,7 @@
         .profile-container {
             max-width: 600px;
             margin: 40px auto;
-            background: white;
+            background: #FAF2E8;
             border: 1px solid #e9ecef;
             border-radius: 8px;
             padding: 40px;

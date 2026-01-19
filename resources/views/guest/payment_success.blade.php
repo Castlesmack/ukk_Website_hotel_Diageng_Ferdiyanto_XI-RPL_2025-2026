@@ -8,7 +8,7 @@
             max-width: 500px;
             margin: 50px auto;
             text-align: center;
-            background: white;
+            background: #FAF2E8;
             border-radius: 8px;
             padding: 40px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);

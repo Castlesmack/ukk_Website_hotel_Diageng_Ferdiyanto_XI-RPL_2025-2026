@@ -11,7 +11,7 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             color: #333;
-            background: #FAF2E8;
+            background: white;
         }
 
         /* Hero Section */

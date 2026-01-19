@@ -5,7 +5,7 @@
 @section('content')
     <div style="display: grid; grid-template-columns: 200px 1fr; gap: 20px; margin: 0 -20px; padding: 0;">
         <!-- Sidebar -->
-        <div style="background: #f8f9fa; padding: 20px; min-height: 100vh;">
+        <div style="background: white; padding: 20px; min-height: 100vh;">
             <h2 style="margin: 0 0 30px 0; font-size: 18px; font-weight: 600;">Menu</h2>
             <nav style="display: flex; flex-direction: column; gap: 10px;">
                 <a href="{{ route('admin.dashboard') }}"
@@ -18,10 +18,10 @@
                         Manage</button>
                     <div id="manage-menu" style="display: none; flex-direction: column; gap: 5px; margin-left: 10px;">
                         <a href="{{ route('admin.villas.index') }}"
-                            style="padding: 8px; background: #FAF2E8; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: white; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Villa</a>
                         <a href="{{ route('admin.settings.homepage') }}"
-                            style="padding: 8px; background: #FAF2E8; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: white; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Homepage</a>
                     </div>
                 </div>

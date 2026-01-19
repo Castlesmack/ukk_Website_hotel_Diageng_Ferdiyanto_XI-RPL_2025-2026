@@ -23,7 +23,7 @@
         }
 
         .sidebar-card {
-            background: white;
+            background: #FAF2E8;
             border: 1px solid #e9ecef;
             border-radius: 12px;
             padding: 0;
@@ -117,7 +117,7 @@
         }
 
         .booking-card {
-            background: white;
+            background: #FAF2E8;
             border: 1px solid #e9ecef;
             border-radius: 12px;
             padding: 24px;
@@ -239,7 +239,7 @@
         .no-bookings {
             text-align: center;
             padding: 80px 40px;
-            background: white;
+            background: #FAF2E8;
             border: 2px dashed #e9ecef;
             border-radius: 12px;
         }

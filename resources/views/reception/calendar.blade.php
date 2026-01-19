@@ -95,7 +95,7 @@
             margin-bottom: 25px;
             flex-wrap: wrap;
             gap: 15px;
-            background: white;
+            background: #FAF2E8;
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -113,7 +113,7 @@
             padding: 10px 15px;
             border: 1px solid #ddd;
             border-radius: 6px;
-            background: white;
+            background: #FAF2E8;
             color: #000;
             font-weight: 600;
             cursor: pointer;
@@ -136,7 +136,7 @@
         }
 
         .calendar-container {
-            background: white;
+            background: #FAF2E8;
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -166,7 +166,7 @@
 
         .day {
             min-height: 120px;
-            background: white;
+            background: #FAF2E8;
             padding: 10px;
             position: relative;
             display: flex;

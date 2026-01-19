@@ -23,7 +23,7 @@
         }
 
         .sidebar-card {
-            background: white;
+            background: #FAF2E8;
             border: 1px solid #e9ecef;
             border-radius: 12px;
             padding: 0;
@@ -116,7 +116,7 @@
 
         /* Form Container */
         .form-container {
-            background: white;
+            background: #FAF2E8;
             border: 1px solid #e9ecef;
             border-radius: 12px;
             padding: 30px;
@@ -167,7 +167,7 @@
         .form-group input:focus {
             outline: none;
             border-color: #f05b4f;
-            background: white;
+            background: #FAF2E8;
             box-shadow: 0 0 0 3px rgba(240, 91, 79, 0.1);
         }
 

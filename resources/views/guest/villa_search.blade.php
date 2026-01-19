@@ -9,7 +9,7 @@
 
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
                 <!-- Left: Booking Form -->
-                <div style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
+                <div style="background: #FAF2E8; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
                     <h2 style="font-size: 16px; font-weight: 600; color: #f05b4f; margin-bottom: 20px;">Booking Details</h2>
 
                     @if($errors->any())
@@ -107,7 +107,7 @@
 
                 <!-- Right: Order Summary -->
                 <div
-                    style="background: white; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: fit-content; position: sticky; top: 20px;">
+                    style="background: #FAF2E8; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); height: fit-content; position: sticky; top: 20px;">
                     <h2 style="font-size: 16px; font-weight: 600; color: #f05b4f; margin-bottom: 20px;">Order Summary</h2>
 
                     <!-- Villa Info -->

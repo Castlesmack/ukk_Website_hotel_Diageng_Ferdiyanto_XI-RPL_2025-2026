@@ -96,7 +96,7 @@
         }
 
         .kpi-card {
-            background: white;
+            background: #FAF2E8;
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -149,7 +149,7 @@
         }
 
         .schedule-card {
-            background: white;
+            background: #FAF2E8;
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -214,7 +214,7 @@
         }
 
         .chart-section {
-            background: white;
+            background: #FAF2E8;
             padding: 25px;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);

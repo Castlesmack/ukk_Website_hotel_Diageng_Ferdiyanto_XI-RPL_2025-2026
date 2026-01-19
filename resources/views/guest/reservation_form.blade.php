@@ -15,7 +15,7 @@
             border: 1px solid #e9ecef;
             border-radius: 8px;
             padding: 20px;
-            background: white;
+            background: #FAF2E8;
         }
 
         .form-section h3 {
@@ -65,7 +65,7 @@
             border: 1px solid #e9ecef;
             border-radius: 8px;
             padding: 20px;
-            background: white;
+            background: #FAF2E8;
             height: fit-content;
         }
 

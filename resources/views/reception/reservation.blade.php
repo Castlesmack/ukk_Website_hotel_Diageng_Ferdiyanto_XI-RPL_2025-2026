@@ -89,7 +89,7 @@
         }
 
         .filter-card {
-            background: white;
+            background: #FAF2E8;
             padding: 20px;
             border-radius: 12px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
@@ -151,7 +151,7 @@
         }
 
         .reservation-table {
-            background: white;
+            background: #FAF2E8;
             border-radius: 12px;
             overflow: hidden;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);

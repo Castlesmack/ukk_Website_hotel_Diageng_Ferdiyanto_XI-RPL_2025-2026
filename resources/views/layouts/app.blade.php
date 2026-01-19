@@ -15,7 +15,7 @@
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
-            background: #f8f9fa;
+            background: #FAF2E8;
             color: #333;
             line-height: 1.6;
             min-height: 100vh;
@@ -104,7 +104,7 @@
             position: absolute;
             top: 50px;
             right: 20px;
-            background: white;
+            background: #FAF2E8;
             border: 1px solid #ddd;
             border-radius: 4px;
             min-width: 150px;
