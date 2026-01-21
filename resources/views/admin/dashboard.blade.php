@@ -9,7 +9,7 @@
             <h2 style="margin: 0 0 30px 0; font-size: 18px; font-weight: 600;">Menu</h2>
             <nav style="display: flex; flex-direction: column; gap: 10px;">
                 <a href="{{ route('admin.dashboard') }}"
-                    style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">📊
+                    style="padding: 12px; background: #f05b4f; color: white; text-decoration: none; border-radius: 4px;">📊
                     Dashboard</a>
                 <div style="display: flex; flex-direction: column; gap: 5px;">
                     <button

@@ -117,7 +117,7 @@
         }
 
         .booking-card {
-            background: #FAF2E8;
+            background: white;
             border: 1px solid #e9ecef;
             border-radius: 12px;
             padding: 24px;

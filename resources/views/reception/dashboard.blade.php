@@ -18,21 +18,24 @@
         }
 
         .sidebar {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
             width: 280px;
-            background: #1a1a1a;
-            padding: 25px 20px;
-            border-radius: 12px;
             height: fit-content;
             position: sticky;
             top: 20px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            flex-shrink: 0;
         }
 
         .sidebar h3 {
             margin-top: 0;
-            margin-bottom: 20px;
-            color: white;
-            font-size: 18px;
+            margin-bottom: 15px;
+            color: #333;
+            font-size: 16px;
             font-weight: 700;
         }
 
@@ -40,36 +43,40 @@
             display: flex;
             align-items: center;
             padding: 12px 15px;
-            margin-bottom: 8px;
+            margin-bottom: 0;
             border-radius: 8px;
             text-decoration: none;
-            color: rgba(255, 255, 255, 0.8);
+            color: #333;
             transition: all 0.3s;
             font-weight: 500;
             font-size: 14px;
+            background: white;
+            border: 1px solid #f0f0f0;
         }
 
         .sidebar .menu-item:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: white;
-            transform: translateX(5px);
+            background: #f5f5f5;
+            color: #333;
+            transform: none;
         }
 
         .sidebar .menu-item.active {
-            background: rgba(255, 255, 255, 0.15);
+            background: #f05b4f;
             color: white;
-            border-left: 3px solid #A0522D;
-            padding-left: 12px;
+            border-color: #f05b4f;
+            box-shadow: 0 2px 8px rgba(240, 91, 79, 0.2);
         }
 
         .sidebar .menu-item::before {
-            content: '›';
-            margin-right: 10px;
-            font-size: 18px;
+            content: '';
+            margin-right: 0;
+            font-size: 0;
         }
 
         .main-content {
             flex: 1;
+            background: white;
+            padding: 20px;
         }
 
         .header {
@@ -96,10 +103,10 @@
         }
 
         .kpi-card {
-            background: #FAF2E8;
+            background: white;
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            box-shadow: none;
             border-left: 5px solid #000;
             transition: transform 0.3s, box-shadow 0.3s;
         }
@@ -149,10 +156,10 @@
         }
 
         .schedule-card {
-            background: #FAF2E8;
+            background: white;
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            box-shadow: none;
         }
 
         .schedule-card h3 {
@@ -214,10 +221,10 @@
         }
 
         .chart-section {
-            background: #FAF2E8;
+            background: white;
             padding: 25px;
             border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            box-shadow: none;
         }
 
         .chart-section h3 {

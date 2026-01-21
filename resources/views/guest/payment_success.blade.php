@@ -8,10 +8,11 @@
             max-width: 500px;
             margin: 50px auto;
             text-align: center;
-            background: #FAF2E8;
+            background: white;
             border-radius: 8px;
             padding: 40px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            border: 2px solid #000;
         }
 
         .success-icon {

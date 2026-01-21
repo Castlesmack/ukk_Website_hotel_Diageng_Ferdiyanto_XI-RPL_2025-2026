@@ -15,12 +15,12 @@
                     <button onclick="document.getElementById('manage-menu').style.display = document.getElementById('manage-menu').style.display === 'none' ? 'flex' : 'none'"
                         style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; text-align: left; font-weight: 500;">🏡
                         Manage</button>
-                    <div id="manage-menu" style="display: none; flex-direction: column; gap: 5px; margin-left: 10px;">
+                    <div id="manage-menu" style="display: flex; flex-direction: column; gap: 5px; margin-left: 10px;">
                         <a href="{{ route('admin.villas.index') }}"
-                            style="padding: 8px; background: #ffffff; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: white; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Villa</a>
                         <a href="{{ route('admin.settings.homepage') }}"
-                            style="padding: 8px; background: white; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
+                            style="padding: 8px; background: #f05b4f; color: white; text-decoration: none; border-radius: 4px; font-size: 13px;">
                             Homepage</a>
                     </div>
                 </div>
@@ -37,7 +37,7 @@
         </div>
 
         <!-- Main Content -->
-        <div style="padding: 20px;">
+        <div style="padding: 20px; background: white;">
             <h1 style="margin: 0 0 30px 0; font-size: 28px;">Edit Homepage</h1>
 
             @if ($errors->any())

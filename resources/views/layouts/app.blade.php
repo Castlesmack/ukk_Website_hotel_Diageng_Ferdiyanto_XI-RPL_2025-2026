@@ -104,7 +104,7 @@
             position: absolute;
             top: 50px;
             right: 20px;
-            background: #FAF2E8;
+            background: white;
             border: 1px solid #ddd;
             border-radius: 4px;
             min-width: 150px;

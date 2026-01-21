@@ -26,7 +26,7 @@
                     </div>
                 </div>
                 <a href="{{ route('admin.reservations.index') }}"
-                    style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">📅
+                    style="padding: 12px; background: #f05b4f; color: white; text-decoration: none; border-radius: 4px;">📅
                     Reservation</a>
                 <a href="{{ route('admin.users.index') }}"
                     style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">👥

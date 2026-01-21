@@ -32,7 +32,7 @@
                     style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">👥
                     Users</a>
                 <a href="{{ route('admin.finances.index') }}"
-                    style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">💰
+                    style="padding: 12px; background: #f05b4f; color: white; text-decoration: none; border-radius: 4px;">💰
                     Finance</a>
             </nav>
         </div>

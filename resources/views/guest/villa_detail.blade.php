@@ -36,17 +36,18 @@
         .image-section {
             margin-bottom: 40px;
             display: grid;
-            grid-template-columns: 1.5fr 1fr;
+            grid-template-columns: 1fr 1fr;
             gap: 15px;
         }
 
         .main-image-container {
             grid-column: 1;
+            grid-row: 1 / 3;
         }
 
         .main-image {
             width: 100%;
-            height: 450px;
+            height: 300px;
             background: #FAF2E8;
             border-radius: 12px;
             overflow: hidden;
@@ -64,12 +65,16 @@
         }
 
         .main-image:hover::after {
-            content: '🔍';
+            content: 'click to zoom in';
             position: absolute;
-            font-size: 48px;
+            font-size: 18px;
+            font-weight: 600;
             color: white;
             text-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
             z-index: 5;
+            background: rgba(0, 0, 0, 0.4);
+            padding: 10px 20px;
+            border-radius: 6px;
         }
 
         .main-image img {
@@ -111,9 +116,8 @@
             width: 100%;
             height: 70vh;
             object-fit: contain;
-            margin-bottom: 0px;
+            margin-bottom: 15px;
             border-radius: 8px;
-            position: relative;
         }
 
         .lightbox-thumbnails {
@@ -124,7 +128,6 @@
             width: 100%;
             padding: 10px 0;
             max-width: 900px;
-            margin-top: 15px;
         }
 
         .lightbox-thumbnail {
@@ -209,7 +212,7 @@
 
         .lightbox-counter {
             position: absolute;
-            bottom: 20px;
+            bottom: 30px;
             left: 50%;
             transform: translateX(-50%);
             color: white;
@@ -217,7 +220,8 @@
             background: rgba(0, 0, 0, 0.6);
             padding: 8px 16px;
             border-radius: 20px;
-            z-index: 1015;
+            z-index: 1005;
+            pointer-events: none;
         }
 
         .thumbnail-gallery {
@@ -227,7 +231,7 @@
             padding: 0;
             margin: 0;
             grid-column: 2;
-            grid-row: 1;
+            grid-row: 1 / 3;
             height: fit-content;
         }
 
@@ -549,25 +553,15 @@
                             <img id="mainImage" src="{{ asset($villa->thumbnail_path) }}" alt="{{ $villa->name }}">
                         </div>
                     </div>
-                    @if ($villa->images && count($villa->images) > 0)
-                        <div class="thumbnail-gallery" id="galleryGrid">
-                            @if ($villa->thumbnail_path)
-                                <div class="thumbnail active"
-                                    onclick="changeImage('{{ asset($villa->thumbnail_path) }}', this); openLightbox(0)">
-                                    <img src="{{ asset($villa->thumbnail_path) }}" alt="Thumbnail">
-                                </div>
-                            @endif
-                            @foreach ($villa->images as $index => $image)
-                                <div class="thumbnail {{ $loop->index < 3 ? '' : 'hidden-photo' }}"
-                                    onclick="changeImage('{{ asset($image) }}', this); openLightbox({{ $loop->index + 1 }})">
-                                    @if ($loop->index === 3 && count($villa->images) > 4)
-                                        <div class="see-all-overlay">See all Photos</div>
-                                    @endif
+                    <div class="thumbnail-gallery" id="galleryGrid">
+                        @foreach ($villa->images as $index => $image)
+                            @if ($index < 4)
+                                <div class="thumbnail" onclick="changeImage('{{ asset($image) }}', this); openLightboxByImage(this)">
                                     <img src="{{ asset($image) }}" alt="Gallery image">
                                 </div>
-                            @endforeach
-                        </div>
-                    @endif
+                            @endif
+                        @endforeach
+                    </div>
                 </div>
             @endif
 
@@ -770,6 +764,28 @@
         function openLightbox(index = 0) {
             initializeLightbox();
             lightboxCurrentIndex = index;
+            const modal = document.getElementById('lightboxModal');
+            modal.classList.add('active');
+            updateLightboxImage();
+            document.body.style.overflow = 'hidden';
+        }
+
+        function openLightboxByImage(element) {
+            initializeLightbox();
+            // Find the index of the clicked thumbnail
+            const thumbnail = element;
+            const allThumbnails = Array.from(document.querySelectorAll('.thumbnail'));
+            const clickedIndex = allThumbnails.indexOf(thumbnail);
+
+            // Find the corresponding image in allImages array
+            const clickedSrc = thumbnail.querySelector('img').src;
+            lightboxCurrentIndex = allImages.indexOf(clickedSrc);
+
+            // If not found (shouldn't happen), default to 0
+            if (lightboxCurrentIndex === -1) {
+                lightboxCurrentIndex = 0;
+            }
+
             const modal = document.getElementById('lightboxModal');
             modal.classList.add('active');
             updateLightboxImage();
