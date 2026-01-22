@@ -7,5 +7,5 @@ use Illuminate\Database\Eloquent\Model;
 class HomepageFacility extends Model
 {
     protected $table = 'homepage_facilities';
-    protected $fillable = ['category', 'name', 'is_visible', 'order'];
+    protected $fillable = ['category', 'name', 'icon', 'is_visible', 'order'];
 }
