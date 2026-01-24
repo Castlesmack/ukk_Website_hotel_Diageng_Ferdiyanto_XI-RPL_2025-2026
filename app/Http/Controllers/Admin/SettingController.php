@@ -140,11 +140,15 @@ class SettingController extends Controller
         $request->validate([
             'category' => 'required|string',
             'name' => 'required|string',
+            'icon' => 'nullable|string|max:10',
         ]);
 
+        $icon = $request->input('icon', '✨');
+        
         HomepageFacility::create([
             'category' => $request->input('category'),
             'name' => $request->input('name'),
+            'icon' => $icon,
             'is_visible' => true,
             'order' => HomepageFacility::where('category', $request->input('category'))->max('order') + 1,
         ]);

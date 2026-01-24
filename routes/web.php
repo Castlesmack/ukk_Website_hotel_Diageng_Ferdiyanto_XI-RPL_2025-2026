@@ -16,6 +16,11 @@ use App\Http\Controllers\ReceptionController;
 
 Route::get('/', [VillaController::class, 'index'])->name('home');
 
+// WebSocket Test Dashboard (Development only)
+Route::get('/websocket-test', function () {
+    return view('websocket-test');
+})->name('websocket-test');
+
 // Auth views (GET handled by controllers)
 Route::get('/login', [LoginController::class, 'show'])->name('login');
 Route::post('/login', [LoginController::class, 'login']);

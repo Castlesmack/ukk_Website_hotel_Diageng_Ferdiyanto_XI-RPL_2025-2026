@@ -1,456 +1,123 @@
 @extends('layouts.app')
 
-@section('title', 'Reception Calendar')
-
-@push('styles')
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        .reception-layout {
-            display: flex;
-            gap: 20px;
-            margin-top: 20px;
-            margin-bottom: 40px;
-        }
-
-        .sidebar {
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            width: 280px;
-            height: fit-content;
-            position: sticky;
-            top: 20px;
-            flex-shrink: 0;
-            box-shadow: none;
-        }
-
-        .sidebar h3 {
-            margin-top: 0;
-            margin-bottom: 15px;
-            color: #333;
-            font-size: 16px;
-            font-weight: 700;
-        }
-
-        .sidebar .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 15px;
-            margin-bottom: 0;
-            border-radius: 8px;
-            text-decoration: none;
-            color: #333;
-            transition: all 0.3s;
-            font-weight: 500;
-            font-size: 14px;
-            background: white;
-            border: 1px solid #f0f0f0;
-        }
-
-        .sidebar .menu-item:hover {
-            background: #f5f5f5;
-            color: #333;
-            transform: none;
-        }
-
-        .sidebar .menu-item.active {
-            background: #f05b4f;
-            color: white;
-            border-color: #f05b4f;
-            box-shadow: 0 2px 8px rgba(240, 91, 79, 0.2);
-        }
-
-        .sidebar .menu-item::before {
-            content: '';
-            margin-right: 0;
-            font-size: 0;
-        }
-
-        .main-content {
-            flex: 1;
-            background: white;
-            padding: 20px;
-        }
-
-        .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #e9ecef;
-        }
-
-        .header h2 {
-            margin: 0;
-            color: #2c3e50;
-            font-size: 28px;
-            font-weight: 700;
-        }
-
-        .calendar-controls {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            flex-wrap: wrap;
-            gap: 15px;
-            background: white;
-            padding: 20px;
-            border-radius: 12px;
-            box-shadow: none;
-        }
-
-        .calendar-controls>div {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-
-        .calendar-controls select,
-        .calendar-controls a,
-        .calendar-controls button {
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            background: white;
-            color: #000;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .calendar-controls select:focus,
-        .calendar-controls a:hover,
-        .calendar-controls button:hover {
-            background: #A0522D;
-            color: white;
-            border-color: #A0522D;
-        }
-
-        .calendar-nav-btn {
-            padding: 8px 12px;
-            font-size: 18px;
-        }
-
-        .calendar-container {
-            background: white;
-            padding: 25px;
-            border-radius: 12px;
-            box-shadow: none;
-            overflow: hidden;
-        }
-
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 1px;
-            background: #e0e0e0;
-            padding: 1px;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .day-header {
-            font-weight: 700;
-            text-align: center;
-            padding: 12px;
-            background: #1a1a1a;
-            color: white;
-            text-transform: uppercase;
-            font-size: 12px;
-            letter-spacing: 0.5px;
-        }
-
-        .day {
-            min-height: 120px;
-            background: white;
-            padding: 10px;
-            position: relative;
-            display: flex;
-            flex-direction: column;
-            transition: all 0.3s;
-        }
-
-        .day:hover {
-            background: #f8f9ff;
-            box-shadow: inset 0 0 8px rgba(102, 126, 234, 0.1);
-        }
-
-        .day.other-month {
-            background: #f5f5f5;
-            color: #ccc;
-        }
-
-        .day-number {
-            font-size: 14px;
-            font-weight: 700;
-            margin-bottom: 8px;
-            color: #000;
-        }
-
-        .day.other-month .day-number {
-            color: #bdc3c7;
-        }
-
-        .day.booked {
-            background: linear-gradient(135deg, #fff5f0 0%, #fff9f7 100%);
-            border-left: 4px solid #A0522D;
-        }
-
-        .day.available {
-            background: linear-gradient(135deg, #f5f5f5 0%, #f9f9f9 100%);
-        }
-
-        .booking-badge {
-            background: #A0522D;
-            color: white;
-            padding: 3px 6px;
-            border-radius: 3px;
-            font-size: 11px;
-            font-weight: 600;
-            margin-bottom: 4px;
-            display: block;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            overflow: hidden;
-        }
-
-        .guest-info {
-            font-size: 11px;
-            color: #666;
-            margin-bottom: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .price-info {
-            font-size: 10px;
-            color: #000;
-            font-weight: 600;
-            margin-top: auto;
-            padding-top: 5px;
-            border-top: 1px solid #f0f0f0;
-        }
-
-        .availability-text {
-            font-size: 12px;
-            color: #27ae60;
-            font-weight: 600;
-            text-align: center;
-            margin-top: auto;
-            padding: 8px 0;
-        }
-
-        .legend {
-            display: flex;
-            gap: 20px;
-            justify-content: center;
-            margin-top: 25px;
-            padding: 20px;
-            background: #f8f9fa;
-            border-radius: 8px;
-            flex-wrap: wrap;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 13px;
-            color: #666;
-        }
-
-        .legend-color {
-            width: 24px;
-            height: 24px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-        }
-
-        .legend-available {
-            background: linear-gradient(135deg, #f5f5f5 0%, #f9f9f9 100%);
-        }
-
-        .legend-booked {
-            background: linear-gradient(135deg, #fff5f0 0%, #fff9f7 100%);
-            border-left: 3px solid #A0522D;
-        }
-
-        @media (max-width: 1024px) {
-            .calendar-controls {
-                flex-direction: column;
-                align-items: stretch;
-            }
-
-            .calendar-controls>div {
-                justify-content: space-between;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .reception-layout {
-                flex-direction: column;
-            }
-
-            .sidebar {
-                width: 100%;
-                position: static;
-                display: flex;
-                gap: 10px;
-            }
-
-            .sidebar h3 {
-                margin-bottom: 0;
-            }
-
-            .sidebar .menu-item {
-                flex: 1;
-                margin-bottom: 0;
-                justify-content: center;
-            }
-
-            .day {
-                min-height: 90px;
-                padding: 8px;
-                font-size: 12px;
-            }
-
-            .calendar-grid {
-                font-size: 12px;
-            }
-
-            .legend {
-                flex-direction: column;
-                gap: 10px;
-            }
-        }
-    </style>
-@endpush
+@section('title', 'Availability Calendar')
 
 @section('content')
-    <div class="reception-layout">
-        <aside class="sidebar">
-            <h3>Reception</h3>
-            <a href="/reception/dashboard" class="menu-item">Dashboard</a>
-            <a href="/reception/reservations" class="menu-item">Reservations</a>
-            <a href="/reception/calendar" class="menu-item active">Calendar</a>
-        </aside>
+    <div style="display: grid; grid-template-columns: 200px 1fr; gap: 20px; margin: 0 -20px; padding: 0;">
+        <!-- Sidebar -->
+        <div style="background: #f8f9fa; padding: 20px; min-height: 100vh;">
+            <h2 style="margin: 0 0 30px 0; font-size: 18px; font-weight: 600;">Menu</h2>
+            <nav style="display: flex; flex-direction: column; gap: 10px;">
+                <a href="{{ route('reception.dashboard') }}"
+                    style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">📊
+                    Dashboard</a>
+                <a href="{{ route('reception.reservations') }}"
+                    style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">📅
+                    Reservations</a>
+                <a href="{{ route('reception.calendar') }}"
+                    style="padding: 12px; background: #f05b4f; color: white; text-decoration: none; border-radius: 4px;">📆
+                    Calendar</a>
+            </nav>
+        </div>
 
-        <main class="main-content">
-            <div class="header">
-                <div>
-                    <h2>Availability Calendar</h2>
-                    <p style="margin: 5px 0 0 0; color: #7f8c8d; font-size: 14px;">
-                        Track villa occupancy and manage bookings
-                    </p>
+        <!-- Main Content -->
+        <div style="padding: 20px; background: white;">
+            <!-- Filter Bar -->
+            <form method="GET" action="{{ route('reception.calendar') }}"
+                style="display: flex; gap: 12px; align-items: center; margin-bottom: 25px; flex-wrap: wrap; background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e0e0e0;">
+                <!-- Navigation -->
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <a href="{{ route('reception.calendar', ['month' => $month - 1 ?: 12, 'year' => $month - 1 ? $year : $year - 1]) }}"
+                        style="padding: 8px 10px; background: white; border: 1px solid #bbb; border-radius: 5px; text-decoration: none; color: #333; font-size: 16px; cursor: pointer; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
+                        onmouseover="this.style.borderColor='#A0522D';" onmouseout="this.style.borderColor='#bbb';">
+                        &lt;
+                    </a>
+                    <a href="{{ route('reception.calendar', ['month' => $month + 1 <= 12 ? $month + 1 : 1, 'year' => $month + 1 > 12 ? $year + 1 : $year]) }}"
+                        style="padding: 8px 10px; background: white; border: 1px solid #bbb; border-radius: 5px; text-decoration: none; color: #333; font-size: 16px; cursor: pointer; font-weight: 600; transition: all 0.2s; display: flex; align-items: center; justify-content: center;"
+                        onmouseover="this.style.borderColor='#A0522D';" onmouseout="this.style.borderColor='#bbb';">
+                        &gt;
+                    </a>
                 </div>
-            </div>
 
-            <form method="GET" action="{{ route('reception.calendar') }}">
-                <div class="calendar-controls">
-                    <div>
-                        <a href="{{ route('reception.calendar', ['month' => $month - 1 ?: 12, 'year' => $month - 1 ? $year : $year - 1]) }}"
-                            class="calendar-nav-btn">← Prev</a>
+                <!-- Month/Year Selector -->
+                <select name="month" onchange="this.form.submit()"
+                    style="padding: 8px 12px; border: 1px solid #bbb; border-radius: 5px; font-size: 14px; background: white; cursor: pointer;">
+                    @for($m = 1; $m <= 12; $m++)
+                        <option value="{{ $m }}" {{ $month == $m ? 'selected' : '' }}>
+                            {{ \Carbon\Carbon::createFromDate($year, $m, 1)->format('F Y') }}
+                        </option>
+                    @endfor
+                </select>
 
-                        <select name="month" onchange="this.form.submit()">
-                            @for($m = 1; $m <= 12; $m++)
-                                <option value="{{ $m }}" {{ $month == $m ? 'selected' : '' }}>
-                                    {{ \Carbon\Carbon::createFromDate($year, $m, 1)->format('F') }}
-                                </option>
-                            @endfor
-                        </select>
+                <!-- Today Button -->
+                <a href="{{ route('reception.calendar', ['month' => \Carbon\Carbon::now()->month, 'year' => \Carbon\Carbon::now()->year]) }}"
+                    style="padding: 8px 16px; background: white; border: 1px solid #bbb; border-radius: 5px; text-decoration: none; color: #333; font-size: 13px; font-weight: 600; cursor: pointer; transition: all 0.2s;"
+                    onmouseover="this.style.background='#f0f0f0';" onmouseout="this.style.background='white';">
+                    Today
+                </a>
 
-                        <select name="year" onchange="this.form.submit()">
-                            @for($y = \Carbon\Carbon::now()->year - 1; $y <= \Carbon\Carbon::now()->year + 2; $y++)
-                                <option value="{{ $y }}" {{ $year == $y ? 'selected' : '' }}>
-                                    {{ $y }}
-                                </option>
-                            @endfor
-                        </select>
+                <!-- Spacer -->
+                <div style="flex: 1;"></div>
 
-                        <a href="{{ route('reception.calendar', ['month' => \Carbon\Carbon::now()->month, 'year' => \Carbon\Carbon::now()->year]) }}"
-                            class="calendar-nav-btn">Today</a>
-
-                        <a href="{{ route('reception.calendar', ['month' => $month + 1 <= 12 ? $month + 1 : 1, 'year' => $month + 1 > 12 ? $year + 1 : $year]) }}"
-                            class="calendar-nav-btn">Next →</a>
-                    </div>
-                    <div>
-                        <select name="villa_id" onchange="this.form.submit()">
-                            <option value="">📍 All Villas</option>
-                            @foreach($villas as $villa)
-                                <option value="{{ $villa->id }}" {{ $villaId == $villa->id ? 'selected' : '' }}>
-                                    {{ $villa->name }}
-                                </option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+                <!-- Villa Filter -->
+                <select name="villa_id" onchange="this.form.submit()"
+                    style="padding: 8px 12px; border: 1px solid #bbb; border-radius: 5px; font-size: 14px; background: white; cursor: pointer;">
+                    <option value="">All Villas</option>
+                    @foreach($villas as $villa)
+                        <option value="{{ $villa->id }}" {{ $villaId == $villa->id ? 'selected' : '' }}>{{ $villa->name }}
+                        </option>
+                    @endforeach
+                </select>
             </form>
 
-            <div class="calendar-container">
-                <h4 style="text-align: center; margin-bottom: 20px; color: #2c3e50;">
-                    {{ \Carbon\Carbon::createFromDate($year, $month, 1)->format('F Y') }}
-                </h4>
+            <!-- Calendar Grid -->
+            <div style="background: white; border: 1px solid #ddd; border-radius: 0; overflow: hidden;">
+                <div style="display: grid; grid-template-columns: repeat(7, 1fr); gap: 0; background: white;">
+                    <!-- Day Headers -->
+                    @foreach(['Sunday', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday'] as $day)
+                        <div
+                            style="font-weight: 700; text-align: center; padding: 15px 10px; background: white; color: #666; text-transform: capitalize; font-size: 13px; letter-spacing: 0.5px; border-bottom: 2px solid #f0f0f0; border-right: 1px solid #f0f0f0;">
+                            {{ $day }}
+                        </div>
+                    @endforeach
 
-                <div class="calendar-grid">
-                    <div class="day-header">Sun</div>
-                    <div class="day-header">Mon</div>
-                    <div class="day-header">Tue</div>
-                    <div class="day-header">Wed</div>
-                    <div class="day-header">Thu</div>
-                    <div class="day-header">Fri</div>
-                    <div class="day-header">Sat</div>
+                    <!-- Calendar Days -->
+                    @foreach($calendarDays as $dayData)
+                        <div
+                            style="min-height: 100px; padding: 12px 10px; position: relative; border-right: 1px solid #f0f0f0; border-bottom: 1px solid #f0f0f0; background: white; display: flex; flex-direction: column;">
+                            @if($dayData['day'] === null)
+                                <!-- Empty cell for other month days -->
+                            @else
+                                <!-- Day number -->
+                                <div style="font-size: 14px; font-weight: 700; color: #333; margin-bottom: 8px;">
+                                    {{ $dayData['day'] }}
+                                </div>
 
-                    @foreach($calendarDays as $day)
-                        @if($day['isCurrentMonth'])
-                            <div class="day {{ $day['isBooked'] ? 'booked' : 'available' }}">
-                                <div class="day-number">{{ $day['day'] }}</div>
-                                @if($day['bookings']->count() > 0)
-                                    @foreach($day['bookings'] as $booking)
-                                        <span class="booking-badge" title="{{ $booking->guest_name }}">
-                                            🏠 {{ $booking->guest_name }}
-                                        </span>
-                                    @endforeach
-                                    @if($day['totalPrice'] > 0)
-                                        <div class="price-info">
-                                            Rp {{ number_format($day['totalPrice'], 0, ',', '.') }}
-                                        </div>
-                                    @endif
+                                <!-- Diagonal lines pattern for visual interest -->
+                                <div
+                                    style="position: absolute; top: 0; right: 0; width: 40px; height: 40px; background: repeating-linear-gradient(45deg, transparent, transparent 10px, #f5f5f5 10px, #f5f5f5 20px); opacity: 0.3; pointer-events: none;">
+                                </div>
+
+                                <!-- Availability Status -->
+                                @if($dayData['isBooked'] && $dayData['bookings']->count() > 0)
+                                    <div style="font-size: 11px; font-weight: 600; color: #A0522D; margin-top: auto;">
+                                        <span
+                                            style="background: #ffe0d0; padding: 2px 6px; border-radius: 3px; display: inline-block;">Booked</span>
+                                    </div>
+                                    <div style="font-size: 11px; color: #666; margin-top: 3px;">
+                                        Rp {{ number_format($dayData['totalPrice'] ?? 0, 0, ',', '.') }}
+                                    </div>
                                 @else
-                                    <div class="availability-text">✓ Available</div>
+                                    <div style="font-size: 11px; font-weight: 600; color: #27ae60; margin-top: auto;">
+                                        <span
+                                            style="background: #e8f5e9; padding: 2px 6px; border-radius: 3px; display: inline-block;">Available</span>
+                                    </div>
                                 @endif
-                            </div>
-                        @else
-                            <div class="day other-month">
-                                <div class="day-number">{{ $day['day'] ?? '-' }}</div>
-                            </div>
-                        @endif
+                            @endif
+                        </div>
                     @endforeach
                 </div>
-
-                <div class="legend">
-                    <div class="legend-item">
-                        <div class="legend-color legend-available"></div>
-                        <span>Available</span>
-                    </div>
-                    <div class="legend-item">
-                        <div class="legend-color legend-booked"></div>
-                        <span>Booked</span>
-                    </div>
-                </div>
             </div>
-        </main>
+        </div>
     </div>
 @endsection
