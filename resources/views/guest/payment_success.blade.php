@@ -12,7 +12,7 @@
             border-radius: 8px;
             padding: 40px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-            border: 2px solid #000;
+            border: 1px solid #e9ecef;
         }
 
         .success-icon {
@@ -96,7 +96,7 @@
 @section('content')
     <div class="result-container">
         @if($status === 'error')
-            <div class="success-icon" style="color: #dc3545;">✕</div>
+            <div class="success-icon" style="color: #dc3545;"></div>
             <div class="result-title" style="color: #dc3545;">Payment Error</div>
             <div class="result-message">
                 <p>{{ $message ?? 'An error occurred during payment processing.' }}</p>
@@ -111,7 +111,7 @@
                 </div>
             @endif
         @else
-            <div class="success-icon">✓</div>
+            <div class="success-icon"></div>
             <div class="result-title">
                 @if($status === 'pending')
                     Payment Pending
@@ -133,7 +133,7 @@
             </div>
 
             @if($booking)
-                <div style="background: #FAF2E8; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: left;">
+                <div style="background: white; padding: 20px; border-radius: 8px; margin: 20px 0; text-align: left; border: 1px solid rgba(0, 0, 0, 0.5);">
                     <h4 style="margin-top: 0; color: #333;">Booking Details</h4>
                     <p style="margin: 8px 0;"><strong>Booking Code:</strong> {{ $booking->booking_code }}</p>
                     <p style="margin: 8px 0;"><strong>Villa:</strong> {{ $booking->villa->name ?? 'N/A' }}</p>

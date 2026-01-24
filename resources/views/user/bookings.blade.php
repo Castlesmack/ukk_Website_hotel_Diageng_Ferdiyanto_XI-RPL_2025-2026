@@ -13,7 +13,9 @@
             gap: 30px;
             margin: 40px auto;
             max-width: 1300px;
-            padding: 0 20px;
+            padding: 30px 20px;
+            background: white;
+            border-radius: 12px;
         }
 
         /* Sidebar Styles */
@@ -48,6 +50,7 @@
 
         .sidebar-menu {
             padding: 8px;
+            background: white;
         }
 
         .sidebar .menu-item {
@@ -339,15 +342,15 @@
         <aside class="sidebar">
             <div class="sidebar-card">
                 <div class="sidebar-header">
-                    <h3>📋 Menu</h3>
+                    <h3>Menu</h3>
                 </div>
                 <div class="sidebar-menu">
                     <a href="{{ route('user.profile') }}" class="menu-item">
-                        <span class="menu-icon">👤</span>
+                        <span class="menu-icon"></span>
                         <span>Profile</span>
                     </a>
                     <a href="{{ route('user.bookings') }}" class="menu-item active">
-                        <span class="menu-icon">🗓️</span>
+                        <span class="menu-icon"></span>
                         <span>My Bookings</span>
                     </a>
                 </div>
@@ -374,19 +377,19 @@
 
                             <div class="booking-details">
                                 <div class="detail-item">
-                                    <span class="detail-label">👥 Guests</span>
+                                    <span class="detail-label">Guests</span>
                                     <span class="detail-value">{{ $booking->guests }}
                                         {{ $booking->guests > 1 ? 'People' : 'Person' }}</span>
                                 </div>
 
                                 <div class="detail-item">
-                                    <span class="detail-label">📅 Check-in</span>
+                                    <span class="detail-label">Check-in</span>
                                     <span
                                         class="detail-value">{{ \Carbon\Carbon::parse($booking->check_in_date)->format('d M Y') }}</span>
                                 </div>
 
                                 <div class="detail-item">
-                                    <span class="detail-label">📅 Check-out</span>
+                                    <span class="detail-label">Check-out</span>
                                     <span
                                         class="detail-value">{{ \Carbon\Carbon::parse($booking->check_out_date)->format('d M Y') }}</span>
                                 </div>
@@ -398,13 +401,13 @@
                                 </div>
 
                                 <div class="detail-item">
-                                    <span class="detail-label">💰 Total Price</span>
+                                    <span class="detail-label">Total Price</span>
                                     <span class="detail-value price">Rp
                                         {{ number_format($booking->total_price, 0, ',', '.') }}</span>
                                 </div>
 
                                 <div class="detail-item">
-                                    <span class="detail-label">👤 Guest Name</span>
+                                    <span class="detail-label">Guest Name</span>
                                     <span class="detail-value">{{ $booking->guest_name }}</span>
                                 </div>
                             </div>

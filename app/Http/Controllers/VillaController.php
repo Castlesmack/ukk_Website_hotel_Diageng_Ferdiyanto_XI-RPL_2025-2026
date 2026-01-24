@@ -212,8 +212,8 @@ class VillaController extends Controller
             'booking_code' => 'BK-' . strtoupper(uniqid()),
         ]);
 
-        // Broadcast real-time order creation to admin
-        broadcast(new OrderCreated($booking))->toOthers();
+        // Broadcast real-time order creation to admin (remove toOthers for all listeners to receive)
+        broadcast(new OrderCreated($booking));
 
         // Redirect to payment with booking ID
         return redirect()->route('guest.payment', ['booking_id' => $booking->id]);

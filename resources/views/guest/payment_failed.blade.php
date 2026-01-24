@@ -94,7 +94,7 @@
 
 @section('content')
     <div class="result-container">
-        <div class="error-icon">✕</div>
+        <div class="error-icon"></div>
 
         <div class="result-title">Payment Failed!</div>
 

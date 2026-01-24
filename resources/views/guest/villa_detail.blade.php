@@ -604,7 +604,7 @@
                 <h1 class="villa-title">{{ $villa->name }}</h1>
                 <div class="villa-meta">
                     <div class="villa-meta-item">
-                        <span>👥 Kapasitas:</span>
+                        <span>Kapasitas:</span>
                         <strong>{{ $villa->capacity }} orang</strong>
                     </div>
                     <div class="villa-meta-item">
@@ -612,7 +612,7 @@
                         <strong>{{ $villa->rooms_total }} kamar</strong>
                     </div>
                     <div class="villa-meta-item">
-                        <span>💰 Harga:</span>
+                        <span>Harga:</span>
                         <strong>Rp {{ number_format($villa->base_price, 0, ',', '.') }}/malam</strong>
                     </div>
                 </div>

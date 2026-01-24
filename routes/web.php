@@ -94,6 +94,12 @@ Route::get('/home', [VillaController::class, 'index'])->name('guest.home');
 // API routes for search
 Route::get('/api/villas/search', [VillaController::class, 'searchAPI'])->name('api.villas.search');
 
+// Real-time API endpoints for WebSocket updates (admin only)
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/api/reservations/latest', [ReservationController::class, 'getLatestReservations'])->name('api.reservations.latest');
+    Route::get('/api/orders/latest', [ReservationController::class, 'getLatestOrders'])->name('api.orders.latest');
+});
+
 // Additional guest / user pages (static previews)
 Route::view('/guest/home-before', 'guest.home_before')->name('guest.home.before');
 Route::view('/guest/home-after', 'guest.home_after')->name('guest.home.after');

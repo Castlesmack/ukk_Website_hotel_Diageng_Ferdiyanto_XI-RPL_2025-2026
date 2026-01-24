@@ -64,7 +64,7 @@
 
             <!-- All Bookings Table -->
             <div style="background: white; border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin-top: 20px;">
-                <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">📋 All Orders</h3>
+                <h3 style="margin: 0 0 20px 0; font-size: 18px; font-weight: 600;">All Orders</h3>
                 <div style="overflow-x: auto;">
                     <table style="width: 100%; border-collapse: collapse;">
                         <thead style="background: #f8f9fa;">
@@ -104,7 +104,8 @@
                                     <td style="padding: 12px;">{{ $booking->check_in_date->format('d M Y') }}</td>
                                     <td style="padding: 12px;">{{ $booking->check_out_date->format('d M Y') }}</td>
                                     <td style="padding: 12px; font-weight: 600;">Rp
-                                        {{ number_format($booking->total_price, 0, ',', '.') }}</td>
+                                        {{ number_format($booking->total_price, 0, ',', '.') }}
+                                    </td>
                                     <td style="padding: 12px;">
                                         <span
                                             style="background: {{ $booking->status == 'pending' ? '#fff3cd' : '#d4edda' }}; color: {{ $booking->status == 'pending' ? '#856404' : '#155724' }}; padding: 4px 8px; border-radius: 4px; font-size: 12px; font-weight: 500;">
@@ -112,7 +113,8 @@
                                         </span>
                                     </td>
                                     <td style="padding: 12px; font-size: 12px; color: #666;">
-                                        {{ $booking->created_at->format('H:i:s') }}</td>
+                                        {{ $booking->created_at->format('H:i:s') }}
+                                    </td>
                                 </tr>
                             @endforeach
                         </tbody>
@@ -158,25 +160,25 @@
             const orderEl = document.createElement('div');
             orderEl.style.cssText = 'padding: 15px; border-bottom: 1px solid #eee; background: #f9f9f9; animation: slideIn 0.3s ease-in-out;';
             orderEl.innerHTML = `
-                    <div style="display: flex; justify-content: space-between; align-items: start;">
-                        <div style="flex: 1;">
-                            <div style="font-weight: 600; color: #333; margin-bottom: 5px;">
-                                🎉 New Order #${data.id} from <strong>${data.guest_name}</strong>
+                        <div style="display: flex; justify-content: space-between; align-items: start;">
+                            <div style="flex: 1;">
+                                <div style="font-weight: 600; color: #333; margin-bottom: 5px;">
+                                    🎉 New Order #${data.id} from <strong>${data.guest_name}</strong>
+                                </div>
+                                <div style="font-size: 13px; color: #666; line-height: 1.6;">
+                                    <p style="margin: 3px 0;">📍 <strong>${data.villa_name}</strong></p>
+                                    <p style="margin: 3px 0;">${data.check_in} → ${data.check_out}</p>
+                                    <p style="margin: 3px 0;"><strong style="color: #f05b4f;">Rp ${data.total_price}</strong></p>
+                                </div>
                             </div>
-                            <div style="font-size: 13px; color: #666; line-height: 1.6;">
-                                <p style="margin: 3px 0;">📍 <strong>${data.villa_name}</strong></p>
-                                <p style="margin: 3px 0;">📅 ${data.check_in} → ${data.check_out}</p>
-                                <p style="margin: 3px 0;">💰 <strong style="color: #f05b4f;">Rp ${data.total_price}</strong></p>
+                            <div style="text-align: right; margin-left: 15px;">
+                                <span style="background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">
+                                    ${data.status.toUpperCase()}
+                                </span>
+                                <p style="margin: 8px 0 0 0; font-size: 11px; color: #999;">${data.created_at}</p>
                             </div>
                         </div>
-                        <div style="text-align: right; margin-left: 15px;">
-                            <span style="background: #fff3cd; color: #856404; padding: 4px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">
-                                ${data.status.toUpperCase()}
-                            </span>
-                            <p style="margin: 8px 0 0 0; font-size: 11px; color: #999;">${data.created_at}</p>
-                        </div>
-                    </div>
-                `;
+                    `;
 
             feed.prepend(orderEl);
 
@@ -234,17 +236,17 @@
         // Add CSS animation
         const style = document.createElement('style');
         style.textContent = `
-                @keyframes slideIn {
-                    from {
-                        opacity: 0;
-                        transform: translateX(-20px);
+                    @keyframes slideIn {
+                        from {
+                            opacity: 0;
+                            transform: translateX(-20px);
+                        }
+                        to {
+                            opacity: 1;
+                            transform: translateX(0);
+                        }
                     }
-                    to {
-                        opacity: 1;
-                        transform: translateX(0);
-                    }
-                }
-            `;
+                `;
         document.head.appendChild(style);
     </script>
 @endsection

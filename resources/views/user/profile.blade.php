@@ -13,7 +13,9 @@
             gap: 30px;
             margin: 40px auto;
             max-width: 1300px;
-            padding: 0 20px;
+            padding: 30px 20px;
+            background: white;
+            border-radius: 12px;
         }
 
         /* Sidebar Styles */
@@ -48,6 +50,7 @@
 
         .sidebar-menu {
             padding: 8px;
+            background: white;
         }
 
         .sidebar .menu-item {
@@ -116,7 +119,7 @@
 
         /* Form Container */
         .form-container {
-            background: #FAF2E8;
+            background: white;
             border: 1px solid #e9ecef;
             border-radius: 12px;
             padding: 30px;
@@ -287,15 +290,15 @@
         <aside class="sidebar">
             <div class="sidebar-card">
                 <div class="sidebar-header">
-                    <h3>📋 Menu</h3>
+                    <h3>Menu</h3>
                 </div>
                 <div class="sidebar-menu">
                     <a href="{{ route('user.profile') }}" class="menu-item active">
-                        <span class="menu-icon">👤</span>
+                        <span class="menu-icon"></span>
                         <span>Profile</span>
                     </a>
                     <a href="{{ route('user.bookings') }}" class="menu-item">
-                        <span class="menu-icon">🗓️</span>
+                        <span class="menu-icon"></span>
                         <span>My Bookings</span>
                     </a>
                 </div>
@@ -314,14 +317,14 @@
 
                     @if (session('success'))
                         <div class="alert alert-success">
-                            ✓ {{ session('success') }}
+                            {{ session('success') }}
                         </div>
                     @endif
 
                     <div class="form-grid">
                         <div class="form-group">
                             <label for="name">
-                                👤 Name
+                                Name
                                 <span class="required-indicator">*</span>
                             </label>
                             <input type="text" id="name" name="name" value="{{ auth()->user()->name }}" required

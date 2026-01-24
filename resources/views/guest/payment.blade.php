@@ -24,7 +24,7 @@
         }
 
         .booking-info {
-            background: #FAF2E8;
+            background: white;
             border: 1px solid #ddd;
             border-radius: 8px;
             padding: 20px;
@@ -55,7 +55,7 @@
         .total-amount {
             font-size: 24px;
             font-weight: bold;
-            color: #f05b4f;
+            color: #000;
             text-align: center;
             margin-top: 20px;
             padding-top: 20px;

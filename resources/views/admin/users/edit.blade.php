@@ -9,13 +9,11 @@
             <h2 style="margin: 0 0 30px 0; font-size: 18px; font-weight: 600;">Menu</h2>
             <nav style="display: flex; flex-direction: column; gap: 10px;">
                 <a href="{{ route('admin.dashboard') }}"
-                    style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">📊
-                    Dashboard</a>
+                    style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">Dashboard</a>
                 <div style="display: flex; flex-direction: column; gap: 5px;">
                     <button
                         onclick="document.getElementById('manage-menu').style.display = document.getElementById('manage-menu').style.display === 'none' ? 'flex' : 'none'"
-                        style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; text-align: left; font-weight: 500;">🏡
-                        Manage</button>
+                        style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px; border: none; cursor: pointer; text-align: left; font-weight: 500;">Manage</button>
                     <div id="manage-menu" style="display: none; flex-direction: column; gap: 5px; margin-left: 10px;">
                         <a href="{{ route('admin.villas.index') }}"
                             style="padding: 8px; background: #ffffff; color: #333; text-decoration: none; border-radius: 4px; font-size: 13px;">
@@ -26,14 +24,11 @@
                     </div>
                 </div>
                 <a href="{{ route('admin.reservations.index') }}"
-                    style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">📅
-                    Reservation</a>
+                    style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">Reservation</a>
                 <a href="{{ route('admin.users.index') }}"
-                    style="padding: 12px; background: #f05b4f; color: white; text-decoration: none; border-radius: 4px;">👥
-                    Users</a>
+                    style="padding: 12px; background: #f05b4f; color: white; text-decoration: none; border-radius: 4px;">Users</a>
                 <a href="{{ route('admin.finances.index') }}"
-                    style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">💰
-                    Finance</a>
+                    style="padding: 12px; background: white; color: #333; text-decoration: none; border-radius: 4px;">Finance</a>
             </nav>
         </div>
 

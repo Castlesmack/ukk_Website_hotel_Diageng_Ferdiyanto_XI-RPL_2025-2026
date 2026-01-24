@@ -350,7 +350,7 @@
                     </div>
                 </div>
                 <div class="facility-item">
-                    <div class="facility-icon">🎯</div>
+                    <div class="facility-icon"></div>
                     <div class="facility-text">
                         <strong>Other Activities</strong>
                         Garden
@@ -444,27 +444,27 @@
 
                         if (data.villas && data.villas.length > 0) {
                             villaGrid.innerHTML = data.villas.map(villa => `
-                                        <div class="villa-card">
-                                            <a href="/villa/${villa.id}">
-                                                <div class="villa-card-header">
-                                                    ${villa.name}
-                                                    <div class="villa-card-header-small">${villa.status}</div>
+                                                <div class="villa-card">
+                                                    <a href="/villa/${villa.id}">
+                                                        <div class="villa-card-header">
+                                                            ${villa.name}
+                                                            <div class="villa-card-header-small">${villa.status}</div>
+                                                        </div>
+                                                        <div class="villa-card-image">
+                                                            No Image
+                                                        </div>
+                                                        <div class="villa-card-body">
+                                                            <h3>Kapasitas ${villa.capacity} orang</h3>
+                                                            <div class="villa-info">
+                                                                <strong>Harga:</strong> Rp ${new Intl.NumberFormat('id-ID').format(villa.base_price)}
+                                                            </div>
+                                                            <div class="villa-info">
+                                                                <strong>Kamar:</strong> ${villa.rooms_total}
+                                                            </div>
+                                                        </div>
+                                                    </a>
                                                 </div>
-                                                <div class="villa-card-image">
-                                                    No Image
-                                                </div>
-                                                <div class="villa-card-body">
-                                                    <h3>Kapasitas ${villa.capacity} orang</h3>
-                                                    <div class="villa-info">
-                                                        <strong>Harga:</strong> Rp ${new Intl.NumberFormat('id-ID').format(villa.base_price)}
-                                                    </div>
-                                                    <div class="villa-info">
-                                                        <strong>Kamar:</strong> ${villa.rooms_total}
-                                                    </div>
-                                                </div>
-                                            </a>
-                                        </div>
-                                    `).join('');
+                                            `).join('');
                         } else {
                             villaGrid.innerHTML = '<div class="no-results">No villas found matching your criteria</div>';
                         }

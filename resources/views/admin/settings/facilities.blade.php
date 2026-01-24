@@ -101,7 +101,7 @@
                                                 <strong style="font-size: 15px;">{{ $facility->name }}</strong>
                                                 <span
                                                     style="background: {{ $facility->is_visible ? '#d4edda' : '#f8d7da' }}; color: {{ $facility->is_visible ? '#155724' : '#721c24' }}; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">
-                                                    {{ $facility->is_visible ? '✓ TERLIHAT' : '✕ TERSEMBUNYI' }}
+                                                    {{ $facility->is_visible ? 'TERLIHAT' : 'TERSEMBUNYI' }}
                                                 </span>
                                             </div>
                                         </div>
@@ -109,7 +109,7 @@
                                             <a href="{{ route('admin.settings.facilities.edit', $facility->id) }}"
                                                 style="padding: 6px 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500; transition: background 0.2s; text-decoration: none; display: inline-block;"
                                                 title="Edit">
-                                                ✏️ Edit
+                                                Edit
                                             </a>
                                             <form action="{{ route('admin.settings.facilities.toggle', $facility->id) }}" method="POST"
                                                 style="margin: 0;">
@@ -127,7 +127,7 @@
                                                 <button type="submit" onclick="return confirm('Hapus fasilitas ini?')"
                                                     style="padding: 6px 12px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500; transition: background 0.2s;"
                                                     title="Hapus">
-                                                    🗑️ Hapus
+                                                    Hapus
                                                 </button>
                                             </form>
                                         </div>
