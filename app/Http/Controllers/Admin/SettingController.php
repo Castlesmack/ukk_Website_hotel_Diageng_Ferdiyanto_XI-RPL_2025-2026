@@ -152,10 +152,40 @@ class SettingController extends Controller
         return redirect()->back()->with('success', 'Fasilitas berhasil ditambahkan!');
     }
 
+    public function editFacility(HomepageFacility $facility)
+    {
+        return view('admin.settings.facilities-edit', compact('facility'));
+    }
+
+    public function updateFacility(Request $request, HomepageFacility $facility)
+    {
+        $request->validate([
+            'category' => 'required|string',
+            'name' => 'required|string',
+        ]);
+
+        $facility->update([
+            'category' => $request->input('category'),
+            'name' => $request->input('name'),
+        ]);
+
+        return redirect()->route('admin.settings.facilities')->with('success', 'Fasilitas berhasil diperbarui!');
+    }
+
     public function destroyFacility(HomepageFacility $facility)
     {
         $facility->delete();
         return redirect()->back()->with('success', 'Fasilitas berhasil dihapus!');
+    }
+
+    public function toggleFacility(HomepageFacility $facility)
+    {
+        $facility->update([
+            'is_visible' => !$facility->is_visible
+        ]);
+        
+        $message = $facility->is_visible ? 'Fasilitas berhasil ditampilkan!' : 'Fasilitas berhasil disembunyikan!';
+        return redirect()->back()->with('success', $message);
     }
 
     public function villaGallery()

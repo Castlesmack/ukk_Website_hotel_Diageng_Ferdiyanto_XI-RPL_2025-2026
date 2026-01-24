@@ -156,7 +156,63 @@
                     @error('images') <small style="color: #dc3545;">{{ $message }}</small> @enderror
                 </div>
 
+                <!-- Availability Management -->
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; margin-bottom: 20px; border: 1px solid #e9ecef;">
+                    <h4 style="margin: 0 0 15px 0; font-size: 15px; font-weight: 600; display: flex; align-items: center; gap: 8px;">
+                        📅 Manajemen Ketersediaan
+                    </h4>
+                    
+                    <div style="background: white; padding: 12px; border-radius: 4px; margin-bottom: 12px;">
+                        <label style="display: flex; align-items: center; gap: 10px; margin-bottom: 10px; cursor: pointer;">
+                            <input type="checkbox" name="availability_all_days" id="availAll"
+                                {{ $villa->availability == 'all_days' ? 'checked' : '' }}
+                                style="cursor: pointer;" onchange="toggleAvailabilityOptions()">
+                            <span style="font-weight: 500;">Tersedia setiap hari (default)</span>
+                        </label>
+                    </div>
+
+                    <div id="specific-days" style="display: {{ $villa->availability == 'all_days' ? 'none' : 'block' }}; background: white; padding: 12px; border-radius: 4px;">
+                        <label style="display: block; margin-bottom: 10px; font-weight: 500;">Pilih hari tersedia:</label>
+                        <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px;">
+                            @php
+                                $days = ['monday' => 'Senin', 'tuesday' => 'Selasa', 'wednesday' => 'Rabu', 'thursday' => 'Kamis', 'friday' => 'Jumat', 'saturday' => 'Sabtu', 'sunday' => 'Minggu'];
+                                $availableDays = $villa->available_days ? json_decode($villa->available_days, true) : [];
+                            @endphp
+                            @foreach ($days as $key => $label)
+                                <label style="display: flex; align-items: center; gap: 8px; cursor: pointer;">
+                                    <input type="checkbox" name="available_days[]" value="{{ $key }}"
+                                        {{ in_array($key, $availableDays) ? 'checked' : '' }}
+                                        style="cursor: pointer;">
+                                    <span>{{ $label }}</span>
+                                </label>
+                            @endforeach
+                        </div>
+                    </div>
+
+                    <div id="date-range" style="display: {{ $villa->availability == 'all_days' ? 'none' : 'block' }}; background: white; padding: 12px; border-radius: 4px; margin-top: 12px;">
+                        <label style="display: block; margin-bottom: 10px; font-weight: 500;">📍 Rentang Tanggal Tersedia:</label>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px;">
+                            <div>
+                                <label style="display: block; font-size: 13px; margin-bottom: 3px; font-weight: 500;">Dari tanggal</label>
+                                <input type="date" name="available_from" value="{{ old('available_from', $villa->available_from) }}"
+                                    style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                            <div>
+                                <label style="display: block; font-size: 13px; margin-bottom: 3px; font-weight: 500;">Sampai tanggal</label>
+                                <input type="date" name="available_to" value="{{ old('available_to', $villa->available_to) }}"
+                                    style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <script>
+                    function toggleAvailabilityOptions() {
+                        const allDays = document.getElementById('availAll').checked;
+                        document.getElementById('specific-days').style.display = allDays ? 'none' : 'block';
+                        document.getElementById('date-range').style.display = allDays ? 'none' : 'block';
+                    }
+                </script>
                     function deleteImage(button, imagePath) {
                         if (confirm('Are you sure you want to delete this image?')) {
                             const form = button.closest('form');

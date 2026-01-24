@@ -95,26 +95,42 @@
                             <div style="display: grid; gap: 0;">
                                 @foreach ($items as $facility)
                                     <div
-                                        style="padding: 10px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between;">
+                                        style="padding: 15px; border-bottom: 1px solid #eee; display: flex; align-items: center; justify-content: space-between; background: {{ $facility->is_visible ? '#ffffff' : '#f9f9f9' }}; transition: background 0.2s;">
                                         <div style="flex: 1;">
-                                            <strong>{{ $facility->name }}</strong>
-                                            <div style="font-size: 12px; color: #666;">
-                                                Status:
+                                            <div style="display: flex; align-items: center; gap: 12px;">
+                                                <strong style="font-size: 15px;">{{ $facility->name }}</strong>
                                                 <span
-                                                    style="background: {{ $facility->is_visible ? '#d4edda' : '#f8d7da' }}; color: {{ $facility->is_visible ? '#155724' : '#721c24' }}; padding: 2px 6px; border-radius: 3px;">
-                                                    {{ $facility->is_visible ? 'Terlihat' : 'Tersembunyi' }}
+                                                    style="background: {{ $facility->is_visible ? '#d4edda' : '#f8d7da' }}; color: {{ $facility->is_visible ? '#155724' : '#721c24' }}; padding: 3px 8px; border-radius: 4px; font-size: 11px; font-weight: 600;">
+                                                    {{ $facility->is_visible ? '✓ TERLIHAT' : '✕ TERSEMBUNYI' }}
                                                 </span>
                                             </div>
                                         </div>
-                                        <form action="{{ route('admin.settings.facilities.destroy', $facility->id) }}" method="POST"
-                                            style="margin: 0;">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" onclick="return confirm('Hapus fasilitas ini?')"
-                                                style="padding: 6px 12px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px;">
-                                                🗑️ Hapus
-                                            </button>
-                                        </form>
+                                        <div style="display: flex; gap: 8px; align-items: center;">
+                                            <a href="{{ route('admin.settings.facilities.edit', $facility->id) }}"
+                                                style="padding: 6px 12px; background: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500; transition: background 0.2s; text-decoration: none; display: inline-block;"
+                                                title="Edit">
+                                                ✏️ Edit
+                                            </a>
+                                            <form action="{{ route('admin.settings.facilities.toggle', $facility->id) }}" method="POST"
+                                                style="margin: 0;">
+                                                @csrf
+                                                <button type="submit"
+                                                    style="padding: 6px 12px; background: {{ $facility->is_visible ? '#ffc107' : '#28a745' }}; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500; transition: background 0.2s;"
+                                                    title="{{ $facility->is_visible ? 'Sembunyikan' : 'Tampilkan' }}">
+                                                    {{ $facility->is_visible ? '👁️ Sembunyikan' : '👁️‍🗨️ Tampilkan' }}
+                                                </button>
+                                            </form>
+                                            <form action="{{ route('admin.settings.facilities.destroy', $facility->id) }}" method="POST"
+                                                style="margin: 0;">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" onclick="return confirm('Hapus fasilitas ini?')"
+                                                    style="padding: 6px 12px; background: #dc3545; color: white; border: none; border-radius: 4px; cursor: pointer; font-size: 12px; font-weight: 500; transition: background 0.2s;"
+                                                    title="Hapus">
+                                                    🗑️ Hapus
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
                                 @endforeach
                             </div>

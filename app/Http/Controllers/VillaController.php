@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\HomepageSetting;
 use App\Models\VillaVisibility;
 use App\Models\HomepageFacility;
+use App\Events\OrderCreated;
 use Illuminate\Support\Facades\Auth;
 
 class VillaController extends Controller
@@ -210,6 +211,9 @@ class VillaController extends Controller
             'status' => 'pending',
             'booking_code' => 'BK-' . strtoupper(uniqid()),
         ]);
+
+        // Broadcast real-time order creation to admin
+        broadcast(new OrderCreated($booking))->toOthers();
 
         // Redirect to payment with booking ID
         return redirect()->route('guest.payment', ['booking_id' => $booking->id]);

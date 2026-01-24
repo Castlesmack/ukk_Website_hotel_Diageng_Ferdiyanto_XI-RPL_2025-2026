@@ -83,6 +83,7 @@
             max-width: 1200px;
             margin: 0 auto;
             padding: 0 20px;
+            background: white;
         }
 
         /* Description Section */
@@ -213,16 +214,55 @@
             margin: 50px 0 30px;
         }
 
+        .facility-categories {
+            display: flex;
+            flex-direction: column;
+            gap: 25px;
+            margin-top: 20px;
+        }
+
+        .facility-category {
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            padding: 0;
+            box-shadow: none;
+        }
+
+        .facility-category-title {
+            display: block;
+            font-size: 16px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #f05b4f;
+        }
+
+        .facility-list {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-left: 20px;
+        }
+
+        .facility-item {
+            display: block;
+            padding: 6px 0;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .facility-item::before {
+            content: "";
+            display: none;
+        }
+
         .facility-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
             gap: 30px;
             margin-top: 20px;
-        }
-
-        .facility-item {
-            display: flex;
-            gap: 15px;
         }
 
         .facility-icon {
@@ -387,14 +427,20 @@
         <!-- Facility Section -->
         @if ($facilities && count($facilities) > 0)
             <div class="facility-section">
-                <h2 class="section-title">Facility</h2>
-                <div class="facility-grid">
-                    @foreach ($facilities as $facility)
-                        <div class="facility-item">
-                            <div class="facility-icon">{{ $facility->icon ?? '🏢' }}</div>
-                            <div class="facility-text">
-                                <strong>{{ $facility->name }}</strong>
-                                {{ $facility->description }}
+                <h2 class="section-title">Facilities</h2>
+                <div class="facility-categories">
+                    @php
+                        $grouped = $facilities->groupBy('category');
+                    @endphp
+                    @foreach ($grouped as $category => $items)
+                        <div class="facility-category">
+                            <div class="facility-category-title">
+                                <span>{{ str_replace('_', ' ', ucfirst($category)) }}</span>
+                            </div>
+                            <div class="facility-list">
+                                @foreach ($items as $facility)
+                                    <div class="facility-item">{{ $facility->name }}</div>
+                                @endforeach
                             </div>
                         </div>
                     @endforeach
@@ -402,27 +448,39 @@
             </div>
         @else
             <div class="facility-section">
-                <h2 class="section-title">Facility</h2>
-                <div class="facility-grid">
-                    <div class="facility-item">
-                        <div class="facility-icon">🏢</div>
-                        <div class="facility-text">
-                            <strong>Public Facilities</strong>
-                            Parking area, lounge
+                <h2 class="section-title">Facilities</h2>
+                <div class="facility-categories">
+                    <div class="facility-category">
+                        <div class="facility-category-title">
+                            <span>Public Facilities</span>
+                        </div>
+                        <div class="facility-list">
+                            <div class="facility-item">Parking area</div>
                         </div>
                     </div>
-                    <div class="facility-item">
-                        <div class="facility-icon">🎯</div>
-                        <div class="facility-text">
-                            <strong>Other Activities</strong>
-                            Garden, outdoor space
+                    <div class="facility-category">
+                        <div class="facility-category-title">
+                            <span>Connectivity</span>
+                        </div>
+                        <div class="facility-list">
+                            <div class="facility-item">WiFi in public areas</div>
+                            <div class="facility-item">In-room internet</div>
                         </div>
                     </div>
-                    <div class="facility-item">
-                        <div class="facility-icon">📡</div>
-                        <div class="facility-text">
-                            <strong>Connectivity</strong>
-                            In-room internet
+                    <div class="facility-category">
+                        <div class="facility-category-title">
+                            <span>Other Activities</span>
+                        </div>
+                        <div class="facility-list">
+                            <div class="facility-item">Garden</div>
+                        </div>
+                    </div>
+                    <div class="facility-category">
+                        <div class="facility-category-title">
+                            <span>Transportation</span>
+                        </div>
+                        <div class="facility-list">
+                            <div class="facility-item">Bicycle rental</div>
                         </div>
                     </div>
                 </div>

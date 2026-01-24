@@ -25,6 +25,10 @@ class Villa extends Model
         'thumbnail_path',
         'images',
         'closed_dates',
+        'availability',
+        'available_days',
+        'available_from',
+        'available_to',
     ];
 
     /**

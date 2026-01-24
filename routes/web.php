@@ -46,6 +46,7 @@ Route::middleware(['auth', 'admin'])->group(function () {
     
     // Reservations
     Route::get('/admin/reservations', [ReservationController::class, 'index'])->name('admin.reservations.index');
+    Route::get('/admin/reservations/realtime', [ReservationController::class, 'realtimeDashboard'])->name('admin.reservations.realtime');
     Route::get('/admin/reservations/{booking}', [ReservationController::class, 'show'])->name('admin.reservations.show');
     Route::post('/admin/reservations/{booking}/status', [ReservationController::class, 'updateStatus'])->name('admin.reservations.updateStatus');
     Route::delete('/admin/reservations/{booking}', [ReservationController::class, 'destroy'])->name('admin.reservations.destroy');
@@ -68,6 +69,9 @@ Route::middleware(['auth', 'admin'])->group(function () {
     Route::post('/admin/settings/homepage/delete-image', [SettingController::class, 'deleteHomepageImage'])->name('admin.homepage.delete-image');
     Route::get('/admin/settings/facilities', [SettingController::class, 'manageFacilities'])->name('admin.settings.facilities');
     Route::post('/admin/settings/facilities', [SettingController::class, 'storeFacility'])->name('admin.settings.facilities.store');
+    Route::get('/admin/settings/facilities/{facility}/edit', [SettingController::class, 'editFacility'])->name('admin.settings.facilities.edit');
+    Route::put('/admin/settings/facilities/{facility}', [SettingController::class, 'updateFacility'])->name('admin.settings.facilities.update');
+    Route::post('/admin/settings/facilities/{facility}/toggle', [SettingController::class, 'toggleFacility'])->name('admin.settings.facilities.toggle');
     Route::delete('/admin/settings/facilities/{facility}', [SettingController::class, 'destroyFacility'])->name('admin.settings.facilities.destroy');
     Route::get('/admin/settings/gallery', [SettingController::class, 'villaGallery'])->name('admin.settings.gallery');
 });
@@ -106,3 +110,17 @@ Route::middleware('auth')->group(function () {
 
 Route::get('/guest/payment/failed', [PaymentController::class, 'failed'])->name('guest.payment.failed');
 Route::get('/guest/payment/success', [PaymentController::class, 'success'])->name('guest.payment.success');
+
+// WebSocket Test Routes
+Route::get('/websocket-test', function () {
+    return view('websocket-test');
+})->name('websocket-test');
+
+Route::post('/api/broadcast-test', function (Request $request) {
+    $channel = $request->input('channel', 'notifications');
+    $message = $request->input('message', 'Test message');
+    
+    broadcast(new \App\Events\TestBroadcastEvent($channel, $message))->toOthers();
+    
+    return response()->json(['success' => true, 'message' => 'Broadcast sent']);
+})->middleware('auth');
