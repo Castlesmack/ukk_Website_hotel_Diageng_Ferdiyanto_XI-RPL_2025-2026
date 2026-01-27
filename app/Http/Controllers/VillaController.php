@@ -11,9 +11,15 @@ use App\Models\VillaVisibility;
 use App\Models\HomepageFacility;
 use App\Events\OrderCreated;
 use Illuminate\Support\Facades\Auth;
+use Carbon\Carbon;
 
 class VillaController extends Controller
 {
+    /**
+     * Display the homepage with available villas.
+     *
+     * @return \Illuminate\View\View
+     */
     public function index()
     {
         $homepage = HomepageSetting::first();
@@ -21,11 +27,12 @@ class VillaController extends Controller
         $description = $homepage?->description ?? '';
         
         // Get visible villas in order
-        $visibleVillaIds = VillaVisibility::where('is_visible', true)->orderBy('order')->pluck('villa_id');
+        $visibleVillaIds = VillaVisibility::where('is_visible', true)
+            ->orderBy('order')
+            ->pluck('villa_id');
         
-        // Fetch villas and sort by the visibility order (SQLite doesn't support FIELD function)
+        // Fetch villas and sort by the visibility order
         if ($visibleVillaIds->isEmpty()) {
-            // If no visibility records exist, show all villas
             $villas = Villa::all();
         } else {
             $villas = Villa::whereIn('id', $visibleVillaIds)->get();
@@ -36,7 +43,10 @@ class VillaController extends Controller
         }
         
         // Get visible facilities
-        $facilities = HomepageFacility::where('is_visible', true)->orderBy('category')->orderBy('order')->get();
+        $facilities = HomepageFacility::where('is_visible', true)
+            ->orderBy('category')
+            ->orderBy('order')
+            ->get();
         
         return view('guest.homepage', compact('villas', 'sliderImages', 'description', 'facilities'));
     }
@@ -89,6 +99,13 @@ class VillaController extends Controller
         return view('guest.home', compact('villas', 'checkin', 'checkout', 'guests', 'sliderImages', 'description', 'facilities'));
     }
 
+    /**
+     * Get villa detail page with booked dates.
+     *
+     * @param int $id Villa ID
+     * @return \Illuminate\View\View
+     * @throws \Illuminate\Database\Eloquent\ModelNotFoundException
+     */
     public function detail($id)
     {
         $villa = Villa::findOrFail($id);
@@ -96,7 +113,7 @@ class VillaController extends Controller
         // Get all confirmed/pending bookings for this villa
         $bookedDates = Booking::where('villa_id', $id)
             ->whereIn('status', ['confirmed', 'pending'])
-            ->selectRaw('check_in_date, check_out_date')
+            ->select('check_in_date', 'check_out_date')
             ->get();
         
         return view('guest.villa_detail', compact('villa', 'bookedDates'));
@@ -225,10 +242,17 @@ class VillaController extends Controller
         return view('guest.payment', compact('booking'));
     }
 
+    /**
+     * Search API for villa filtering.
+     *
+     * @param Request $request
+     * @return \Illuminate\Http\JsonResponse
+     */
     public function searchAPI(Request $request)
     {
         $capacity = $request->get('capacity');
-        $dates = $request->get('dates');
+        $checkin = $request->get('checkin');
+        $checkout = $request->get('checkout');
         $price = $request->get('price');
 
         $query = Villa::query();
@@ -243,12 +267,12 @@ class VillaController extends Controller
             $query->where('base_price', '<=', $price);
         }
 
-        // Filter by availability on selected date
-        if ($dates) {
-            // Get all bookings for the selected date
-            $bookedVillaIds = Booking::where(function($q) use ($dates) {
-                $q->where('check_in_date', '<=', $dates)
-                  ->where('check_out_date', '>', $dates);
+        // Filter by availability on selected dates
+        if ($checkin && $checkout) {
+            // Get all bookings that conflict with selected dates
+            $bookedVillaIds = Booking::where(function($q) use ($checkin, $checkout) {
+                $q->where('check_in_date', '<', $checkout)
+                  ->where('check_out_date', '>', $checkin);
             })
             ->whereIn('status', ['confirmed', 'pending'])
             ->distinct()
@@ -263,6 +287,8 @@ class VillaController extends Controller
         $villas = $query->get();
 
         return response()->json([
+            'success' => true,
+            'count' => $villas->count(),
             'villas' => $villas->map(function($villa) {
                 return [
                     'id' => $villa->id,

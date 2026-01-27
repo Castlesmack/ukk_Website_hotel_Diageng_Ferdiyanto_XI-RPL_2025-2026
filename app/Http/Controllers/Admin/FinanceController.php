@@ -11,7 +11,7 @@ class FinanceController extends Controller
 {
     public function index(Request $request)
     {
-        $query = Booking::where('status', 'confirmed');
+        $query = Booking::whereIn('status', ['confirmed', 'completed', 'paid']);
 
         if ($request->filled('start_date')) {
             $query->whereDate('created_at', '>=', $request->start_date);
@@ -25,7 +25,7 @@ class FinanceController extends Controller
             $query->where('villa_id', $request->villa_id);
         }
 
-        $bookings = $query->with('villa')->get();
+        $bookings = $query->with('villa')->orderBy('created_at', 'desc')->get();
         $totalIncome = $bookings->sum('total_price');
         $villas = Villa::all();
 

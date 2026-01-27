@@ -118,59 +118,65 @@
             </div>
         @endif
 
-        <form method="POST" action="/register">
+        <form method="POST" action="/register" id="registerForm" name="registerForm">
             @csrf
             <div class="form-group">
-                <label for="name">Full Name <span style="color: #dc3545;">*</span></label>
-                <input type="text" id="name" name="name" value="{{ old('name') }}" required>
+                <label for="registerFullName">Full Name <span style="color: #dc3545;">*</span></label>
+                <input type="text" id="registerFullName" name="name" value="{{ old('name') }}" placeholder="John Doe"
+                    maxlength="255" required autocomplete="name" aria-label="Full Name">
                 @error('name')
-                    <small style="color: #dc3545;">{{ $message }}</small>
+                    <small style="color: #dc3545;" role="alert">{{ $message }}</small>
                 @enderror
             </div>
 
             <div class="form-group">
-                <label for="email">Email Address <span style="color: #dc3545;">*</span></label>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" required>
+                <label for="registerEmail">Email Address <span style="color: #dc3545;">*</span></label>
+                <input type="email" id="registerEmail" name="email" value="{{ old('email') }}" placeholder="your@email.com"
+                    required autocomplete="email" aria-label="Email Address">
                 @error('email')
-                    <small style="color: #dc3545;">{{ $message }}</small>
+                    <small style="color: #dc3545;" role="alert">{{ $message }}</small>
                 @enderror
             </div>
 
             <div class="form-group">
-                <label for="phone">Phone Number <span style="color: #dc3545;">*</span></label>
-                <input type="text" id="phone" name="phone" value="{{ old('phone') }}" required>
+                <label for="registerPhone">Phone Number <span style="color: #dc3545;">*</span></label>
+                <input type="tel" id="registerPhone" name="phone" value="{{ old('phone') }}" placeholder="08123456789"
+                    maxlength="20" pattern="[0-9\-\+\s]+" required autocomplete="tel" aria-label="Phone Number">
                 @error('phone')
-                    <small style="color: #dc3545;">{{ $message }}</small>
+                    <small style="color: #dc3545;" role="alert">{{ $message }}</small>
                 @enderror
             </div>
 
             <div class="form-group">
-                <label for="password">Password <span style="color: #dc3545;">*</span></label>
-                <input type="password" id="password" name="password" required>
+                <label for="registerPassword">Password <span style="color: #dc3545;">*</span></label>
+                <input type="password" id="registerPassword" name="password" required minlength="8"
+                    placeholder="Min. 8 characters" autocomplete="new-password" aria-label="Password">
                 <small style="color: #666; display: block; margin-top: 5px;">Minimum 8 characters</small>
                 @error('password')
-                    <small style="color: #dc3545;">{{ $message }}</small>
+                    <small style="color: #dc3545;" role="alert">{{ $message }}</small>
                 @enderror
             </div>
 
             <div class="form-group">
-                <label for="password_confirmation">Confirm Password <span style="color: #dc3545;">*</span></label>
-                <input type="password" id="password_confirmation" name="password_confirmation" required>
+                <label for="registerPasswordConfirm">Confirm Password <span style="color: #dc3545;">*</span></label>
+                <input type="password" id="registerPasswordConfirm" name="password_confirmation" required minlength="8"
+                    placeholder="Re-enter password" autocomplete="new-password" aria-label="Confirm Password">
                 @error('password_confirmation')
-                    <small style="color: #dc3545;">{{ $message }}</small>
+                    <small style="color: #dc3545;" role="alert">{{ $message }}</small>
                 @enderror
             </div>
 
             <div class="checkbox-group">
-                <input type="checkbox" id="confirm" name="confirm" value="yes" required>
-                <label for="confirm">I confirm all the details I entered are correct <span
+                <input type="checkbox" id="registerConfirm" name="confirm" value="yes" required
+                    aria-label="Confirm details">
+                <label for="registerConfirm">I confirm all the details I entered are correct <span
                         style="color: #dc3545;">*</span></label>
             </div>
             @error('confirm')
-                <small style="color: #dc3545; display: block; margin-bottom: 15px;">{{ $message }}</small>
+                <small style="color: #dc3545; display: block; margin-bottom: 15px;" role="alert">{{ $message }}</small>
             @enderror
 
-            <button type="submit" class="btn-submit">Create Account</button>
+            <button type="submit" class="btn-submit" id="registerSubmitBtn">Create Account</button>
         </form>
 
         <div style="margin-top: 20px; text-align: center; font-size: 14px;">

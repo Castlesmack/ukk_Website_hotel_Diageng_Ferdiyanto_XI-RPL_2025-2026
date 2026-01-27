@@ -207,7 +207,7 @@
                         document.getElementById('specific-days').style.display = allDays ? 'none' : 'block';
                         document.getElementById('date-range').style.display = allDays ? 'none' : 'block';
                     }
-                </script>
+
                     function deleteImage(button, imagePath) {
                         if (confirm('Are you sure you want to delete this image?')) {
                             const form = button.closest('form');

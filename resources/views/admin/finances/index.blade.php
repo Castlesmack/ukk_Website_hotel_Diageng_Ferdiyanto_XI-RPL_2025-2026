@@ -38,34 +38,53 @@
 
             <!-- Filters -->
             <form method="GET"
-                style="background: #FAF2E8; padding: 15px; border-radius: 8px; margin-bottom: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+                style="background: linear-gradient(135deg, #f8f9fa 0%, #FAF2E8 100%); padding: 20px; border-radius: 12px; margin-bottom: 20px; display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 15px; border: 1px solid #e0e0e0;">
                 <div>
-                    <label style="display: block; margin-bottom: 5px; font-size: 12px; font-weight: 600;">Filter Tanggal
-                        Mulai</label>
-                    <input type="date" name="start_date" value="{{ request('start_date') }}"
-                        style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    <label
+                        style="display: block; margin-bottom: 8px; font-size: 12px; font-weight: 700; color: #333; text-transform: uppercase; letter-spacing: 0.5px;">📅
+                        Dari Tanggal</label>
+                    <input type="date" name="start_date" id="financeStartDate" value="{{ request('start_date') }}"
+                        style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; transition: all 0.3s;"
+                        onchange="this.style.borderColor='#5a4a42';"
+                        onfocus="this.style.boxShadow='0 0 0 3px rgba(90,74,66,0.1)';" aria-label="Tanggal Mulai Filter">
                 </div>
                 <div>
-                    <label style="display: block; margin-bottom: 5px; font-size: 12px; font-weight: 600;">Filter Tanggal
-                        Akhir</label>
-                    <input type="date" name="end_date" value="{{ request('end_date') }}"
-                        style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    <label
+                        style="display: block; margin-bottom: 8px; font-size: 12px; font-weight: 700; color: #333; text-transform: uppercase; letter-spacing: 0.5px;">📅
+                        Hingga Tanggal</label>
+                    <input type="date" name="end_date" id="financeEndDate" value="{{ request('end_date') }}"
+                        style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; transition: all 0.3s;"
+                        onchange="this.style.borderColor='#5a4a42';"
+                        onfocus="this.style.boxShadow='0 0 0 3px rgba(90,74,66,0.1)';" aria-label="Tanggal Akhir Filter">
                 </div>
                 <div>
-                    <label style="display: block; margin-bottom: 5px; font-size: 12px; font-weight: 600;">Filter Tipe
-                        Villa</label>
-                    <select name="villa_id" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
-                        <option value="">Semua Villa</option>
+                    <label
+                        style="display: block; margin-bottom: 8px; font-size: 12px; font-weight: 700; color: #333; text-transform: uppercase; letter-spacing: 0.5px;">🏠
+                        Pilih Villa</label>
+                    <select name="villa_id" id="financeVillaFilter"
+                        style="width: 100%; padding: 10px 12px; border: 1px solid #ddd; border-radius: 6px; font-size: 14px; transition: all 0.3s; background: white; cursor: pointer;"
+                        onchange="this.style.borderColor='#5a4a42';"
+                        onfocus="this.style.boxShadow='0 0 0 3px rgba(90,74,66,0.1)';" aria-label="Filter Villa">
+                        <option value="">🔍 Semua Villa</option>
                         @foreach($villas as $villa)
                             <option value="{{ $villa->id }}" {{ request('villa_id') == $villa->id ? 'selected' : '' }}>
-                                {{ $villa->name }}
+                                {{ $villa->name }} (Rp {{ number_format($villa->base_price, 0, ',', '.') }}/malam)
                             </option>
                         @endforeach
                     </select>
                 </div>
-                <div style="display: flex; align-items: flex-end;">
+                <div style="display: flex; align-items: flex-end; gap: 10px;">
                     <button type="submit"
-                        style="width: 100%; background: #f05b4f; color: white; padding: 8px; border: none; border-radius: 4px; cursor: pointer; font-weight: 600;">Filter</button>
+                        style="flex: 1; background: linear-gradient(135deg, #f05b4f 0%, #e63c34 100%); color: white; padding: 10px 20px; border: none; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; transition: all 0.3s; box-shadow: 0 2px 8px rgba(240, 91, 79, 0.3);"
+                        onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 4px 12px rgba(240, 91, 79, 0.4)';"
+                        onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 2px 8px rgba(240, 91, 79, 0.3)';">
+                        ✓ Terapkan Filter
+                    </button>
+                    <a href="{{ route('admin.finances.index') }}"
+                        style="background: white; color: #666; padding: 10px 20px; border: 1px solid #ddd; border-radius: 6px; cursor: pointer; font-weight: 600; font-size: 14px; text-decoration: none; transition: all 0.3s;"
+                        onmouseover="this.style.background='#f5f5f5';" onmouseout="this.style.background='white';">
+                        ↻ Reset
+                    </a>
                 </div>
             </form>
 

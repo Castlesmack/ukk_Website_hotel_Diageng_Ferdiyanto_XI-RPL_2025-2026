@@ -103,51 +103,86 @@
             grid-template-columns: repeat(4, 1fr) 1fr;
             gap: 15px;
             margin-bottom: 30px;
-            padding: 20px;
-            background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            padding: 25px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 2px solid #e8e8e8;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+
+        .search-bar:hover {
+            border-color: #5a4a42;
+            box-shadow: 0 6px 20px rgba(90, 74, 66, 0.12);
         }
 
         .search-input {
             padding: 12px 15px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
+            border: 1.5px solid #ddd;
+            border-radius: 8px;
             font-size: 14px;
             font-family: inherit;
             transition: all 0.3s;
             background: white;
+            color: #333;
+        }
+
+        .search-input:hover {
+            border-color: #bbb;
         }
 
         .search-input:focus {
             outline: none;
             border-color: #5a4a42;
-            box-shadow: 0 0 0 3px rgba(90, 74, 66, 0.1);
+            box-shadow: 0 0 0 4px rgba(90, 74, 66, 0.1);
             background: white;
+            transform: scale(1.01);
+        }
+
+        .search-input::placeholder {
+            color: #999;
+            font-weight: 500;
         }
 
         .search-btn {
-            padding: 12px 28px;
+            padding: 12px 32px;
             background: linear-gradient(135deg, #5a4a42 0%, #3d2f2a 100%);
             color: white;
             border: none;
-            border-radius: 6px;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: 600;
+            font-weight: 700;
+            letter-spacing: 0.5px;
             align-self: flex-start;
             transition: all 0.3s;
-            box-shadow: 0 4px 12px rgba(90, 74, 66, 0.3);
+            box-shadow: 0 4px 16px rgba(90, 74, 66, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
         }
 
         .search-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(90, 74, 66, 0.4);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(90, 74, 66, 0.4);
         }
 
         .search-btn:active {
-            transform: translateY(0);
+            transform: translateY(-1px);
+        }
+
+        .search-loading {
+            display: none;
+            color: #f05b4f;
+            font-weight: bold;
+            text-align: center;
+            padding: 20px;
+            font-size: 16px;
+        }
+
+        .search-loading.active {
+            display: block;
         }
 
         /* Villa Grid */
@@ -303,6 +338,7 @@
                 opacity: 0;
                 transform: translateY(10px);
             }
+
             to {
                 opacity: 1;
                 transform: translateY(0);
@@ -402,6 +438,7 @@
 
         /* Responsive */
         @media (max-width: 1024px) {
+
             .villa-grid,
             .facility-grid {
                 grid-template-columns: repeat(3, 1fr);
@@ -532,14 +569,46 @@
 
         <!-- Villa Section -->
         <div class="villa-section" id="villa">
-            <h2 class="section-title">Find Your Perfect Villa</h2>
+            <h2 class="section-title">🏠 Find Your Perfect Villa</h2>
 
-            <div class="search-bar">
-                <input type="number" id="capacity" class="search-input" placeholder="Number of Guests" min="1">
-                <input type="date" id="checkin" class="search-input" placeholder="Check-in">
-                <input type="date" id="checkout" class="search-input" placeholder="Check-out">
-                <input type="number" id="price" class="search-input" placeholder="Max Price" min="0">
-                <button class="search-btn" onclick="searchVillas()" style="grid-column: 1/-1;">🔍 Search</button>
+            <div class="search-bar" id="searchBar">
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <label
+                        style="font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.5px;">👥
+                        Jumlah Tamu</label>
+                    <input type="number" id="capacity" class="search-input" placeholder="2" min="1" max="20"
+                        aria-label="Jumlah Tamu">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <label
+                        style="font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.5px;">📍
+                        Cek Masuk</label>
+                    <input type="date" id="checkin" class="search-input" min="{{ date('Y-m-d') }}"
+                        aria-label="Tanggal Cek Masuk">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <label
+                        style="font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.5px;">📍
+                        Cek Keluar</label>
+                    <input type="date" id="checkout" class="search-input" min="{{ date('Y-m-d', strtotime('+1 day')) }}"
+                        aria-label="Tanggal Cek Keluar">
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 5px;">
+                    <label
+                        style="font-size: 11px; font-weight: 700; color: #666; text-transform: uppercase; letter-spacing: 0.5px;">💰
+                        Maks. Harga</label>
+                    <input type="number" id="price" class="search-input" placeholder="Rp 5.000.000" min="0" step="100000"
+                        aria-label="Harga Maksimal">
+                </div>
+                <button class="search-btn" onclick="searchVillas()" id="searchSubmitBtn"
+                    style="grid-column: 1/-1; margin-top: 8px;">
+                    <span id="searchBtnText">🔍 Cari Villa</span>
+                    <span id="searchBtnLoader" style="display: none;">⏳ Mencari...</span>
+                </button>
+            </div>
+
+            <div id="searchLoading" class="search-loading">
+                ⏳ Sedang mencari villa yang tersedia...
             </div>
 
             <div class="villa-grid" id="villaGrid">
@@ -551,24 +620,25 @@
                                     <img src="{{ asset($villa->image_url) }}" alt="{{ $villa->name }}"
                                         style="width:100%; height:100%; object-fit: cover;">
                                 @else
-                                    No image
+                                    <span style="color: #999;">No image</span>
                                 @endif
                             </div>
                             <div class="villa-info">
                                 <div class="villa-name">{{ $villa->name }}</div>
-                                <div class="villa-capacity">{{ $villa->capacity }} guests</div>
-                                <div class="villa-price">Rp {{ number_format($villa->base_price, 0, ',', '.') }}/night</div>
+                                <div class="villa-capacity">👥 {{ $villa->capacity }} tamu</div>
+                                <div class="villa-price">💰 Rp {{ number_format($villa->base_price, 0, ',', '.') }}/malam</div>
                             </div>
                         </div>
                     </a>
                 @empty
-                    <p style="grid-column: 1 / -1; text-align: center; color: #999; padding: 30px;">No villas available</p>
+                    <p style="grid-column: 1 / -1; text-align: center; color: #999; padding: 30px; font-size: 16px;">📭 Tidak
+                        ada villa tersedia</p>
                 @endforelse
             </div>
         </div>
 
         <!-- Facility Section -->
-        @if ($facilities && $facilities->count() > 0)
+        @if ($facilities && (is_array($facilities) ? count($facilities) > 0 : $facilities->count() > 0))
             <div class="facility-section" id="facility">
                 <h2 class="section-title">Our Facilities</h2>
 
@@ -634,12 +704,18 @@
         style.textContent = '.facility-item { transition: opacity 0.3s ease; }';
         document.head.appendChild(style);
 
-        // Instant search for villas
+        // Instant search for villas with better UX
         function searchVillas() {
             const capacity = document.getElementById('capacity').value;
             const checkin = document.getElementById('checkin').value;
             const checkout = document.getElementById('checkout').value;
             const price = document.getElementById('price').value;
+
+            // Show loading state
+            document.getElementById('searchLoading').classList.add('active');
+            document.getElementById('searchSubmitBtn').disabled = true;
+            document.getElementById('searchBtnText').style.display = 'none';
+            document.getElementById('searchBtnLoader').style.display = 'inline';
 
             const params = new URLSearchParams();
             if (capacity) params.append('capacity', capacity);
@@ -653,40 +729,107 @@
                     const villaGrid = document.getElementById('villaGrid');
                     villaGrid.innerHTML = '';
 
+                    // Hide loading state
+                    document.getElementById('searchLoading').classList.remove('active');
+                    document.getElementById('searchSubmitBtn').disabled = false;
+                    document.getElementById('searchBtnText').style.display = 'inline';
+                    document.getElementById('searchBtnLoader').style.display = 'none';
+
                     if (data.villas && data.villas.length > 0) {
-                        data.villas.forEach(villa => {
+                        data.villas.forEach((villa, index) => {
                             const villaHTML = `
-                                <a href="/villa/${villa.id}" style="text-decoration: none; color: inherit;">
-                                    <div class="villa-card">
-                                        <div class="villa-image">
-                                            ${villa.image_url ? `<img src="${villa.image_url}" alt="${villa.name}" style="width:100%; height:100%; object-fit: cover;">` : 'No image'}
-                                        </div>
-                                        <div class="villa-info">
-                                            <div class="villa-name">${villa.name}</div>
-                                            <div class="villa-capacity">${villa.capacity} guests</div>
-                                            <div class="villa-price">Rp ${villa.base_price.toLocaleString('id-ID')}/night</div>
-                                        </div>
-                                    </div>
-                                </a>
-                            `;
+                                                <a href="/villa/${villa.id}" style="text-decoration: none; color: inherit;">
+                                                    <div class="villa-card" style="animation: fadeIn 0.4s ease-in-out ${index * 0.05}s both;">
+                                                        <div class="villa-image">
+                                                            ${villa.image_url ? `<img src="${villa.image_url}" alt="${villa.name}" style="width:100%; height:100%; object-fit: cover;">` : '<span style="color: #999;">No image</span>'}
+                                                        </div>
+                                                        <div class="villa-info">
+                                                            <div class="villa-name">${villa.name}</div>
+                                                            <div class="villa-capacity">👥 ${villa.capacity} tamu</div>
+                                                            <div class="villa-price">💰 Rp ${villa.base_price.toLocaleString('id-ID')}/malam</div>
+                                                        </div>
+                                                    </div>
+                                                </a>
+                                            `;
                             villaGrid.innerHTML += villaHTML;
                         });
                     } else {
-                        villaGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: #999; padding: 30px;">No villas found matching your criteria</p>';
+                        villaGrid.innerHTML = `
+                                            <div style="grid-column: 1/-1; text-align: center; padding: 40px 20px;">
+                                                <p style="font-size: 20px; margin-bottom: 10px;">😔 Tidak ada villa tersedia</p>
+                                                <p style="color: #999; margin: 0;">Coba ubah tanggal atau filters yang lain</p>
+                                            </div>
+                                        `;
                     }
                 })
-                .catch(error => console.error('Error:', error));
+                .catch(error => {
+                    console.error('Error:', error);
+                    document.getElementById('searchLoading').classList.remove('active');
+                    document.getElementById('searchSubmitBtn').disabled = false;
+                    document.getElementById('searchBtnText').style.display = 'inline';
+                    document.getElementById('searchBtnLoader').style.display = 'none';
+
+                    const villaGrid = document.getElementById('villaGrid');
+                    villaGrid.innerHTML = `
+                                        <div style="grid-column: 1/-1; text-align: center; padding: 40px 20px;">
+                                            <p style="font-size: 18px; color: #dc3545; margin-bottom: 10px;">⚠️ Terjadi kesalahan</p>
+                                            <p style="color: #999; margin: 0;">Mohon coba lagi nanti</p>
+                                        </div>
+                                    `;
+                });
+        }
+
+        // Validate and enforce minimum 1 day stay
+        function validateDateRange() {
+            const checkinInput = document.getElementById('checkin');
+            const checkoutInput = document.getElementById('checkout');
+
+            if (checkinInput.value && checkoutInput.value) {
+                const checkinDate = new Date(checkinInput.value);
+                const checkoutDate = new Date(checkoutInput.value);
+
+                // If checkout is same day or before checkin, set it to next day
+                if (checkoutDate <= checkinDate) {
+                    const nextDay = new Date(checkinDate);
+                    nextDay.setDate(nextDay.getDate() + 1);
+                    checkoutInput.value = nextDay.toISOString().split('T')[0];
+                }
+            }
         }
 
         // Load all villas on page load
         document.addEventListener('DOMContentLoaded', function () {
+            // Auto-populate check-in with today and check-out with tomorrow
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(tomorrow.getDate() + 1);
+
+            const todayString = today.toISOString().split('T')[0];
+            const tomorrowString = tomorrow.toISOString().split('T')[0];
+
+            const checkinInput = document.getElementById('checkin');
+            const checkoutInput = document.getElementById('checkout');
+
+            if (!checkinInput.value) {
+                checkinInput.value = todayString;
+            }
+            if (!checkoutInput.value) {
+                checkoutInput.value = tomorrowString;
+            }
+
             searchVillas();
         });
 
         // Real-time search as user changes filters
         document.getElementById('capacity').addEventListener('change', searchVillas);
-        document.getElementById('checkin').addEventListener('change', searchVillas);
-        document.getElementById('checkout').addEventListener('change', searchVillas);
+        document.getElementById('checkin').addEventListener('change', function () {
+            validateDateRange();
+            searchVillas();
+        });
+        document.getElementById('checkout').addEventListener('change', function () {
+            validateDateRange();
+            searchVillas();
+        });
         document.getElementById('price').addEventListener('input', searchVillas);
     </script>
 @endsection

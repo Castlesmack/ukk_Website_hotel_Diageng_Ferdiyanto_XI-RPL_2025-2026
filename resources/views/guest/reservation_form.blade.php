@@ -200,7 +200,7 @@
                     <strong>Price per night:</strong> Rp {{ number_format($villa->base_price, 0, ',', '.') }}
                 </div>
                 <div class="total-price">
-                    Total: [Will be calculated once dates are selected]
+                    Total: -
                 </div>
             @endif
         </aside>

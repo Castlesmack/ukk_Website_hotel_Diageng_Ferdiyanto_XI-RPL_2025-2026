@@ -150,14 +150,14 @@
         document.head.appendChild(style);
     }
 
-    // Auto-refresh page every 5 seconds for admin and reception pages
+    // Auto-refresh page every 7 seconds for admin and reception pages
     const isAdminOrReception = window.location.pathname.includes('/admin') ||
         window.location.pathname.includes('/reception');
     if (isAdminOrReception) {
-        console.log('Auto-refresh enabled: Page will refresh every 5 seconds');
+        console.log('Auto-refresh enabled: Page will refresh every 7 seconds');
         setInterval(function () {
             console.log('Auto-refreshing page...');
             location.reload();
-        }, 5000); // 5000 ms = 5 seconds
+        }, 7000); // 7000 ms = 7 seconds
     }
 </script>

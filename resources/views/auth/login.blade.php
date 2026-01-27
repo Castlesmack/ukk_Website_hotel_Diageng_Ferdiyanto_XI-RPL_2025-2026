@@ -137,30 +137,36 @@
             </div>
         @endif
 
-        <form method="POST" action="/login">
+        <form method="POST" action="/login" id="loginForm" name="loginForm">
             @csrf
             <div class="form-group">
-                <label for="email">Email Address <span style="color: #dc3545;">*</span></label>
-                <input type="email" id="email" name="email" value="{{ old('email') }}" required>
+                <label for="loginEmail">Email Address <span style="color: #dc3545;">*</span></label>
+                <input type="email" id="loginEmail" name="email" class="form-control" value="{{ old('email') }}"
+                    placeholder="your@email.com" required autocomplete="email" aria-label="Email Address">
                 @error('email')
-                    <small style="color: #dc3545;">{{ $message }}</small>
+                    <small style="color: #dc3545;" class="error-text" role="alert">{{ $message }}</small>
                 @enderror
             </div>
 
             <div class="form-group">
-                <label for="password">Password <span style="color: #dc3545;">*</span></label>
-                <input type="password" id="password" name="password" required>
+                <label for="loginPassword">Password <span style="color: #dc3545;">*</span></label>
+                <input type="password" id="loginPassword" name="password" class="form-control" required minlength="6"
+                    placeholder="Min. 6 characters" autocomplete="current-password" aria-label="Password">
                 @error('password')
-                    <small style="color: #dc3545;">{{ $message }}</small>
+                    <small style="color: #dc3545;" class="error-text" role="alert">{{ $message }}</small>
                 @enderror
             </div>
 
             <div class="checkbox-group">
-                <input type="checkbox" id="confirm" name="confirm" required>
-                <label for="confirm" style="margin-bottom: 0;">I confirm all the details I entered are correct</label>
+                <input type="checkbox" id="loginConfirm" name="confirm" required aria-label="Confirm details">
+                <label for="loginConfirm" style="margin-bottom: 0;">I confirm all the details I entered are correct</label>
+                @error('confirm')
+                    <small style="color: #dc3545; display: block; margin-top: 5px;" class="error-text"
+                        role="alert">{{ $message }}</small>
+                @enderror
             </div>
 
-            <button type="submit" class="btn-submit">Login</button>
+            <button type="submit" class="btn-submit" id="loginSubmitBtn" name="submitBtn">Login</button>
         </form>
 
         <div style="margin-top: 20px; text-align: center; font-size: 14px;">
