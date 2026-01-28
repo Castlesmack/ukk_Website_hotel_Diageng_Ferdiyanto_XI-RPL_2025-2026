@@ -1292,7 +1292,7 @@
         document.getElementById('villaBookingCheckIn').addEventListener('change', function () {
             const checkInValue = this.value;
             const checkOutValue = document.getElementById('villaBookingCheckOut').value;
-            
+
             if (checkInValue && checkOutValue) {
                 const checkInDate = stringToDate(checkInValue);
                 const checkOutDate = stringToDate(checkOutValue);
@@ -1305,11 +1305,11 @@
             generateAvailabilityCalendar();
             updateSummary();
         });
-        
+
         document.getElementById('villaBookingCheckOut').addEventListener('change', function () {
             const checkInValue = document.getElementById('villaBookingCheckIn').value;
             const checkOutValue = this.value;
-            
+
             if (checkInValue && checkOutValue) {
                 const checkInDate = stringToDate(checkInValue);
                 const checkOutDate = stringToDate(checkOutValue);
