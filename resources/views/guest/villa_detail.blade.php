@@ -947,55 +947,55 @@
         let allImages = [];
 
         // Form validation before submission
-        document.getElementById('villaBookingForm').addEventListener('submit', function(e) {
+        document.getElementById('villaBookingForm').addEventListener('submit', function (e) {
             const checkInValue = document.getElementById('villaBookingCheckIn').value;
             const checkOutValue = document.getElementById('villaBookingCheckOut').value;
-            
+
             // Validate check-in and check-out are filled
             if (!checkInValue || !checkOutValue) {
                 e.preventDefault();
                 alert('Harap pilih tanggal check-in dan check-out terlebih dahulu!');
                 return false;
             }
-            
+
             // Parse dates
             const checkInDate = new Date(checkInValue);
             const checkOutDate = new Date(checkOutValue);
-            
+
             // Validate check-out is after check-in
             if (checkOutDate <= checkInDate) {
                 e.preventDefault();
                 alert('Tanggal checkout harus setelah check-in!');
                 return false;
             }
-            
+
             // Check if dates overlap with booked dates
             const bookedDatesSet = new Set();
             const bookedDatesJson = @json($bookedDates ?? []);
-            
+
             bookedDatesJson.forEach(booking => {
                 const startDate = new Date(booking.check_in_date);
                 const endDate = new Date(booking.check_out_date);
                 for (let d = new Date(startDate); d < endDate; d.setDate(d.getDate() + 1)) {
-                    const dateStr = d.getFullYear() + '-' + 
-                                   String(d.getMonth() + 1).padStart(2, '0') + '-' + 
-                                   String(d.getDate()).padStart(2, '0');
+                    const dateStr = d.getFullYear() + '-' +
+                        String(d.getMonth() + 1).padStart(2, '0') + '-' +
+                        String(d.getDate()).padStart(2, '0');
                     bookedDatesSet.add(dateStr);
                 }
             });
-            
+
             // Check if selected range overlaps with any booked date
             for (let d = new Date(checkInDate); d < checkOutDate; d.setDate(d.getDate() + 1)) {
-                const dateStr = d.getFullYear() + '-' + 
-                               String(d.getMonth() + 1).padStart(2, '0') + '-' + 
-                               String(d.getDate()).padStart(2, '0');
+                const dateStr = d.getFullYear() + '-' +
+                    String(d.getMonth() + 1).padStart(2, '0') + '-' +
+                    String(d.getDate()).padStart(2, '0');
                 if (bookedDatesSet.has(dateStr)) {
                     e.preventDefault();
                     alert('Tanggal yang dipilih ada yang sudah dipesan. Silakan pilih tanggal lain.');
                     return false;
                 }
             }
-            
+
             // If all validation passes, form will submit
             return true;
         });
