@@ -161,15 +161,13 @@ class VillaController extends Controller
         $checkin = \Carbon\Carbon::parse($validated['checkin']);
         $checkout = \Carbon\Carbon::parse($validated['checkout']);
         
+        // Check for overlapping bookings
+        // A booking overlaps if: existing_checkin < requested_checkout AND existing_checkout > requested_checkin
         $existingBooking = Booking::where('villa_id', $validated['villa_id'])
             ->whereIn('status', ['confirmed', 'pending'])
             ->where(function($query) use ($checkin, $checkout) {
-                $query->whereBetween('check_in_date', [$checkin, $checkout->subDay()])
-                      ->orWhereBetween('check_out_date', [$checkin->addDay(), $checkout])
-                      ->orWhere(function($q) use ($checkin, $checkout) {
-                          $q->where('check_in_date', '<=', $checkin)
-                            ->where('check_out_date', '>=', $checkout);
-                      });
+                $query->where('check_in_date', '<', $checkout->format('Y-m-d'))
+                      ->where('check_out_date', '>', $checkin->format('Y-m-d'));
             })
             ->first();
         

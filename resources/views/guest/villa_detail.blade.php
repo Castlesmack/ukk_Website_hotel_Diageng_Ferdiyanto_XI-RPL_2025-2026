@@ -946,6 +946,60 @@
         let lightboxCurrentIndex = 0;
         let allImages = [];
 
+        // Form validation before submission
+        document.getElementById('villaBookingForm').addEventListener('submit', function(e) {
+            const checkInValue = document.getElementById('villaBookingCheckIn').value;
+            const checkOutValue = document.getElementById('villaBookingCheckOut').value;
+            
+            // Validate check-in and check-out are filled
+            if (!checkInValue || !checkOutValue) {
+                e.preventDefault();
+                alert('Harap pilih tanggal check-in dan check-out terlebih dahulu!');
+                return false;
+            }
+            
+            // Parse dates
+            const checkInDate = new Date(checkInValue);
+            const checkOutDate = new Date(checkOutValue);
+            
+            // Validate check-out is after check-in
+            if (checkOutDate <= checkInDate) {
+                e.preventDefault();
+                alert('Tanggal checkout harus setelah check-in!');
+                return false;
+            }
+            
+            // Check if dates overlap with booked dates
+            const bookedDatesSet = new Set();
+            const bookedDatesJson = @json($bookedDates ?? []);
+            
+            bookedDatesJson.forEach(booking => {
+                const startDate = new Date(booking.check_in_date);
+                const endDate = new Date(booking.check_out_date);
+                for (let d = new Date(startDate); d < endDate; d.setDate(d.getDate() + 1)) {
+                    const dateStr = d.getFullYear() + '-' + 
+                                   String(d.getMonth() + 1).padStart(2, '0') + '-' + 
+                                   String(d.getDate()).padStart(2, '0');
+                    bookedDatesSet.add(dateStr);
+                }
+            });
+            
+            // Check if selected range overlaps with any booked date
+            for (let d = new Date(checkInDate); d < checkOutDate; d.setDate(d.getDate() + 1)) {
+                const dateStr = d.getFullYear() + '-' + 
+                               String(d.getMonth() + 1).padStart(2, '0') + '-' + 
+                               String(d.getDate()).padStart(2, '0');
+                if (bookedDatesSet.has(dateStr)) {
+                    e.preventDefault();
+                    alert('Tanggal yang dipilih ada yang sudah dipesan. Silakan pilih tanggal lain.');
+                    return false;
+                }
+            }
+            
+            // If all validation passes, form will submit
+            return true;
+        });
+
         // Initialize all images for lightbox
         function initializeLightbox() {
             const mainImage = document.getElementById('mainImage').src;
@@ -1145,73 +1199,29 @@
                 const isBooked = bookedDatesSet.has(dateStr);
                 const isToday = dateToString(dateObj) === dateToString(now);
                 const isPast = dateObj < now && !isToday;
-                const isCheckInSelected = dateStr === checkInValue;
-                const isCheckOutSelected = dateStr === checkOutValue;
-
-                let isInRange = false;
-                if (checkInValue && checkOutValue) {
-                    const checkInDate = stringToDate(checkInValue);
-                    const checkOutDate = stringToDate(checkOutValue);
-                    isInRange = dateObj > checkInDate && dateObj < checkOutDate;
-                }
 
                 const cell = document.createElement('div');
 
                 if (isPast) {
-                    cell.style.cssText = 'padding: 12px; text-align: center; background: #e0e0e0; color: #999; border-radius: 6px; font-weight: 600; cursor: not-allowed; opacity: 0.6;';
+                    // Past dates - gray, non-interactive
+                    cell.style.cssText = 'padding: 12px; text-align: center; background: #e0e0e0; color: #999; border-radius: 6px; font-weight: 600; opacity: 0.6;';
                     cell.textContent = day;
+                    cell.title = 'Tanggal sudah lewat';
                 } else if (isBooked) {
-                    cell.style.cssText = 'padding: 12px; text-align: center; background: #ffebee; border: 2px solid #ef5350; color: #c62828; border-radius: 6px; font-weight: 600; cursor: not-allowed; opacity: 0.8;';
+                    // Booked dates - red, non-interactive, informational only
+                    cell.style.cssText = 'padding: 12px; text-align: center; background: #ffebee; border: 2px solid #ef5350; color: #c62828; border-radius: 6px; font-weight: 600; opacity: 0.8;';
                     cell.innerHTML = `❌<br>${day}`;
                     cell.title = 'Sudah dipesan';
-                } else if (isCheckInSelected || isCheckOutSelected) {
-                    cell.style.cssText = 'padding: 12px; text-align: center; background: #4caf50; color: white; border: 3px solid #2e7d32; border-radius: 6px; font-weight: 700; cursor: pointer; transition: all 0.2s;';
-                    cell.innerHTML = `✓<br>${day}`;
-                    cell.title = isCheckInSelected ? 'Check-in' : 'Check-out';
-                    cell.onmouseover = () => cell.style.background = '#388e3c';
-                    cell.onmouseout = () => cell.style.background = '#4caf50';
-                    cell.onclick = (e) => {
-                        e.stopPropagation();
-                        if (!checkInValue) {
-                            setCheckInDate(dateStr);
-                        } else {
-                            setCheckOutDate(dateStr);
-                        }
-                    };
-                } else if (isInRange) {
-                    cell.style.cssText = 'padding: 12px; text-align: center; background: #a5d6a7; color: #2e7d32; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s;';
-                    cell.textContent = day;
-                    cell.title = 'Dalam rentang dipilih';
-                    cell.onmouseover = () => cell.style.background = '#81c784';
-                    cell.onmouseout = () => cell.style.background = '#a5d6a7';
-                    cell.onclick = (e) => {
-                        e.stopPropagation();
-                        setCheckOutDate(dateStr);
-                    };
                 } else if (isToday) {
-                    cell.style.cssText = 'padding: 12px; text-align: center; background: #e3f2fd; border: 3px solid #2196f3; color: #1976d2; border-radius: 6px; font-weight: 700; cursor: pointer; transition: all 0.2s;';
+                    // Today - blue, non-interactive, informational only
+                    cell.style.cssText = 'padding: 12px; text-align: center; background: #e3f2fd; border: 3px solid #2196f3; color: #1976d2; border-radius: 6px; font-weight: 700;';
                     cell.innerHTML = `🔵<br>${day}`;
-                    cell.title = 'Hari ini - Klik untuk check-in';
-                    cell.onmouseover = () => cell.style.background = '#bbdefb';
-                    cell.onmouseout = () => cell.style.background = '#e3f2fd';
-                    cell.onclick = (e) => {
-                        e.stopPropagation();
-                        setCheckInDate(dateStr);
-                    };
+                    cell.title = 'Hari ini';
                 } else {
-                    cell.style.cssText = 'padding: 12px; text-align: center; background: #e8f5e9; border: 2px solid #4caf50; color: #2e7d32; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s;';
+                    // Available dates - green, non-interactive, informational only
+                    cell.style.cssText = 'padding: 12px; text-align: center; background: #e8f5e9; border: 2px solid #4caf50; color: #2e7d32; border-radius: 6px; font-weight: 600;';
                     cell.innerHTML = `✓<br>${day}`;
-                    cell.title = 'Klik untuk memilih';
-                    cell.onmouseover = () => cell.style.background = '#c8e6c9';
-                    cell.onmouseout = () => cell.style.background = '#e8f5e9';
-                    cell.onclick = (e) => {
-                        e.stopPropagation();
-                        if (!checkInValue) {
-                            setCheckInDate(dateStr);
-                        } else {
-                            setCheckOutDate(dateStr);
-                        }
-                    };
+                    cell.title = 'Tersedia untuk booking';
                 }
                 container.appendChild(cell);
             }
@@ -1322,6 +1332,29 @@
             generateAvailabilityCalendar();
             updateSummary();
         });
+
+        // Unified date click handler
+        function handleDateClick(dateStr) {
+            const currentCheckIn = document.getElementById('villaBookingCheckIn').value;
+            const currentCheckOut = document.getElementById('villaBookingCheckOut').value;
+
+            if (!currentCheckIn || currentCheckOut) {
+                // If no check-in is selected, or if both are selected (start a new selection)
+                setCheckInDate(dateStr);
+            } else {
+                // If only check-in is selected
+                const clickedDate = stringToDate(dateStr);
+                const checkInDate = stringToDate(currentCheckIn);
+
+                if (clickedDate <= checkInDate) {
+                    // If clicked date is before or same as current check-in, set new check-in
+                    setCheckInDate(dateStr);
+                } else {
+                    // If clicked date is after current check-in, set check-out
+                    setCheckOutDate(dateStr);
+                }
+            }
+        }
 
         // Image gallery function
         function changeImage(src, element) {

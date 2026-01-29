@@ -13,6 +13,7 @@ use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\VillaController;
 use App\Http\Controllers\ReceptionController;
+use App\Http\Controllers\BookingController;
 
 Route::get('/', [VillaController::class, 'index'])->name('home');
 
@@ -93,6 +94,25 @@ Route::get('/home', [VillaController::class, 'index'])->name('guest.home');
 
 // API routes for search
 Route::get('/api/villas/search', [VillaController::class, 'searchAPI'])->name('api.villas.search');
+
+// Booking availability API routes (public - no auth required)
+Route::prefix('api')->group(function () {
+    // Get availability for single villa
+    Route::get('/villa/{id}/availability', [BookingController::class, 'getAvailability'])
+        ->name('api.villa.availability');
+    
+    // Validate specific date range for a villa
+    Route::post('/villa/availability/validate', [BookingController::class, 'validateAvailability'])
+        ->name('api.villa.availability.validate');
+    
+    // Check availability for multiple villas
+    Route::post('/villas/availability', [BookingController::class, 'checkMultipleVillasAvailability'])
+        ->name('api.villas.availability');
+    
+    // Get booking statistics for a villa
+    Route::get('/villa/{id}/stats', [BookingController::class, 'getBookingStats'])
+        ->name('api.villa.stats');
+});
 
 // Real-time API endpoints for WebSocket updates (admin only)
 Route::middleware(['auth', 'admin'])->group(function () {
