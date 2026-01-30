@@ -151,9 +151,11 @@
     }
 
     // Auto-refresh page every 7 seconds for admin and reception pages
+    // EXCEPT finance page
     const isAdminOrReception = window.location.pathname.includes('/admin') ||
         window.location.pathname.includes('/reception');
-    if (isAdminOrReception) {
+    const isFinancePage = window.location.pathname.includes('/admin/finances');
+    if (isAdminOrReception && !isFinancePage) {
         console.log('Auto-refresh enabled: Page will refresh every 7 seconds');
         setInterval(function () {
             console.log('Auto-refreshing page...');
