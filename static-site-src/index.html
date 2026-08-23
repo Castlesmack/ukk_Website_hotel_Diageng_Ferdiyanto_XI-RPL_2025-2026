@@ -1,5 +1,6 @@
 <!doctype html>
 <html lang="en">
+
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -7,67 +8,402 @@
     <link rel="icon" href="assets/favicon.png">
     <title>Ade Villa | Private villa stays</title>
     <style>
-        :root { --ink:#202522; --muted:#68716d; --paper:#f4f0e8; --card:#fffdf8; --accent:#b55d3e; --line:#ddd5c7; }
-        * { box-sizing:border-box; }
-        html { scroll-behavior:smooth; }
-        body { margin:0; color:var(--ink); background:var(--paper); font-family: Georgia, 'Times New Roman', serif; }
-        a { color:inherit; }
-        .shell { width:min(1180px, calc(100% - 40px)); margin:auto; }
-        header { display:flex; align-items:center; justify-content:space-between; padding:22px 0; }
-        .brand { display:flex; align-items:center; gap:12px; text-decoration:none; font-size:1.35rem; font-weight:bold; }
-        .brand img { width:52px; height:52px; object-fit:contain; }
-        nav { display:flex; gap:24px; font:600 .85rem Arial, sans-serif; text-transform:uppercase; letter-spacing:.08em; }
-        nav a { text-decoration:none; }
-        nav a:hover { color:var(--accent); }
-        .hero { min-height:620px; display:grid; align-items:end; position:relative; overflow:hidden; color:#fff; background:#2c3733; border-radius:3px; }
-        .hero-image { position:absolute; inset:0; background:center/cover url('assets/uploads/homepage/slider_1768270880_6965ac205c78c.png'); opacity:.82; transition:opacity .5s; }
-        .hero::after { content:''; position:absolute; inset:35% 0 0; background:linear-gradient(transparent,rgba(19,25,22,.86)); }
-        .hero-copy { position:relative; z-index:1; max-width:650px; padding:52px; }
-        .eyebrow { color:#f4c3a4; font:700 .76rem Arial,sans-serif; letter-spacing:.18em; text-transform:uppercase; }
-        h1 { margin:12px 0; font-size:clamp(3rem, 8vw, 6.6rem); line-height:.9; font-weight:400; }
-        .hero-copy p { max-width:500px; color:#f1ebe1; font-size:1.15rem; line-height:1.6; }
-        .button { display:inline-block; padding:13px 19px; background:var(--accent); color:#fff; text-decoration:none; border:0; font:700 .8rem Arial,sans-serif; text-transform:uppercase; letter-spacing:.1em; cursor:pointer; }
-        .button.secondary { background:transparent; border:1px solid rgba(255,255,255,.7); margin-left:8px; }
-        section { padding:84px 0; }
-        .section-heading { display:flex; align-items:end; justify-content:space-between; gap:24px; margin-bottom:28px; }
-        h2 { margin:0; font-size:clamp(2rem, 4vw, 3.3rem); font-weight:400; }
-        .section-heading p { max-width:380px; margin:0; color:var(--muted); line-height:1.6; }
-        .intro { max-width:760px; margin:auto; text-align:center; font-size:1.25rem; line-height:1.8; }
-        .villa-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:22px; }
-        .villa-card { background:var(--card); border:1px solid var(--line); }
-        .villa-card img { display:block; width:100%; aspect-ratio:16/10; object-fit:cover; }
-        .villa-card .body { padding:22px; }
-        .villa-card h3 { margin:0 0 8px; font-size:1.55rem; font-weight:400; }
-        .villa-card p { margin:0 0 18px; color:var(--muted); line-height:1.5; }
-        .details { display:flex; justify-content:space-between; align-items:center; gap:12px; border-top:1px solid var(--line); padding-top:16px; font:700 .8rem Arial,sans-serif; }
-        .price { color:var(--accent); }
-        .facilities { background:#27342f; color:#f7f2e9; }
-        .facility-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:1px; background:#53615a; margin-top:32px; }
-        .facility { background:#27342f; padding:28px 20px; min-height:130px; }
-        .facility strong { display:block; margin-bottom:9px; font-size:1.1rem; font-weight:400; }
-        .facility span { color:#b9c0b9; font: .85rem Arial,sans-serif; }
-        .backend-note { margin-top:28px; padding:16px 18px; border-left:3px solid #e2a47e; color:#e8d8c8; font: .86rem/1.5 Arial,sans-serif; }
-        footer { padding:30px 0 42px; border-top:1px solid var(--line); color:var(--muted); font: .8rem Arial,sans-serif; }
-        @media (max-width:700px) { .shell { width:min(100% - 28px, 1180px); } header { align-items:flex-start; } nav { gap:12px; flex-wrap:wrap; justify-content:flex-end; font-size:.7rem; } .hero { min-height:540px; } .hero-copy { padding:28px; } .hero-copy .button { margin-top:8px; } .button.secondary { margin-left:0; } section { padding:58px 0; } .section-heading { display:block; } .section-heading p { margin-top:14px; } .villa-grid, .facility-grid { grid-template-columns:1fr; } }
+        :root {
+            --ink: #202522;
+            --muted: #68716d;
+            --paper: #f4f0e8;
+            --card: #fffdf8;
+            --accent: #b55d3e;
+            --line: #ddd5c7;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            margin: 0;
+            color: var(--ink);
+            background: var(--paper);
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+
+        a {
+            color: inherit;
+        }
+
+        .shell {
+            width: min(1180px, calc(100% - 40px));
+            margin: auto;
+        }
+
+        header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 22px 0;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-decoration: none;
+            font-size: 1.35rem;
+            font-weight: bold;
+        }
+
+        .brand img {
+            width: 52px;
+            height: 52px;
+            object-fit: contain;
+        }
+
+        nav {
+            display: flex;
+            gap: 24px;
+            font: 600 .85rem Arial, sans-serif;
+            text-transform: uppercase;
+            letter-spacing: .08em;
+        }
+
+        nav a {
+            text-decoration: none;
+        }
+
+        nav a:hover {
+            color: var(--accent);
+        }
+
+        .hero {
+            min-height: 620px;
+            display: grid;
+            align-items: end;
+            position: relative;
+            overflow: hidden;
+            color: #fff;
+            background: #2c3733;
+            border-radius: 3px;
+        }
+
+        .hero-image {
+            position: absolute;
+            inset: 0;
+            background: center/cover url('assets/uploads/homepage/slider_1768270880_6965ac205c78c.png');
+            opacity: .82;
+            transition: opacity .5s;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            inset: 35% 0 0;
+            background: linear-gradient(transparent, rgba(19, 25, 22, .86));
+        }
+
+        .hero-copy {
+            position: relative;
+            z-index: 1;
+            max-width: 650px;
+            padding: 52px;
+        }
+
+        .eyebrow {
+            color: #f4c3a4;
+            font: 700 .76rem Arial, sans-serif;
+            letter-spacing: .18em;
+            text-transform: uppercase;
+        }
+
+        h1 {
+            margin: 12px 0;
+            font-size: clamp(3rem, 8vw, 6.6rem);
+            line-height: .9;
+            font-weight: 400;
+        }
+
+        .hero-copy p {
+            max-width: 500px;
+            color: #f1ebe1;
+            font-size: 1.15rem;
+            line-height: 1.6;
+        }
+
+        .button {
+            display: inline-block;
+            padding: 13px 19px;
+            background: var(--accent);
+            color: #fff;
+            text-decoration: none;
+            border: 0;
+            font: 700 .8rem Arial, sans-serif;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            cursor: pointer;
+        }
+
+        .button.secondary {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, .7);
+            margin-left: 8px;
+        }
+
+        section {
+            padding: 84px 0;
+        }
+
+        .section-heading {
+            display: flex;
+            align-items: end;
+            justify-content: space-between;
+            gap: 24px;
+            margin-bottom: 28px;
+        }
+
+        h2 {
+            margin: 0;
+            font-size: clamp(2rem, 4vw, 3.3rem);
+            font-weight: 400;
+        }
+
+        .section-heading p {
+            max-width: 380px;
+            margin: 0;
+            color: var(--muted);
+            line-height: 1.6;
+        }
+
+        .intro {
+            max-width: 760px;
+            margin: auto;
+            text-align: center;
+            font-size: 1.25rem;
+            line-height: 1.8;
+        }
+
+        .villa-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 22px;
+        }
+
+        .villa-card {
+            background: var(--card);
+            border: 1px solid var(--line);
+        }
+
+        .villa-card img {
+            display: block;
+            width: 100%;
+            aspect-ratio: 16/10;
+            object-fit: cover;
+        }
+
+        .villa-card .body {
+            padding: 22px;
+        }
+
+        .villa-card h3 {
+            margin: 0 0 8px;
+            font-size: 1.55rem;
+            font-weight: 400;
+        }
+
+        .villa-card p {
+            margin: 0 0 18px;
+            color: var(--muted);
+            line-height: 1.5;
+        }
+
+        .details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            border-top: 1px solid var(--line);
+            padding-top: 16px;
+            font: 700 .8rem Arial, sans-serif;
+        }
+
+        .price {
+            color: var(--accent);
+        }
+
+        .facilities {
+            background: #27342f;
+            color: #f7f2e9;
+        }
+
+        .facility-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1px;
+            background: #53615a;
+            margin-top: 32px;
+        }
+
+        .facility {
+            background: #27342f;
+            padding: 28px 20px;
+            min-height: 130px;
+        }
+
+        .facility strong {
+            display: block;
+            margin-bottom: 9px;
+            font-size: 1.1rem;
+            font-weight: 400;
+        }
+
+        .facility span {
+            color: #b9c0b9;
+            font: .85rem Arial, sans-serif;
+        }
+
+        .backend-note {
+            margin-top: 28px;
+            padding: 16px 18px;
+            border-left: 3px solid #e2a47e;
+            color: #e8d8c8;
+            font: .86rem/1.5 Arial, sans-serif;
+        }
+
+        footer {
+            padding: 30px 0 42px;
+            border-top: 1px solid var(--line);
+            color: var(--muted);
+            font: .8rem Arial, sans-serif;
+        }
+
+        @media (max-width:700px) {
+            .shell {
+                width: min(100% - 28px, 1180px);
+            }
+
+            header {
+                align-items: flex-start;
+            }
+
+            nav {
+                gap: 12px;
+                flex-wrap: wrap;
+                justify-content: flex-end;
+                font-size: .7rem;
+            }
+
+            .hero {
+                min-height: 540px;
+            }
+
+            .hero-copy {
+                padding: 28px;
+            }
+
+            .hero-copy .button {
+                margin-top: 8px;
+            }
+
+            .button.secondary {
+                margin-left: 0;
+            }
+
+            section {
+                padding: 58px 0;
+            }
+
+            .section-heading {
+                display: block;
+            }
+
+            .section-heading p {
+                margin-top: 14px;
+            }
+
+            .villa-grid,
+            .facility-grid {
+                grid-template-columns: 1fr;
+            }
+        }
     </style>
 </head>
+
 <body>
     <header class="shell">
         <a class="brand" href="./"><img src="assets/logo.png" alt="Ade Villa logo">Ade Villa</a>
-        <nav aria-label="Main navigation"><a href="#villas">Villas</a><a href="#facilities">Facilities</a><a href="#contact">Contact</a></nav>
+        <nav aria-label="Main navigation"><a href="#villas">Villas</a><a href="#facilities">Facilities</a><a
+                href="#contact">Contact</a></nav>
     </header>
     <main>
         <section class="shell hero" aria-labelledby="hero-title">
             <div class="hero-image" aria-hidden="true"></div>
-            <div class="hero-copy"><div class="eyebrow">Slow stays, open skies</div><h1 id="hero-title">Room to breathe.</h1><p>A small collection of private villas made for unhurried mornings, shared meals, and mountain air.</p><a class="button" href="#villas">Explore villas</a><a class="button secondary" href="#contact">Contact us</a></div>
+            <div class="hero-copy">
+                <div class="eyebrow">Slow stays, open skies</div>
+                <h1 id="hero-title">Room to breathe.</h1>
+                <p>A small collection of private villas made for unhurried mornings, shared meals, and mountain air.</p>
+                <a class="button" href="#villas">Explore villas</a><a class="button secondary" href="#contact">Contact
+                    us</a>
+            </div>
         </section>
-        <section class="shell" aria-labelledby="welcome-title"><div class="intro"><div class="eyebrow">Welcome to Ade Villa</div><h2 id="welcome-title">A gentler kind of getaway.</h2><p>Find a comfortable base close to the city, or settle into a spacious villa with panoramic views. Every stay is designed around privacy, practical comfort, and time together.</p></div></section>
-        <section class="shell" id="villas" aria-labelledby="villas-title"><div class="section-heading"><h2 id="villas-title">Stay your way</h2><p>Browse the homes currently featured in this static preview. Live availability and booking are handled by the Laravel application.</p></div><div class="villa-grid">
-            <article class="villa-card"><img src="assets/uploads/villas/img_1768275870_6965bf9e6e3f6.png" alt="Villa Kota Bunga Ade"><div class="body"><h3>Villa Kota Bunga Ade</h3><p>Comfortable villa close to the city with garden and pool.</p><div class="details"><span>6 guests · 3 rooms</span><span class="price">Rp 5.104.000 / night</span></div></div></article>
-            <article class="villa-card"><img src="assets/uploads/villas/img_1768276455_6965c1e79caec.png" alt="Villa Puncak Harmony"><div class="body"><h3>Villa Puncak Harmony</h3><p>Spacious villa with panoramic mountain views.</p><div class="details"><span>8 guests · 4 rooms</span><span class="price">Rp 7.200.000 / night</span></div></div></article>
-        </div></section>
-        <section class="facilities" id="facilities" aria-labelledby="facilities-title"><div class="shell"><div class="section-heading"><h2 id="facilities-title">The essentials</h2><p>Simple comforts for a stay that feels easy from the moment you arrive.</p></div><div class="facility-grid"><div class="facility"><strong>Private pool</strong><span>Cool off at your own pace.</span></div><div class="facility"><strong>Fast Wi-Fi</strong><span>Stay connected when you need to.</span></div><div class="facility"><strong>Parking</strong><span>Arrive and settle in simply.</span></div><div class="facility"><strong>Mountain air</strong><span>Space to reset and recharge.</span></div></div><div class="backend-note">This GitHub Pages preview is static. Login, live availability, booking submission, Midtrans payment, admin tools, and real-time updates require the normal Laravel backend.</div></div></section>
+        <section class="shell" aria-labelledby="welcome-title">
+            <div class="intro">
+                <div class="eyebrow">Welcome to Ade Villa</div>
+                <h2 id="welcome-title">A gentler kind of getaway.</h2>
+                <p>Find a comfortable base close to the city, or settle into a spacious villa with panoramic views.
+                    Every stay is designed around privacy, practical comfort, and time together.</p>
+            </div>
+        </section>
+        <section class="shell" id="villas" aria-labelledby="villas-title">
+            <div class="section-heading">
+                <h2 id="villas-title">Stay your way</h2>
+                <p>Browse the homes currently featured in this static preview. Live availability and booking are handled
+                    by the Laravel application.</p>
+            </div>
+            <div class="villa-grid">
+                <article class="villa-card"><img src="assets/uploads/villas/img_1768275870_6965bf9e6e3f6.png"
+                        alt="Villa Kota Bunga Ade">
+                    <div class="body">
+                        <h3>Villa Kota Bunga Ade</h3>
+                        <p>Comfortable villa close to the city with garden and pool.</p>
+                        <div class="details"><span>6 guests · 3 rooms</span><span class="price">Rp 5.104.000 /
+                                night</span></div>
+                    </div>
+                </article>
+                <article class="villa-card"><img src="assets/uploads/villas/img_1768276455_6965c1e79caec.png"
+                        alt="Villa Puncak Harmony">
+                    <div class="body">
+                        <h3>Villa Puncak Harmony</h3>
+                        <p>Spacious villa with panoramic mountain views.</p>
+                        <div class="details"><span>8 guests · 4 rooms</span><span class="price">Rp 7.200.000 /
+                                night</span></div>
+                    </div>
+                </article>
+            </div>
+        </section>
+        <section class="facilities" id="facilities" aria-labelledby="facilities-title">
+            <div class="shell">
+                <div class="section-heading">
+                    <h2 id="facilities-title">The essentials</h2>
+                    <p>Simple comforts for a stay that feels easy from the moment you arrive.</p>
+                </div>
+                <div class="facility-grid">
+                    <div class="facility"><strong>Private pool</strong><span>Cool off at your own pace.</span></div>
+                    <div class="facility"><strong>Fast Wi-Fi</strong><span>Stay connected when you need to.</span></div>
+                    <div class="facility"><strong>Parking</strong><span>Arrive and settle in simply.</span></div>
+                    <div class="facility"><strong>Mountain air</strong><span>Space to reset and recharge.</span></div>
+                </div>
+                <div class="backend-note">This GitHub Pages preview is static. Login, live availability, booking
+                    submission, Midtrans payment, admin tools, and real-time updates require the normal Laravel backend.
+                </div>
+            </div>
+        </section>
     </main>
-    <footer id="contact"><div class="shell">Ade Villa · Private stays with room to breathe.</div></footer>
+    <footer id="contact">
+        <div class="shell">Ade Villa · Private stays with room to breathe.</div>
+    </footer>
 </body>
+
 </html>
