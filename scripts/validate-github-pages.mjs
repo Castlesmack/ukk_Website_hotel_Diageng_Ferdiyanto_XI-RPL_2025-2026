@@ -3,8 +3,28 @@ import { resolve } from 'node:path';
 
 const root = resolve(import.meta.dirname, '..');
 const output = resolve(root, 'static-site');
-const html = await readFile(resolve(output, 'index.html'), 'utf8');
 const failures = [];
+
+try {
+    await access(resolve(output, 'index.html'));
+} catch {
+    failures.push('static-site/index.html does not exist');
+}
+
+let html = '';
+try {
+    html = await readFile(resolve(output, 'index.html'), 'utf8');
+} catch {
+    // The missing-file failure above is the actionable diagnostic.
+}
+
+if (!html.trim()) failures.push('static-site/index.html is empty');
+if (!/Find Your Perfect Villa|class="villa-grid"|Our Facilities/.test(html)) {
+    failures.push('hotel homepage markers are missing');
+}
+for (const phrase of ['Laravel Logo', 'About Laravel', 'Learning Laravel', 'Laravel Sponsors']) {
+    if (html.includes(phrase)) failures.push(`Laravel README content found: ${phrase}`);
+}
 
 if (/localhost|127\.0\.0\.1/i.test(html)) failures.push('localhost URL found');
 if (/\b(?:\.env(?:\.[^\s"'<>]*)?|vendor|storage)\b/i.test(html)) failures.push('private/server path found');
@@ -44,6 +64,13 @@ for (const file of files) {
     if (/^\.env(?:\.|$)|(^|[\\/])(?:vendor|storage)(?:[\\/]|$)|\.php$/i.test(relative)) {
         failures.push(`forbidden artifact file: ${relative}`);
     }
+}
+
+if (!files.some(file => /[\\/]assets[\\/]build[\\/].+\.css$/i.test(file))) {
+    failures.push('generated CSS asset is missing');
+}
+if (!files.some(file => /[\\/]assets[\\/]build[\\/].+\.js$/i.test(file))) {
+    failures.push('generated JS asset is missing');
 }
 
 if (failures.length) {
