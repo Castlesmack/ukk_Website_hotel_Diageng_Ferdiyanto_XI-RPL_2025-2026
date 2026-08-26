@@ -1,0 +1,76 @@
+name: Deploy static site to GitHub Pages
+
+on:
+  push:
+    branches: [main, master]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, sqlite3, pdo_sqlite
+          tools: composer:v2
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install Laravel dependencies
+        run: composer install --no-dev --prefer-dist --no-interaction --no-progress
+      - name: Install frontend dependencies
+        run: npm ci
+      - name: Build static GitHub Pages output
+        run: npm run build:pages
+      - name: Validate static artifact
+        run: npm run validate:pages
+      - name: Print static artifact diagnostic
+        shell: pwsh
+        run: |
+          Get-ChildItem static-site -Recurse -File
+          Write-Output '--- static-site/index.html (first 80 lines) ---'
+          Get-Content static-site/index.html -TotalCount 80
+      - name: Enforce Pages artifact identity
+        shell: pwsh
+        run: |
+          $index = Get-Content static-site/index.html -Raw
+          if (-not (Test-Path static-site/index.html)) { throw 'static-site/index.html does not exist' }
+          if ([string]::IsNullOrWhiteSpace($index)) { throw 'static-site/index.html is empty' }
+          foreach ($phrase in @('Laravel Logo', 'About Laravel', 'Learning Laravel', 'Laravel Sponsors')) {
+            if ($index.Contains($phrase)) { throw "README content found in Pages artifact: $phrase" }
+          }
+          if (-not ($index -match 'Find Your Perfect Villa|class="villa-grid"|Our Facilities')) {
+            throw 'Hotel homepage markers are missing from Pages artifact'
+          }
+          if (-not (Get-ChildItem static-site/assets/build -Filter '*.css' -File)) { throw 'Generated CSS is missing' }
+          if (-not (Get-ChildItem static-site/assets/build -Filter '*.js' -File)) { throw 'Generated JS is missing' }
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: static-site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

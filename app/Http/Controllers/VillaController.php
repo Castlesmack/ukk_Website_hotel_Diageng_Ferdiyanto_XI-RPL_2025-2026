@@ -10,7 +10,9 @@ use App\Models\HomepageSetting;
 use App\Models\VillaVisibility;
 use App\Models\HomepageFacility;
 use App\Events\OrderCreated;
+use Illuminate\Broadcasting\BroadcastException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 
 class VillaController extends Controller
@@ -227,8 +229,15 @@ class VillaController extends Controller
             'booking_code' => 'BK-' . strtoupper(uniqid()),
         ]);
 
-        // Broadcast real-time order creation to admin (remove toOthers for all listeners to receive)
-        broadcast(new OrderCreated($booking));
+        // Real-time updates must not prevent a completed booking from continuing to payment.
+        try {
+            broadcast(new OrderCreated($booking));
+        } catch (BroadcastException $exception) {
+            Log::warning('Booking created, but real-time order notification failed.', [
+                'booking_id' => $booking->id,
+                'error' => $exception->getMessage(),
+            ]);
+        }
 
         // Redirect to payment with booking ID
         return redirect()->route('guest.payment', ['booking_id' => $booking->id]);
